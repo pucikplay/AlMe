@@ -1,0 +1,5 @@
+1. Struktury danych dla instancji problemu (forma euklidesowa/macierz odległości) oraz rozwiązania.
+2. Metoda wczytywania i zapisywania instancji + rozwiązań. Należy obsługiwać import z TSPLIB, instancje sprecyzowane w dokumencie.
+3. Metoda generowania losowego instancji (co najmniej jedna).
+4. Napisanie funkcji celu.
+5. (Opcja) Dla komiwojażera euklidesowego, metoda wizualizacji instancji i rozwiązania.
