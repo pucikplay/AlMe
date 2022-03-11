@@ -1,7 +1,11 @@
 #include <iostream>
 #include "parser.h"
+#include "visualizer.h"
 
 int main() {
+
+    doSimpleVisual();
+
     std::cout << "Hello, World!" << std::endl;
     std::cout << "Witaj, Świecie!" << std::endl;
 
