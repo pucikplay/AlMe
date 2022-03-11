@@ -3,4 +3,4 @@ project(AlMe)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(AlMe main.cpp)
+add_executable(AlMe main.cpp parser.cpp parser.h)
