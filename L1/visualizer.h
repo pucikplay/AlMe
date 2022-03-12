@@ -5,6 +5,9 @@
 #ifndef ALME_VISUALIZER_H
 #define ALME_VISUALIZER_H
 
+#include <vector>
+
 void doSimpleVisual();
+void makePoints(std::vector<std::pair<double, double>> coords, int** matrix);
 
 #endif //ALME_VISUALIZER_H
