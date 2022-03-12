@@ -12,7 +12,7 @@ int main() {
 	std::vector<std::pair<double, double>> coords = parse_coords("a280.tsp");
 	int** matrix = coords_to_matrix(coords);
 
-	makePoints(coords, matrix);
+	doEucDraw(coords, matrix);
 
 	int counter = 0;
 	for (size_t i = 0; i < coords.size(); i++) {
