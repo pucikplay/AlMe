@@ -5,7 +5,7 @@
 #include "roadSolver.h"
 #include <stdio.h>
 
-std::vector<int> firstRoadMaker(std::vector<std::pair<double, double>> coords, int** matrix, int run) {
+std::vector<int> firstRoadMaker(std::vector<std::pair<double, double>> coords, int** matrix) {
 
 	size_t n = coords.size();
 
@@ -21,39 +21,26 @@ std::vector<int> firstRoadMaker(std::vector<std::pair<double, double>> coords, i
 
 	visited[currentPoint] = true;
 
-	if (run == 2) {
+	for(int i = 0; i < n; i++) {
 
-	} else {
+		int nearestPoint = currentPoint;
+		int smallestDist = __INT_MAX__;
 
-		for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			int smaller = (currentPoint <= j) ? currentPoint : j;
+			int bigger = (currentPoint > j) ? currentPoint : j;
 
-			//printf("%d - %d\n", i, currentPoint);
-
-			int nearestPoint = currentPoint;
-			int smallestDist = __INT_MAX__;
-			//printf("%d\n", smallestDist);
-
-			for(int j = 0; j < n; j++) {
-				int smaller = (currentPoint <= j) ? currentPoint : j;
-				int bigger = (currentPoint > j) ? currentPoint : j;
-
-				//if(i == 0) {
-				//	printf("Now:\nj-%d\nvis-%d\nval-%d\n", j, visited[j], matrix[smaller][bigger]);
-				//}
-				if(j!= currentPoint && !visited[j] && matrix[smaller][bigger] != -1 && matrix[smaller][bigger] < smallestDist) {
-					smallestDist = matrix[smaller][bigger];
-					nearestPoint = j;
-				}
-				//if(i == 0) {
-				//	printf("%d\n\n", smallestDist);
-				//}
+			if(j!= currentPoint && !visited[j] && matrix[smaller][bigger] != -1 && matrix[smaller][bigger] < smallestDist) {
+				smallestDist = matrix[smaller][bigger];
+				nearestPoint = j;
 			}
-
-			currentPoint = nearestPoint;
-			roadList.emplace_back(currentPoint);
-			visited[currentPoint] = true;
 		}
+
+		currentPoint = nearestPoint;
+		roadList.emplace_back(currentPoint);
+		visited[currentPoint] = true;
 	}
+
 	return roadList;
 }
 
@@ -79,6 +66,7 @@ std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int star
 		// Ugly, but works
 		int road1 = localPerm[0][1] + localPerm[1][2] + localPerm[2][3] + localPerm[3][4];
 		int town1 = roadList[start + 1], town2 = roadList[start + 2], town3 = roadList[start + 3], minDist = road1;
+
 		int road2 = localPerm[0][1] + localPerm[1][3] + localPerm[3][2] + localPerm[2][4];
 		if(road2 < minDist) {
 			town1 = roadList[start + 1];
@@ -113,6 +101,9 @@ std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int star
 		newRoadList.emplace_back(town1);
 		newRoadList.emplace_back(town2);
 		newRoadList.emplace_back(town3);
+	} else {
+		for(int i = start + 2; i < end; i++)
+			newRoadList.emplace_back(roadList[i]);
 	}
 
 	for(int i = end; i <= roadList.size(); i++)

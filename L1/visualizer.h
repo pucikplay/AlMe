@@ -8,7 +8,6 @@
 #include <vector>
 #include "SDL.h"
 
-void DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);
 void doSimpleVisual();
 void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale);
 void highlightPoints(SDL_Renderer *renderer, std::vector<int> localRoads, std::vector<std::pair<double, double>> coords, double fittedScale);
