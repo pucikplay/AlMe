@@ -7,6 +7,7 @@
 
 #include <vector>
 
-std::vector<std::pair<std::pair<double, double>, std::pair<double, double>>> firstRoadMaker(std::vector<std::pair<double, double>> coords, int** matrix, int run);
+std::vector<int> firstRoadMaker(std::vector<std::pair<double, double>> coords, int** matrix, int run);
+std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int start, int end);
 
 #endif //ALME_ROADSOLVER_H

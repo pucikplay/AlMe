@@ -11,7 +11,8 @@
 void DrawCircle(SDL_Renderer * renderer, int32_t centreX, int32_t centreY, int32_t radius);
 void doSimpleVisual();
 void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale);
-void makeEdges(SDL_Renderer *renderer, std::vector<std::pair<std::pair<double, double>, std::pair<double, double>>> roads, double fittedScale);
+void highlightPoints(SDL_Renderer *renderer, std::vector<int> localRoads, std::vector<std::pair<double, double>> coords, double fittedScale);
+void makeEdges(SDL_Renderer *renderer, std::vector<int> roads, std::vector<std::pair<double, double>> coords, double fittedScale);
 void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix);
 
 #endif //ALME_VISUALIZER_H

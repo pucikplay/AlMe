@@ -6,6 +6,7 @@
 #include "visualizer.h"
 #include "roadSolver.h"
 #include <math.h>
+#include <stdio.h>
 
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 960
@@ -106,18 +107,35 @@ void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> c
 	}
 }
 
-void makeEdges(SDL_Renderer *renderer, std::vector<std::pair<std::pair<double, double>, std::pair<double, double>>> roads, double fittedScale) {
+void highlightPoints(SDL_Renderer *renderer, std::vector<int> localRoads, std::vector<std::pair<double, double>> coords, double fittedScale) {
+
+	SDL_SetRenderDrawColor(renderer, 50, 255, 50, 255); // Green-like
+	//SDL_RenderSetScale(renderer, fittedScale, fittedScale);
+	for (int i = 0; i < localRoads.size(); i++) {
+		SDL_Rect pointRect;
+		pointRect.x = (int)coords[localRoads[i]].first * (int)fittedScale - (int)fittedScale;
+		pointRect.y = (int)coords[localRoads[i]].second * (int)fittedScale - (int)fittedScale;
+		pointRect.w = 2 * (int)fittedScale;
+		pointRect.h = 2 * (int)fittedScale;
+
+		SDL_RenderDrawRect(renderer, &pointRect);
+		SDL_RenderFillRect(renderer, &pointRect);
+		//DrawCircle(renderer, (int)coords[i].first, (int)coords[i].second, (int)fittedScale);
+		//SDL_RenderDrawPoint(renderer, (int)coords[i].first, (int)coords[i].second);
+	}
+}
+
+void makeEdges(SDL_Renderer *renderer, std::vector<int> roads, std::vector<std::pair<double, double>> coords, double fittedScale) {
 	
-	size_t n = roads.size();
+	size_t n = coords.size();
 	SDL_SetRenderDrawColor(renderer, 255, 165, 0, 255); // Orange-like
 	for(int i = 0; i < n; i++) {
-		int x1 = roads[i].first.first * (int)fittedScale + (int)(fittedScale / 2);
-		int y1 = roads[i].first.second * (int)fittedScale + (int)(fittedScale / 2);
-		int x2 = roads[i].second.first * (int)fittedScale + (int)(fittedScale / 2);
-		int y2 = roads[i].second.second * (int)fittedScale + (int)(fittedScale / 2);
+		int x1 = coords[roads[i]].first * (int)fittedScale + (int)(fittedScale / 2);
+		int y1 = coords[roads[i]].second * (int)fittedScale + (int)(fittedScale / 2);
+		int x2 = coords[roads[(i + 1)% n]].first * (int)fittedScale + (int)(fittedScale / 2);
+		int y2 = coords[roads[(i + 1)% n]].second * (int)fittedScale + (int)(fittedScale / 2);
 		SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 	}
-
 }
 
 void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix) {
@@ -141,7 +159,7 @@ void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix) {
 		if(coords[i].first > maxX)
 			maxX = coords[i].first;
 
-		if(coords[i].first > maxY)
+		if(coords[i].second > maxY)
 			maxY = coords[i].second;
 	}
 
@@ -161,24 +179,37 @@ void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix) {
 	SDL_Delay(3000);
 
 	//First road
-	std::vector<std::pair<std::pair<double, double>, std::pair<double, double>>> roadList = firstRoadMaker(coords, matrix, 1);
+	std::vector<int> roadList = firstRoadMaker(coords, matrix, 1);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
 	SDL_RenderClear(renderer);
 
-	makeEdges(renderer, roadList, fittedScale);
+	makeEdges(renderer, roadList, coords, fittedScale);
 	makePoints(renderer, coords, fittedScale);
 	SDL_RenderPresent(renderer);
 
 	SDL_Delay(5000);
 
 	//Second road
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-	SDL_RenderClear(renderer);
+	for(int i = 0; i < coords.size() - 4; i++) {
+		roadList = localEnhancer(roadList, matrix, i, i + 4);
 
-	makePoints(renderer, coords, fittedScale);
-	SDL_RenderPresent(renderer);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+		SDL_RenderClear(renderer);
 
-	SDL_Delay(1000);
+		makeEdges(renderer, roadList, coords, fittedScale);
+		makePoints(renderer, coords, fittedScale);
+
+		std::vector<int> localRoads;
+		for(int j = 0; j < 4; j++)
+			localRoads.emplace_back(roadList[i + j]);
+
+		highlightPoints(renderer, localRoads, coords, fittedScale);
+		SDL_RenderPresent(renderer);
+
+		SDL_Delay(200);
+	}
+
+	SDL_Delay(2000);
 
 	if (renderer) {
 		SDL_DestroyRenderer(renderer);
