@@ -14,8 +14,7 @@ int distance(std::pair<double, double> p1, std::pair<double, double> p2) {
 
 std::vector<std::pair<double, double>> parse_coords(const std::string& file) {
 	std::ifstream File(file);
-	std::string line, token;
-	std::vector<std::string> tokens;
+	std::string line;
 	std::vector<std::pair<double, double>> list;
 	int i;
 	double n, m;
@@ -51,4 +50,61 @@ int** coords_to_matrix(std::vector<std::pair<double, double>> coords) {
 		}
 	}
 	return matrix;
+}
+
+int** parse_matrix(const std::string& file) {
+    int** matrix = 0;
+    std::ifstream File(file);
+    std::string line;
+    int n, tmp;
+
+    while (std::getline(File, line) && line.find("DIMENSION"));
+    std::string dim = line.substr(11);
+    n = std::stoi(dim);
+
+    matrix = new int* [n];
+    for (size_t i = 0; i < n; i ++) {
+        matrix[i] = new int[n];
+    }
+
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; j++) {
+            matrix[i][j] = -1;
+        }
+    }
+
+    while (std::getline(File, line) && line.find("EDGE_WEIGHT_FORMAT"));
+    std::string format = line.substr(20);
+
+    if (format.compare("UPPER_ROW")) {
+        while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+        for (size_t i = 0; i < n; i++) {
+            for (size_t j = i + 1; j < n; j++) {
+                File >> matrix[i][j];
+            }
+        }
+        File.close();
+
+        return matrix;
+
+    } else if (format.compare("LOWER_ROW")) {
+        while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+
+    } else if (format.compare("FULL_MATRIX")) {
+        while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+
+        for (size_t i = 0; i < n; i++) {
+            for (size_t j = 0; j < i + 1; j++) {
+                File >> tmp;
+            }
+            for (size_t j = i + 1; j < n; j++) {
+                File >> matrix[i][j];
+            }
+        }
+        File.close();
+
+        return matrix;
+
+    }
+    return matrix;
 }

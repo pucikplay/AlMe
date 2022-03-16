@@ -12,5 +12,6 @@
 
 std::vector<std::pair<double, double>> parse_coords(const std::string& file);
 int** coords_to_matrix(std::vector<std::pair<double, double>> coords);
+int** parse_matrix(const std::string& file);
 
 #endif //ALME_PARSER_H
