@@ -98,11 +98,8 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 		while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
 
 		for (size_t i = 0; i < n; i++) {
-			for (size_t j = 0; j < i + 1; j++) {
-				File >> tmp;
-			}
-			for (size_t j = i + 1; j < n; j++) {
-				File >> matrix[i][j];
+			for (size_t j = 0; j < n; j++) {
+				File >> matrix[i][j];;
 			}
 		}
 		File.close();

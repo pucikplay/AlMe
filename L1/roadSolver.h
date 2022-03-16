@@ -7,7 +7,7 @@
 
 #include <vector>
 
-std::vector<int> firstRoadMaker(size_t coords, int** matrix);
+std::vector<int> firstRoadMaker(std::size_t coords, int** matrix);
 std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int start, int end);
 
 #endif //ALME_ROADSOLVER_H
