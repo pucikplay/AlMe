@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include <iostream>
 #include "parser.h"
 
 int distance(std::pair<double, double> p1, std::pair<double, double> p2) {
@@ -78,8 +79,8 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 
 	std::pair<int**, int>  result;
 
-	if (format.compare("UPPER_ROW")) {
-		while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+	if (format.find("UPPER_ROW")) {
+		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 		for (size_t i = 0; i < n; i++) {
 			for (size_t j = i + 1; j < n; j++) {
 				File >> matrix[i][j];
@@ -91,15 +92,15 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 		result.second = n;
 		return result;
 
-	} else if (format.compare("LOWER_ROW")) {
-		while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+	} else if (format.find("LOWER_ROW")) {
+		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 
-	} else if (format.compare("FULL_MATRIX")) {
-		while (std::getline(File, line) && line.compare("EDGE_WEIGHT_SECTION"));
+	} else if (format.find("FULL_MATRIX")) {
+		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 
 		for (size_t i = 0; i < n; i++) {
 			for (size_t j = 0; j < n; j++) {
-				File >> matrix[i][j];;
+				File >> matrix[i][j];
 			}
 		}
 		File.close();
