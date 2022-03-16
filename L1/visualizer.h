@@ -13,5 +13,7 @@ void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> c
 void highlightPoints(SDL_Renderer *renderer, std::vector<int> localRoads, std::vector<std::pair<double, double>> coords, double fittedScale);
 void makeEdges(SDL_Renderer *renderer, std::vector<int> roads, std::vector<std::pair<double, double>> coords, double fittedScale);
 void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix);
+std::vector<std::pair<double, double>> genCords(size_t n);
+void doMatrixDraw(int** matrix, int n);
 
 #endif //ALME_VISUALIZER_H

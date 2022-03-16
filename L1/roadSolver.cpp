@@ -5,9 +5,7 @@
 #include "roadSolver.h"
 #include <stdio.h>
 
-std::vector<int> firstRoadMaker(std::vector<std::pair<double, double>> coords, int** matrix) {
-
-	size_t n = coords.size();
+std::vector<int> firstRoadMaker(size_t n, int** matrix) {
 
 	std::vector<int> roadList;
 	roadList.emplace_back(0);
