@@ -7,19 +7,20 @@ int main(int argc, char *argv[]) {
 
 	std::cout << "Hello, Meta!" << std::endl;
 
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+
 	//Euclidean
 
 	//Generated
 	//size_t n = 100;
-	//std::vector<std::pair<double, double>> coords = gen_coords(n);
+	//coords = gen_coords(n);
 
 	//Euc-2D
-	//std::vector<std::pair<double, double>> coords = parse_coords("Data/Euc2D/a280.tsp");
-	//std::vector<std::pair<double, double>> coords = parse_coords("Data/Euc2D/st70.tsp");
+	//coords = parse_coords("Data/Euc2D/a280.tsp");
+	//coords = parse_coords("Data/Euc2D/st70.tsp");
 
-	//int** matrix = coords_to_matrix(coords);
-	//doEucDraw(coords, matrix);
-
+	//matrix = coords_to_matrix(coords);
 
 	//Matrix
 	std::pair<int**, int> result;
@@ -30,12 +31,14 @@ int main(int argc, char *argv[]) {
 
 	//Upper Row
 	//result = parse_matrix("Data/UpperRow/brg180.tsp");
-	//result = parse_matrix("Data/UpperRow/brazil58.tsp");
-	result = parse_matrix("Data/UpperRow/bayg29.tsp");
+	result = parse_matrix("Data/UpperRow/brazil58.tsp");
+	//result = parse_matrix("Data/UpperRow/bayg29.tsp");
 
-	int** matrix = result.first;
+	matrix = result.first;
 	int n = result.second;
-	doMatrixDraw(matrix, n);
+	coords = genCords(n);
+
+	doDrawing(coords, matrix);
 
 	//Coord Check
 	/*for (size_t i = 0; i < n; i++) {

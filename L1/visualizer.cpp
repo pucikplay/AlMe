@@ -11,46 +11,22 @@
 #define WIN_WIDTH 1280
 #define WIN_HEIGHT 960
 
-void doSimpleVisual() {
-
+SDL_Window* windowInitializing() {
 	SDL_Init(SDL_INIT_VIDEO);
 
 	SDL_Window *window = SDL_CreateWindow(
-		"3-Second Triangle",
+		"Point Madness",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480,
+		WIN_WIDTH,
+		WIN_HEIGHT,
 		0
 	);
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer, 60, 120, 200, SDL_ALPHA_OPAQUE); // Cyan-like
-
-	//SDL_RenderSetScale( renderer, 2.0, 2.0);
-	SDL_RenderDrawLine(renderer, 200, 300, 440, 300);
-
-	//SDL_RenderSetScale( renderer, 4.0, 4.0);
-	SDL_RenderDrawLine(renderer, 440, 300, 320, 100);
-
-	//SDL_RenderSetScale( renderer, 8.0, 8.0);
-	SDL_RenderDrawLine(renderer, 320, 100, 200, 300);
-
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(3000);
-
-	if (renderer) {
-		SDL_DestroyRenderer(renderer);
-	}
-	if (window) {
-		SDL_DestroyWindow(window);
-	}
-	SDL_Quit();
+	return window;
 }
 
+//Drawing "Basics"
 void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale) {
 
 	SDL_SetRenderDrawColor(renderer, 60, 120, 200, 255); // Cyan-like
@@ -66,13 +42,13 @@ void makePoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> c
 	}
 }
 
-void highlightPoints(SDL_Renderer *renderer, std::vector<int> localRoads, std::vector<std::pair<double, double>> coords, double fittedScale) {
+void highlightPoints(SDL_Renderer *renderer, std::vector<int> roadPoints, std::vector<std::pair<double, double>> coords, double fittedScale) {
 
 	SDL_SetRenderDrawColor(renderer, 50, 255, 50, 255); // Green-like
-	for (int i = 0; i < localRoads.size(); i++) {
+	for (int i = 0; i < roadPoints.size(); i++) {
 		SDL_Rect pointRect;
-		pointRect.x = (int)coords[localRoads[i]].first * (int)fittedScale - (int)fittedScale;
-		pointRect.y = (int)coords[localRoads[i]].second * (int)fittedScale - (int)fittedScale;
+		pointRect.x = (int)coords[roadPoints[i]].first * (int)fittedScale - (int)fittedScale;
+		pointRect.y = (int)coords[roadPoints[i]].second * (int)fittedScale - (int)fittedScale;
 		pointRect.w = 2 * (int)fittedScale;
 		pointRect.h = 2 * (int)fittedScale;
 
@@ -95,92 +71,7 @@ void makeEdges(SDL_Renderer *renderer, std::vector<int> roads, std::vector<std::
 	}
 }
 
-void doEucDraw(std::vector<std::pair<double, double>> coords, int** matrix) {
-
-	SDL_Init(SDL_INIT_VIDEO);
-
-	SDL_Window *window = SDL_CreateWindow(
-		"Point Madness",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		WIN_WIDTH,
-		WIN_HEIGHT,
-		0
-	);
-
-	size_t n = coords.size();
-
-	double maxX = 0, maxY = 0;
-	for (int i = 0; i < n; i++) {
-
-		if(coords[i].first > maxX)
-			maxX = coords[i].first;
-
-		if(coords[i].second > maxY)
-			maxY = coords[i].second;
-	}
-
-	double scaleX = WIN_WIDTH / maxX;
-	double scaleY = WIN_HEIGHT / maxY;
-
-	double fittedScale = (scaleX < scaleY) ? scaleX : scaleY;
-
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-	//Points Only
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-	SDL_RenderClear(renderer);
-
-	makePoints(renderer, coords, fittedScale);
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(1000);
-
-	//First road
-	std::vector<int> roadList = firstRoadMaker(coords.size(), matrix);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-	SDL_RenderClear(renderer);
-
-	makeEdges(renderer, roadList, coords, fittedScale);
-	makePoints(renderer, coords, fittedScale);
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(2000);
-
-	// Delay time making
-	int delayTime = 100;
-	delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
-
-	//Second road
-	for(int i = 0; i < coords.size() - 4; i++) {
-		roadList = localEnhancer(roadList, matrix, i, i + 4);
-
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-		SDL_RenderClear(renderer);
-
-		makeEdges(renderer, roadList, coords, fittedScale);
-		makePoints(renderer, coords, fittedScale);
-
-		std::vector<int> localRoads;
-		for(int j = 0; j <= 4; j++)
-			localRoads.emplace_back(roadList[i + j]);
-
-		highlightPoints(renderer, localRoads, coords, fittedScale);
-		SDL_RenderPresent(renderer);
-
-		SDL_Delay(delayTime);
-	}
-
-	SDL_Delay(2000);
-
-	if (renderer) {
-		SDL_DestroyRenderer(renderer);
-	}
-	if (window) {
-		SDL_DestroyWindow(window);
-	}
-	SDL_Quit();
-}
-
+//Utils
 std::vector<std::pair<double, double>> genCords(size_t n) {
 
 	std::vector<std::pair<double, double>> coords;
@@ -199,22 +90,11 @@ std::vector<std::pair<double, double>> genCords(size_t n) {
 	return coords;
 }
 
-void doMatrixDraw(int** matrix, int n) {
-
-	SDL_Init(SDL_INIT_VIDEO);
-
-	SDL_Window *window = SDL_CreateWindow(
-		"Point Madness",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		WIN_WIDTH,
-		WIN_HEIGHT,
-		0
-	);
-
-	std::vector<std::pair<double, double>> coords = genCords(n);
-
+double computeScale(std::vector<std::pair<double, double>> coords) {
+	
+	int n = coords.size();
 	double maxX = 0, maxY = 0;
+
 	for (int i = 0; i < n; i++) {
 
 		if(coords[i].first > maxX)
@@ -226,20 +106,23 @@ void doMatrixDraw(int** matrix, int n) {
 
 	double scaleX = WIN_WIDTH / maxX;
 	double scaleY = WIN_HEIGHT / maxY;
-
 	double fittedScale = (scaleX < scaleY) ? scaleX : scaleY;
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-	//Points Only
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+	return fittedScale;
+}
+
+//Drawing "Events"
+void makeFirstPoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
 	makePoints(renderer, coords, fittedScale);
 	SDL_RenderPresent(renderer);
 
 	SDL_Delay(1000);
+}
 
-	//First road
+std::vector<int> makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix) {
 	std::vector<int> roadList = firstRoadMaker(coords.size(), matrix);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
 	SDL_RenderClear(renderer);
@@ -249,32 +132,95 @@ void doMatrixDraw(int** matrix, int n) {
 	SDL_RenderPresent(renderer);
 
 	SDL_Delay(2000);
+	return roadList;
+}
 
-	// Delay time making
-	int delayTime = 100;
-	delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
+std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k) {
+	std::vector<int> newRoadList = localEnhancer(roadList, matrix, k, k + 4);
 
-	//Second road
-	for(int i = 0; i < coords.size() - 4; i++) {
-		roadList = localEnhancer(roadList, matrix, i, i + 4);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+	SDL_RenderClear(renderer);
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
-		SDL_RenderClear(renderer);
+	makeEdges(renderer, newRoadList, coords, fittedScale);
+	makePoints(renderer, coords, fittedScale);
 
-		makeEdges(renderer, roadList, coords, fittedScale);
-		makePoints(renderer, coords, fittedScale);
+	std::vector<int> roadPoints;
+	for(int j = 0; j <= 4; j++)
+		roadPoints.emplace_back(newRoadList[k + j]);
 
-		std::vector<int> localRoads;
-		for(int j = 0; j <= 4; j++)
-			localRoads.emplace_back(roadList[i + j]);
+	highlightPoints(renderer, roadPoints, coords, fittedScale);
+	SDL_RenderPresent(renderer);
+	
+	return newRoadList;
+}
 
-		highlightPoints(renderer, localRoads, coords, fittedScale);
-		SDL_RenderPresent(renderer);
+//Drawing "Mains"
+void doDrawing(std::vector<std::pair<double, double>> coords, int** matrix) {
 
-		SDL_Delay(delayTime);
+	SDL_Window* window = windowInitializing();
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+	std::vector<int> roadList;
+	double fittedScale = computeScale(coords);
+	int delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
+
+	//Animation Loop logic
+	bool quit = false;
+	int actionCounter = 0;
+	SDL_Event e;
+
+	while(!quit) {
+
+		while(SDL_PollEvent(&e) != 0)
+			if(e.type == SDL_QUIT)
+				quit = true;
+
+		if(actionCounter == 0)
+			makeFirstPoints(renderer, coords, fittedScale);
+		else if(actionCounter == 1)
+			roadList = makeFirstRoad(renderer, coords, fittedScale, matrix);
+		else if(actionCounter < coords.size() - 2) {
+			roadList = makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
+			SDL_Delay(delayTime);
+		}
+		else if(actionCounter == coords.size())
+			SDL_Delay(2000);
+		else
+			quit = true;
+
+		actionCounter += 1;
 	}
 
-	SDL_Delay(2000);
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void doSimpleVisual() {
+
+	SDL_Window* window = windowInitializing();
+
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(renderer, 60, 120, 200, SDL_ALPHA_OPAQUE); // Cyan-like
+
+	//SDL_RenderSetScale( renderer, 2.0, 2.0);
+	SDL_RenderDrawLine(renderer, 200, 300, 440, 300);
+
+	//SDL_RenderSetScale( renderer, 4.0, 4.0);
+	SDL_RenderDrawLine(renderer, 440, 300, 320, 100);
+
+	//SDL_RenderSetScale( renderer, 8.0, 8.0);
+	SDL_RenderDrawLine(renderer, 320, 100, 200, 300);
+
+	SDL_RenderPresent(renderer);
+
+	SDL_Delay(3000);
 
 	if (renderer) {
 		SDL_DestroyRenderer(renderer);
