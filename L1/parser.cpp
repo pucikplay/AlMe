@@ -79,7 +79,7 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 
 	std::pair<int**, int>  result;
 
-	if (format.find("UPPER_ROW")) {
+	if (!format.find("UPPER_ROW")) {
 		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 		for (size_t i = 0; i < n; i++) {
 			for (size_t j = i + 1; j < n; j++) {
@@ -92,10 +92,10 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 		result.second = n;
 		return result;
 
-	} else if (format.find("LOWER_ROW")) {
+	} else if (!format.find("LOWER_ROW")) {
 		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 
-	} else if (format.find("FULL_MATRIX")) {
+	} else if (!format.find("FULL_MATRIX")) {
 		while (std::getline(File, line) && line.find("EDGE_WEIGHT_SECTION"));
 
 		for (size_t i = 0; i < n; i++) {
