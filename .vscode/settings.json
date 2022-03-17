@@ -45,10 +45,7 @@
 		"utility": "cpp",
 		"fstream": "cpp",
 		"sstream": "cpp",
-		"cinttypes": "cpp",
-		"chrono": "cpp",
-		"ctime": "cpp",
-		"ratio": "cpp"
+		"cinttypes": "cpp"
 	},
 	"cmake.sourceDirectory": "${workspaceFolder}/L1"
 }
