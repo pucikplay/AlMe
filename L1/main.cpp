@@ -2,6 +2,8 @@
 #include "parser.h"
 #include "visualizer.h"
 #include "random_generator.h"
+#include "k_random.h"
+#include "2_opt.h"
 
 int main(int argc, char *argv[]) {
 
