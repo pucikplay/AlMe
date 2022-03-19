@@ -3,14 +3,35 @@
 //
 
 #include "roadSolver.h"
+#include "k_random.h"
 #include <stdio.h>
 
-std::vector<int> firstRoadMaker(size_t n, int** matrix) {
+std::vector<int> bestStartingNeighbor(size_t n, int** matrix) {
 
 	std::vector<int> roadList;
-	roadList.emplace_back(0);
+	std::vector<int> bestRoadList;
+	size_t bestLength = SIZE_MAX;
+	size_t length = 0;
 
-	int currentPoint = 0;
+	for (size_t i = 0; i < n; i++) {
+		roadList = doNearestNeighbor(n, matrix, i);
+		length = calculate_length(roadList, matrix, n);
+
+		if (length < bestLength) {
+			bestLength = length;
+			bestRoadList = roadList;
+		}
+	}
+
+	return bestRoadList;
+}
+
+std::vector<int> doNearestNeighbor(size_t n, int** matrix, int k) {
+
+	std::vector<int> roadList;
+	roadList.emplace_back(k);
+
+	int currentPoint = k;
 	bool visited[n];
 
 	for (size_t i = 0; i < n; i ++) {

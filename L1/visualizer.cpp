@@ -169,7 +169,7 @@ void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matri
 	SDL_Window* window = windowInitializing();
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-	std::vector<int> roadList;
+	std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 	double fittedScale = computeScale(coords);
 	int delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
 
@@ -189,7 +189,6 @@ void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matri
 			SDL_Delay(1000);
 		}
 		else if(actionCounter == 1) {
-			roadList = firstRoadMaker(coords.size(), matrix);
 			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
 			SDL_Delay(2000);
 		} else if(actionCounter < coords.size() - 2) {
@@ -268,7 +267,7 @@ void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 	int delayTime = (20000 / coords.size() < 150) ? 20000 / coords.size() : 150;
 
 	//Roads
-	//std::vector<int> roadList = firstRoadMaker(coords.size(), matrix);
+	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
 	std::vector<std::pair<int, int>> changeList = get_2_opt_road_visual(roadList, matrix, roadList.size());
 
