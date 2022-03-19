@@ -22,7 +22,8 @@ double computeScale(std::vector<std::pair<double, double>> coords);
 //Drawing "Events"
 void makeFirstPoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale);
 void makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList);
-std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k);
+void makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k);
+void make2OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, std::pair<int, int> points);
 
 //Drawing "Mains"
 void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matrix);

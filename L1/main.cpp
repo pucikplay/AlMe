@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 	//Control flags
 	bool euclideanFlag = true;
 	bool randomFlag = false;
-	int mode = 0; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt
+	int mode = 2; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt
 
 	//Euclidean
 	if(euclideanFlag) {

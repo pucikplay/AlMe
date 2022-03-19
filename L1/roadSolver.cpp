@@ -19,7 +19,7 @@ std::vector<int> firstRoadMaker(size_t n, int** matrix) {
 
 	visited[currentPoint] = true;
 
-	for(int i = 0; i < n; i++) {
+	for(int i = 1; i < n; i++) {
 
 		int nearestPoint = currentPoint;
 		int smallestDist = __INT_MAX__;

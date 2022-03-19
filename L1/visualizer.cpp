@@ -131,23 +131,36 @@ void makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>
 	SDL_RenderPresent(renderer);
 }
 
-std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k) {
-	std::vector<int> newRoadList = localEnhancer(roadList, matrix, k, k + 4);
-
+void makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
 	SDL_RenderClear(renderer);
 
-	makeEdges(renderer, newRoadList, coords, fittedScale);
+	makeEdges(renderer, roadList, coords, fittedScale);
 	makePoints(renderer, coords, fittedScale);
 
 	std::vector<int> roadPoints;
 	for(int j = 0; j <= 4; j++)
-		roadPoints.emplace_back(newRoadList[k + j]);
+		roadPoints.emplace_back(roadList[k + j]);
 
 	highlightPoints(renderer, roadPoints, coords, fittedScale);
 	SDL_RenderPresent(renderer);
-	
-	return newRoadList;
+}
+
+void make2OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, std::pair<int, int> points) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+	SDL_RenderClear(renderer);
+
+	makeEdges(renderer, roadList, coords, fittedScale);
+	makePoints(renderer, coords, fittedScale);
+
+	std::vector<int> roadPoints;
+	roadPoints.emplace_back(roadList[points.first]);
+	roadPoints.emplace_back(roadList[(points.first + 1) % roadList.size()]);
+	roadPoints.emplace_back(roadList[points.second]);
+	roadPoints.emplace_back(roadList[(points.second + 1) % roadList.size()]);
+
+	highlightPoints(renderer, roadPoints, coords, fittedScale);
+	SDL_RenderPresent(renderer);
 }
 
 //Drawing "Mains"
@@ -180,10 +193,11 @@ void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matri
 			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
 			SDL_Delay(2000);
 		} else if(actionCounter < coords.size() - 2) {
-			roadList = makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
+			roadList = localEnhancer(roadList, matrix, actionCounter - 2, actionCounter + 2);
+			makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
 			SDL_Delay(delayTime);
 		}
-		else if(actionCounter == coords.size())
+		else if(actionCounter == coords.size() - 2)
 			SDL_Delay(2000);
 		else
 			quit = true;
@@ -213,7 +227,7 @@ void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, in
 	int actionCounter = 0;
 	SDL_Event e;
 
-	std::vector<int> perm = best_random_road(k, coords.size(), matrix);
+	std::vector<int> roadList = best_random_road(k, coords.size(), matrix);
 
 	while(!quit) {
 
@@ -226,10 +240,10 @@ void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, in
 			SDL_Delay(1000);
 		}
 		else if(actionCounter == 1) {
-			makeFirstRoad(renderer, coords, fittedScale, matrix, perm);
+			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
 			SDL_Delay(2000);
 		} else if(actionCounter == 2)
-			SDL_Delay(100);
+			SDL_Delay(1000);
 		else
 			quit = true;
 
@@ -250,9 +264,13 @@ void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 	SDL_Window* window = windowInitializing();
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-	std::vector<int> roadList;
 	double fittedScale = computeScale(coords);
-	int delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
+	int delayTime = (20000 / coords.size() < 150) ? 20000 / coords.size() : 150;
+
+	//Roads
+	//std::vector<int> roadList = firstRoadMaker(coords.size(), matrix);
+	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+	std::vector<std::pair<int, int>> changeList = get_2_opt_road_visual(roadList, matrix, roadList.size());
 
 	//Animation Loop logic
 	bool quit = false;
@@ -270,14 +288,16 @@ void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 			SDL_Delay(1000);
 		}
 		else if(actionCounter == 1) {
-			roadList = firstRoadMaker(coords.size(), matrix);
 			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
 			SDL_Delay(2000);
-		} else if(actionCounter < coords.size() - 2) {
-			roadList = makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
+		} else if(actionCounter < changeList.size() + 2) {
+			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
+			SDL_Delay(delayTime);
+			roadList = swap_2_opt(roadList, changeList[actionCounter - 2].first, changeList[actionCounter - 2].second);
+			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
 			SDL_Delay(delayTime);
 		}
-		else if(actionCounter == coords.size())
+		else if(actionCounter == changeList.size() + 2)
 			SDL_Delay(2000);
 		else
 			quit = true;
