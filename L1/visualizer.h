@@ -21,11 +21,13 @@ double computeScale(std::vector<std::pair<double, double>> coords);
 
 //Drawing "Events"
 void makeFirstPoints(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale);
-std::vector<int> makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix);
+void makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList);
 std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k);
 
 //Drawing "Mains"
-void doDrawing(std::vector<std::pair<double, double>> coords, int** matrix);
+void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matrix);
+void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, int k);
+void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix);
 void doSimpleVisual();
 
 #endif //ALME_VISUALIZER_H

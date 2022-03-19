@@ -5,6 +5,8 @@
 #include "SDL.h"
 #include "visualizer.h"
 #include "roadSolver.h"
+#include "k_random.h"
+#include "2_opt.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -118,21 +120,15 @@ void makeFirstPoints(SDL_Renderer *renderer, std::vector<std::pair<double, doubl
 
 	makePoints(renderer, coords, fittedScale);
 	SDL_RenderPresent(renderer);
-
-	SDL_Delay(1000);
 }
 
-std::vector<int> makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix) {
-	std::vector<int> roadList = firstRoadMaker(coords.size(), matrix);
+void makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList) {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
 	SDL_RenderClear(renderer);
 
 	makeEdges(renderer, roadList, coords, fittedScale);
 	makePoints(renderer, coords, fittedScale);
 	SDL_RenderPresent(renderer);
-
-	SDL_Delay(2000);
-	return roadList;
 }
 
 std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k) {
@@ -155,7 +151,7 @@ std::vector<int> makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<dou
 }
 
 //Drawing "Mains"
-void doDrawing(std::vector<std::pair<double, double>> coords, int** matrix) {
+void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matrix) {
 
 	SDL_Window* window = windowInitializing();
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -175,11 +171,109 @@ void doDrawing(std::vector<std::pair<double, double>> coords, int** matrix) {
 			if(e.type == SDL_QUIT)
 				quit = true;
 
-		if(actionCounter == 0)
+		if(actionCounter == 0) {
 			makeFirstPoints(renderer, coords, fittedScale);
-		else if(actionCounter == 1)
-			roadList = makeFirstRoad(renderer, coords, fittedScale, matrix);
-		else if(actionCounter < coords.size() - 2) {
+			SDL_Delay(1000);
+		}
+		else if(actionCounter == 1) {
+			roadList = firstRoadMaker(coords.size(), matrix);
+			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
+			SDL_Delay(2000);
+		} else if(actionCounter < coords.size() - 2) {
+			roadList = makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
+			SDL_Delay(delayTime);
+		}
+		else if(actionCounter == coords.size())
+			SDL_Delay(2000);
+		else
+			quit = true;
+
+		actionCounter += 1;
+	}
+
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, int k) {
+
+	SDL_Window* window = windowInitializing();
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+	double fittedScale = computeScale(coords);
+	int delayTime = 1000;
+
+	//Animation Loop logic
+	bool quit = false;
+	int actionCounter = 0;
+	SDL_Event e;
+
+	std::vector<int> perm = best_random_road(k, coords.size(), matrix);
+
+	while(!quit) {
+
+		while(SDL_PollEvent(&e) != 0)
+			if(e.type == SDL_QUIT)
+				quit = true;
+
+		if(actionCounter == 0) {
+			makeFirstPoints(renderer, coords, fittedScale);
+			SDL_Delay(1000);
+		}
+		else if(actionCounter == 1) {
+			makeFirstRoad(renderer, coords, fittedScale, matrix, perm);
+			SDL_Delay(2000);
+		} else if(actionCounter == 2)
+			SDL_Delay(100);
+		else
+			quit = true;
+
+		actionCounter += 1;
+	}
+
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
+
+	SDL_Window* window = windowInitializing();
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+	std::vector<int> roadList;
+	double fittedScale = computeScale(coords);
+	int delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
+
+	//Animation Loop logic
+	bool quit = false;
+	int actionCounter = 0;
+	SDL_Event e;
+
+	while(!quit) {
+
+		while(SDL_PollEvent(&e) != 0)
+			if(e.type == SDL_QUIT)
+				quit = true;
+
+		if(actionCounter == 0) {
+			makeFirstPoints(renderer, coords, fittedScale);
+			SDL_Delay(1000);
+		}
+		else if(actionCounter == 1) {
+			roadList = firstRoadMaker(coords.size(), matrix);
+			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
+			SDL_Delay(2000);
+		} else if(actionCounter < coords.size() - 2) {
 			roadList = makeLocalRoad(renderer, coords, fittedScale, matrix, roadList, actionCounter - 2);
 			SDL_Delay(delayTime);
 		}
