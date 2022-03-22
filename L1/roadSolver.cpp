@@ -112,7 +112,7 @@ std::vector<int> bestBranchingNeighbor(size_t n, int** matrix, int maxDepth) {
 
 size_t doBranching(std::vector<int> roadList, size_t n, int point, int** matrix, int depthLeft) {
 	
-	if(depthLeft == 0 || roadList.size() == n)
+	if(depthLeft == 0 || roadList.size() >= n - 1)
 		return 0;
 
 	std::vector<int> newRoadList;
