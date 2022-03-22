@@ -169,7 +169,8 @@ void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matri
 	SDL_Window* window = windowInitializing();
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
-	std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+	std::vector<int> roadList = bestFullBranchingNeighbor(coords.size(), matrix);
 	double fittedScale = computeScale(coords);
 	int delayTime = (20000 / coords.size() < 200) ? 20000 / coords.size() : 150;
 

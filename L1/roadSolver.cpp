@@ -1,11 +1,240 @@
 //
 // Created by Franek on 12.03.2022.
 //
-
+#include <iostream>
 #include "roadSolver.h"
 #include "k_random.h"
 #include <stdio.h>
 
+// Full, only for good data
+std::vector<int> bestFullBranchingNeighbor(size_t n, int** matrix) {
+
+	std::vector<int> roadList;
+	std::vector<int> bestRoadList;
+	size_t bestLength = SIZE_MAX;
+	size_t length = 0;
+
+	for (size_t i = 0; i < n; i++) {
+		roadList = startFullBranchingNeighbor(n, matrix, i);
+		length = calculate_length(roadList, matrix, n);
+
+		if (length < bestLength) {
+			bestLength = length;
+			bestRoadList = roadList;
+		}
+	}
+
+	return bestRoadList;
+}
+
+std::vector<int> startFullBranchingNeighbor(size_t n, int** matrix, int k) {
+
+	std::vector<int> available;
+	for(int i = 0; i < n; i++)
+		if(i != k)
+			available.emplace_back(i);
+
+	std::vector<int> roadList = getFullNearestBranch(n, matrix, available, k);
+	return roadList;
+}
+
+std::vector<int> getFullNearestBranch(size_t n, int** matrix, std::vector<int> available, int k) {
+
+	std::vector<int> nextMoveList;
+	std::vector<int> equalNearestList;
+	size_t smallestDist = SIZE_MAX;
+
+	for(int i = 0; i < available.size(); i++) {
+
+		// Will be used later
+		if(available[i] != k)
+			nextMoveList.emplace_back(available[i]);
+
+		int smaller = (k <= available[i]) ? k : available[i];
+		int bigger = (k > available[i]) ? k : available[i];
+
+		if(matrix[smaller][bigger] < smallestDist) {
+
+			equalNearestList.clear();
+			equalNearestList.emplace_back(available[i]);
+			smallestDist = matrix[smaller][bigger];
+
+		} else if(matrix[smaller][bigger] == smallestDist)
+			equalNearestList.emplace_back(available[i]);
+	}
+
+	std::vector<int> tmpRoadList;
+	std::vector<int> bestRoadList;
+	int bestChoose = k;
+
+	if(available.size() != 0) {
+
+		size_t smallestScore = SIZE_MAX, tmpScore = 0;
+
+		for(int i = 0; i < equalNearestList.size(); i++) {
+			tmpRoadList = getFullNearestBranch(n, matrix, nextMoveList, equalNearestList[i]);
+			tmpScore = calculate_length(tmpRoadList, matrix, tmpRoadList.size());
+			if(tmpScore <= smallestScore) {
+				smallestScore = tmpScore;
+				bestChoose = equalNearestList[i];
+				bestRoadList = tmpRoadList;
+			}
+		}
+	}
+
+	bestRoadList.emplace(bestRoadList.begin(), k);
+	return bestRoadList;
+}
+
+// Faster
+std::vector<int> bestBranchingNeighbor(size_t n, int** matrix, int maxDepth) {
+
+	std::vector<int> roadList;
+	std::vector<int> bestRoadList;
+	size_t bestLength = SIZE_MAX;
+	size_t length = 0;
+
+	for (size_t i = 0; i < n; i++) {
+		//std::cout << " " << i << ", " << std::endl;
+		roadList = doBranchingNeighbor(n, matrix, i, maxDepth);
+		//std::cout << " " << i << ", ";
+		length = calculate_length(roadList, matrix, n);
+		//std::cout << " " << i << ", ";
+
+		if (length < bestLength) {
+			bestLength = length;
+			bestRoadList = roadList;
+		}
+	}
+
+	return bestRoadList;
+}
+
+size_t doBranching(std::vector<int> roadList, size_t n, int point, int** matrix, int depthLeft) {
+	
+	if(depthLeft == 0 || roadList.size() == n)
+		return 0;
+
+	std::vector<int> newRoadList;
+	bool visited[n];
+
+	for (size_t i = 0; i < n; i ++)
+		visited[i] = false;
+
+	for(size_t i = 0; i < roadList.size(); i++) {
+		visited[roadList[i]] = true;
+		newRoadList.emplace_back(roadList[i]);
+	}
+	newRoadList.emplace_back(point);
+
+	//Proper Branch
+	std::vector<std::pair<int, size_t>> equalNearestList;
+	size_t smallestDist = SIZE_MAX;
+
+	for(int j = 0; j < n; j++) {
+
+		int smaller = (point <= j) ? point : j;
+		int bigger = (point > j) ? point : j;
+
+		if(j!= point && !visited[j] && matrix[smaller][bigger] != -1) {
+			if(matrix[smaller][bigger] < smallestDist) {
+
+				smallestDist = matrix[smaller][bigger];
+				equalNearestList.clear();
+				equalNearestList.emplace_back(j, smallestDist);
+
+			} else if(matrix[smaller][bigger] == smallestDist) {
+				equalNearestList.emplace_back(j, smallestDist);
+			}
+		}
+	}
+
+	size_t score = 0;
+
+	if(equalNearestList.size() > 1) {
+			
+		int bestEqualPoint = -1;
+		size_t bestEqualDist = SIZE_MAX;
+
+		for(int j = 0; j < equalNearestList.size(); j++) {
+			size_t tmpDist = doBranching(newRoadList, n, equalNearestList[j].first, matrix, depthLeft - 1);
+			if(tmpDist <= bestEqualDist) {
+				bestEqualPoint = j;
+				bestEqualDist = tmpDist;
+			}
+		}
+
+		score = equalNearestList[bestEqualPoint].second + bestEqualDist;
+
+	} else {
+		size_t deepenDist = doBranching(newRoadList, n, equalNearestList[0].first, matrix, depthLeft - 1);
+		score = equalNearestList[0].second + deepenDist;
+	}
+
+	return score;
+}
+
+std::vector<int> doBranchingNeighbor(size_t n, int** matrix, int k, int maxDepth) {
+
+	std::vector<int> roadList;
+	roadList.emplace_back(k);
+
+	int currentPoint = k;
+	bool visited[n];
+
+	for (size_t i = 0; i < n; i ++)
+		visited[i] = false;
+
+	visited[currentPoint] = true;
+
+	for(int i = 1; i < n; i++) {
+
+		std::vector<int> equalNearestList;
+		size_t smallestDist = SIZE_MAX;
+
+		for(int j = 0; j < n; j++) {
+
+			int smaller = (currentPoint <= j) ? currentPoint : j;
+			int bigger = (currentPoint > j) ? currentPoint : j;
+
+			if(j!= currentPoint && !visited[j] && matrix[smaller][bigger] != -1) {
+				if(matrix[smaller][bigger] < smallestDist) {
+
+					equalNearestList.clear();
+					equalNearestList.emplace_back(j);
+					smallestDist = matrix[smaller][bigger];
+
+				} else if(matrix[smaller][bigger] == smallestDist) {
+					equalNearestList.emplace_back(j);
+				}
+			}
+		}
+
+		if(equalNearestList.size() > 1) {
+			
+			int bestEqualPoint = -1;
+			size_t bestEqualDist = SIZE_MAX;
+
+			for(int j = 0; j < equalNearestList.size(); j++) {
+				size_t tmpDist = doBranching(roadList, n, equalNearestList[j], matrix, maxDepth);
+				if(tmpDist < bestEqualDist) {
+					bestEqualPoint = equalNearestList[j];
+					bestEqualDist = tmpDist;
+				}
+			}
+			currentPoint = bestEqualPoint;
+
+		} else
+			currentPoint = equalNearestList[0];
+
+		roadList.emplace_back(currentPoint);
+		visited[currentPoint] = true;
+	}
+
+	return roadList;
+}
+
+// Simple branchless
 std::vector<int> bestStartingNeighbor(size_t n, int** matrix) {
 
 	std::vector<int> roadList;
@@ -34,9 +263,8 @@ std::vector<int> doNearestNeighbor(size_t n, int** matrix, int k) {
 	int currentPoint = k;
 	bool visited[n];
 
-	for (size_t i = 0; i < n; i ++) {
+	for (size_t i = 0; i < n; i ++)
 		visited[i] = false;
-	}
 
 	visited[currentPoint] = true;
 
@@ -121,11 +349,11 @@ std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int star
 		newRoadList.emplace_back(town2);
 		newRoadList.emplace_back(town3);
 	} else {
-		for(int i = start + 2; i < end; i++)
+		for(int i = start + 1; i < end; i++)
 			newRoadList.emplace_back(roadList[i]);
 	}
 
-	for(int i = end; i <= roadList.size(); i++)
+	for(int i = end; i < roadList.size(); i++)
 		newRoadList.emplace_back(roadList[i]);
 
 	return newRoadList;
