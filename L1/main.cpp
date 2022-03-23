@@ -5,6 +5,7 @@
 #include "random_generator.h"
 #include "k_random.h"
 #include "2_opt.h"
+#include "3_opt.h"
 #include <time.h>
 
 int main(int argc, char *argv[]) {
@@ -17,8 +18,8 @@ int main(int argc, char *argv[]) {
 	//Control flags
 	bool euclideanFlag = true;
 	bool randomFlag = false;
-	bool drawFlag = false;
-	int mode = 2; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt
+	bool drawFlag = true;
+	int mode = 3; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt
 
 	//Euclidean
 	if(euclideanFlag) {
@@ -56,6 +57,8 @@ int main(int argc, char *argv[]) {
 			drawNearestNeigh(coords, matrix);
 		else if(mode == 2)
 			draw2Opt(coords, matrix);
+		else if(mode == 3)
+			draw3Opt(coords, matrix);
 	} else {
 		if(mode == 0) {
 			
@@ -65,36 +68,50 @@ int main(int argc, char *argv[]) {
 			
 			printf("Not now...\n");
 
-		} else if(mode == 2) {
+		} else if(mode == 2 || mode == 3) {
 
-			std::cout << "Generating first Road..." << std::endl;
-			clock_t start = clock();
-			//std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
-			//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
-			//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
-			//std::vector<int> roadList = bestFullBranchingNeighbor(coords.size(), matrix); // Nie puszczać, gdy często są takie same!!!
-			std::vector<int> roadList = bestBranchingNeighbor(coords.size(), matrix, 5); // 0 = zwykły nearest neighbor
-			std::cout << "Generated!!! - Moving to 2-Opt making" << std::endl;
+			for(int i = 0; i <= 4; i++) {
+				printf("\nBranching depth = %d\n\n", i);
 
-			clock_t middle = clock();
-			std::vector<int> road = get_2_opt_road(roadList, matrix, roadList.size());
-			std::cout << "2-Opt made!!!" << std::endl;
-			
-			clock_t almost = clock();
-			size_t score = calculate_length(road, matrix, road.size());
-			
-			clock_t end = clock();
+				std::cout << "Generating first Road..." << std::endl;
+				clock_t start = clock();
+				//std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+				//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
+				//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+				//std::vector<int> roadList = bestFullBranchingNeighbor(coords.size(), matrix); // Nie puszczać, gdy często są takie same!!!
+				std::vector<int> roadList = bestBranchingNeighbor(coords.size(), matrix, i); // 0 = zwykły nearest neighbor
+				std::cout << "Generated!!! - Moving to " << mode << "-Opt making" << std::endl;
 
-			double elapsed = double(end - start) / CLOCKS_PER_SEC;
-			double elapsed1 = double(middle - start) / CLOCKS_PER_SEC;
-			double elapsed2 = double(almost - middle) / CLOCKS_PER_SEC;
-			double elapsed3 = double(end - almost) / CLOCKS_PER_SEC;
+				clock_t middle = clock();
+				std::vector<int> road;
+				if(mode == 2)
+					road = get_2_opt_road(roadList, matrix, roadList.size());
+				else if(mode == 3)
+					road = get_3_opt_road(roadList, matrix, roadList.size());
+				std::cout << mode << "-Opt made!!!" << std::endl;
+				
+				clock_t almost = clock();
+				size_t score = calculate_length(road, matrix, road.size());
+				size_t scoreBefore = calculate_length(roadList, matrix, road.size());
+				
+				clock_t end = clock();
 
-			printf("Final Road Cost: %ld\n", score);
-			printf("Time Overall:			%f seconds.\n", elapsed);
-			printf("Time For Generation of Start:	%f seconds.\n", elapsed1);
-			printf("Time For 2-Opt Used:		%f seconds.\n", elapsed2);
-			printf("Time For length calculation:	%f seconds.\n", elapsed3);
+				double elapsed = double(end - start) / CLOCKS_PER_SEC;
+				double elapsed1 = double(middle - start) / CLOCKS_PER_SEC;
+				double elapsed2 = double(almost - middle) / CLOCKS_PER_SEC;
+				double elapsed3 = double(end - almost) / CLOCKS_PER_SEC;
+
+				printf("Start Road Cost: %ld\n", scoreBefore);
+				printf("Final Road Cost: %ld\n", score);
+				printf("Time Overall:			%f seconds.\n", elapsed);
+				printf("Time For Generation of Start:	%f seconds.\n", elapsed1);
+				printf("Time For %d-Opt Used:		%f seconds.\n", mode, elapsed2);
+				printf("Time For length calculation:	%f seconds.\n", elapsed3);
+
+				// Setting 2 mins per solution as max
+				if(elapsed > 120)
+					break;
+			}
 		}
 	}
 	//Coord Check

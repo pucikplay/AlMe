@@ -7,6 +7,7 @@
 #include "roadSolver.h"
 #include "k_random.h"
 #include "2_opt.h"
+#include "3_opt.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -163,6 +164,25 @@ void make2OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>>
 	SDL_RenderPresent(renderer);
 }
 
+void make3OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, std::pair<std::pair<int, int>, std::pair<int, int>> points) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); //Black screen
+	SDL_RenderClear(renderer);
+
+	makeEdges(renderer, roadList, coords, fittedScale);
+	makePoints(renderer, coords, fittedScale);
+
+	std::vector<int> roadPoints;
+	roadPoints.emplace_back(roadList[points.first.first]);
+	roadPoints.emplace_back(roadList[(points.first.first + 1) % roadList.size()]);
+	roadPoints.emplace_back(roadList[points.first.second]);
+	roadPoints.emplace_back(roadList[(points.first.second + 1) % roadList.size()]);
+	roadPoints.emplace_back(roadList[points.second.first]);
+	roadPoints.emplace_back(roadList[(points.second.first + 1) % roadList.size()]);
+
+	highlightPoints(renderer, roadPoints, coords, fittedScale);
+	SDL_RenderPresent(renderer);
+}
+
 //Drawing "Mains"
 void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matrix) {
 
@@ -265,7 +285,7 @@ void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 
 	double fittedScale = computeScale(coords);
-	int delayTime = (20000 / coords.size() < 150) ? 20000 / coords.size() : 150;
+	int delayTime = (20000 / coords.size() < 100) ? 20000 / coords.size() : 100;
 
 	//Roads
 	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
@@ -295,6 +315,65 @@ void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 			SDL_Delay(delayTime);
 			roadList = swap_2_opt(roadList, changeList[actionCounter - 2].first, changeList[actionCounter - 2].second);
 			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
+			SDL_Delay(delayTime);
+		}
+		else if(actionCounter == changeList.size() + 2)
+			SDL_Delay(2000);
+		else
+			quit = true;
+
+		actionCounter += 1;
+	}
+
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void draw3Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
+
+	SDL_Window* window = windowInitializing();
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+	double fittedScale = computeScale(coords);
+	int delayTime = (1000 / coords.size() < 40) ? 1000 / coords.size() : 40;
+
+	//Roads
+	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+	std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> changeList = get_3_opt_road_visual(roadList, matrix, roadList.size());
+
+	//Animation Loop logic
+	bool quit = false;
+	int actionCounter = 0;
+	SDL_Event e;
+
+	while(!quit) {
+
+		while(SDL_PollEvent(&e) != 0)
+			if(e.type == SDL_QUIT)
+				quit = true;
+
+		if(actionCounter == 0) {
+			makeFirstPoints(renderer, coords, fittedScale);
+			SDL_Delay(1000);
+		}
+		else if(actionCounter == 1) {
+			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
+			SDL_Delay(2000);
+		} else if(actionCounter < changeList.size() + 2) {
+			make3OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
+			SDL_Delay(delayTime);
+			int x1 = changeList[actionCounter - 2].first.first;
+			int x2 = changeList[actionCounter - 2].first.second;
+			int x3 = changeList[actionCounter - 2].second.first;
+			int x4 = changeList[actionCounter - 2].second.second;
+			roadList = swap_3_opt(roadList, x1, x2, x3, x4);
+			make3OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
 			SDL_Delay(delayTime);
 		}
 		else if(actionCounter == changeList.size() + 2)

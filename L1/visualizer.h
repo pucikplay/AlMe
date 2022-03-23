@@ -24,11 +24,13 @@ void makeFirstPoints(SDL_Renderer *renderer, std::vector<std::pair<double, doubl
 void makeFirstRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList);
 void makeLocalRoad(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, int k);
 void make2OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, std::pair<int, int> points);
+void make3OptSwap(SDL_Renderer *renderer, std::vector<std::pair<double, double>> coords, double fittedScale, int** matrix, std::vector<int> roadList, std::pair<std::pair<int, int>, std::pair<int, int>> points);
 
 //Drawing "Mains"
 void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matrix);
 void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, int k);
 void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix);
+void draw3Opt(std::vector<std::pair<double, double>> coords, int** matrix);
 void doSimpleVisual();
 
 #endif //ALME_VISUALIZER_H

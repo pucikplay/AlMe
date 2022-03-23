@@ -9,8 +9,8 @@ size_t swap_length(size_t length, const std::vector<int>& road, int** matrix, si
 
 	size_t newLength = length;
 
-	int smaller = (road[i] < road[i + 1]) ? road[i] : road[i + 1];
-	int bigger = (road[i] >= road[i + 1]) ? road[i] : road[i + 1];
+	int smaller = (road[i] < road[(i + 1) % n]) ? road[i] : road[(i + 1) % n];
+	int bigger = (road[i] >= road[(i + 1) % n]) ? road[i] : road[(i + 1) % n];
 	newLength -= matrix[smaller][bigger];
 
 	smaller = (road[j] < road[(j + 1) % n]) ? road[j] : road[(j + 1) % n];
@@ -21,8 +21,8 @@ size_t swap_length(size_t length, const std::vector<int>& road, int** matrix, si
 	bigger = (road[i] >= road[j]) ? road[i] : road[j];
 	newLength += matrix[smaller][bigger];
 
-	smaller = (road[i + 1] < road[(j + 1) % n]) ? road[i + 1] : road[(j + 1) % n];
-	bigger = (road[i + 1] >= road[(j + 1) % n]) ? road[i + 1] : road[(j + 1) % n];
+	smaller = (road[(i + 1) % n] < road[(j + 1) % n]) ? road[(i + 1) % n] : road[(j + 1) % n];
+	bigger = (road[(i + 1) % n] >= road[(j + 1) % n]) ? road[(i + 1) % n] : road[(j + 1) % n];
 	newLength += matrix[smaller][bigger];
 
 	return newLength;
@@ -44,7 +44,7 @@ std::vector<int> get_2_opt_road(std::vector<int> road, int** matrix, std::size_t
 		jumpFlag = false;
 		road_changed = false;
 		for (size_t i = 0; i < n - 1; i++) {
-			for (size_t j = i + 1; j < n - 1; j++) {
+			for (size_t j = i + 2; j < n - 1; j++) {
 				length = swap_length(best_length, road, matrix, i, j, n);
 				if (length < best_length) {
 					road = swap_2_opt(road, i, j);
