@@ -75,7 +75,7 @@ std::vector<std::pair<int, int>> get_2_opt_road_visual(std::vector<int> road, in
 		jumpFlag = false;
 		road_changed = false;
 		for (size_t i = 0; i < n - 1; i++) {
-			for (size_t j = i + 1; j < n - 1; j++) {
+			for (size_t j = i + 1; j < n; j++) {
 				length = swap_length(best_length, road, matrix, i, j, n);
 				if (length < best_length) {
 

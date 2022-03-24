@@ -126,8 +126,8 @@ std::vector<int> get_3_opt_road(std::vector<int> road, int** matrix, std::size_t
 		jumpFlag = false;
 		road_changed = false;
 		for (size_t i = 0; i < n - 2; i++) {
-			for (size_t j = i + 2; j < n - 2; j++) {
-				for (size_t k = j + 2; k < n - 2; k++) {
+			for (size_t j = i + 1; j < n - 1; j++) {
+				for (size_t k = j + 1; k < n; k++) {
 					resultPair = swap_every_length(best_length, road, matrix, i, j, k, n);
 					length = resultPair.first;
 					caseNum = resultPair.second;
