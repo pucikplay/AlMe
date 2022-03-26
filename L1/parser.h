@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 #include <cstdio>
-#include <string.h>
+#include <string>
 
 std::vector<std::pair<double, double>> parse_coords(const std::string& file);
 int** coords_to_matrix(std::vector<std::pair<double, double>> coords);
