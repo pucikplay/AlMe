@@ -4,10 +4,12 @@
 
 #include "k_random.h"
 #include <chrono>
-#include <omp.h>
+#include <thread>
+
+#define no_th 6
 
 typedef std::mt19937 MyRNG;
-MyRNG rng1;
+MyRNG rng1(time(nullptr));
 
 size_t calculate_length(const std::vector<int>& permutation, int** matrix, size_t n) {
 	size_t length = 0;
@@ -70,31 +72,49 @@ std::vector<int> best_random_road_timed(std::size_t n, int** matrix, double time
     return best_permutation;
 }
 
-std::vector<int> best_random_road_parallel(std::size_t k, std::size_t n, int** matrix) {
+void thread_shuffle(int** matrix, size_t n, size_t no_tasks, size_t thread_no, size_t lengths[no_th], std::vector<int> paths[no_th]) {
 
-    std::vector<int> permutation, best_permutation, new_permutation(n);
-    size_t lengths[k];
-	std::vector<int> paths[k];
+    size_t length = SIZE_MAX;
     size_t best_length = SIZE_MAX;
-    size_t length = 0;
+    std::vector<int> best_permutation, permutation;
 
     for (size_t i = 0; i < n; i++) permutation.push_back(i);
 
-    omp_set_dynamic(1);
-    #pragma omp parallel for num_threads(6)
-        for (size_t i = 0; i < k; i++) {
-            for (size_t j = 0; j < n; j++) {
-				new_permutation[j] = permutation[j];
-			}
-            std::shuffle(std::begin(new_permutation), std::end(new_permutation), rng1);
+    for (size_t i = 0; i < no_tasks; i++) {
+        std::shuffle(std::begin(permutation), std::end(permutation), rng1);
 
-            length = calculate_length(new_permutation, matrix, n);
+        length = calculate_length(permutation, matrix, n);
 
-            lengths[i] = length;
-			paths[i] = new_permutation;
+        if (length < best_length) {
+            best_length = length;
+            best_permutation = permutation;
         }
+    }
 
-    for (size_t i = 0; i < k ; i++) {
+    lengths[thread_no] = best_length;
+    paths[thread_no] = best_permutation;
+}
+
+std::vector<int> best_random_road_parallel(std::size_t k, std::size_t n, int** matrix, size_t no_threads) {
+
+    std::vector<int> permutation, best_permutation, new_permutation(n);
+    size_t lengths[no_th];
+	std::vector<int> paths[no_th];
+    size_t best_length = SIZE_MAX;
+    size_t length = 0;
+    std::thread th[no_threads];
+
+    for (size_t i = 0; i < no_threads; i++) {
+        th[i] = std::thread(thread_shuffle, matrix, n, size_t(k/no_threads), i, lengths, paths);
+        lengths[i] = length;
+        paths[i] = new_permutation;
+    }
+
+    for (size_t i = 0; i < no_threads ; i++) {
+        th[i].join();
+    }
+
+    for (size_t i = 0; i < no_threads ; i++) {
         if (lengths[i] < best_length) {
             best_length = lengths[i];
             best_permutation = paths[i];
