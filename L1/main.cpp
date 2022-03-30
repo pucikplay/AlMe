@@ -6,6 +6,7 @@
 #include "k_random.h"
 #include "2_opt.h"
 #include "3_opt.h"
+#include "tester.h"
 #include <time.h>
 
 int main(int argc, char *argv[]) {
@@ -18,8 +19,8 @@ int main(int argc, char *argv[]) {
 	//Control flags
 	bool euclideanFlag = true;
 	bool randomFlag = false;
-	bool drawFlag = true;
-	int mode = 3; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt
+	bool drawFlag = false;
+	int mode = 4; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt
 
 	//Euclidean
 	if(euclideanFlag) {
@@ -112,6 +113,12 @@ int main(int argc, char *argv[]) {
 				if(elapsed > 120)
 					break;
 			}
+		} else if (mode == 4) {
+			//test_0_1_TSPLIB("test01.txt");
+			//test_0_2_TSPLIB("test02.txt");
+			//test_1_2_TSPLIB("test12.txt");
+			//test_2_2_TSPLIB("test22.txt");
+			test_Neigh_TSPLIB("testNeigh.txt");
 		}
 	}
 	//Coord Check

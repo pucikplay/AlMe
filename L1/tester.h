@@ -20,5 +20,6 @@ void test_0_1_TSPLIB(const std::string& file);
 void test_0_2_TSPLIB(const std::string& file);
 void test_1_2_TSPLIB(const std::string& file);
 void test_2_2_TSPLIB(const std::string& file);
+void test_Neigh_TSPLIB(const std::string& file);
 
 #endif //ALME_TESTER_H

@@ -12,7 +12,8 @@
 				"-I/usr/include/SDL2",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}",
-				"-lSDL2"
+				"-lSDL2",
+				"-lpthread" 
 			],
 			"options": {
 				"cwd": "${fileDirname}"
