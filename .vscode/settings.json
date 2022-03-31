@@ -48,7 +48,8 @@
 		"cinttypes": "cpp",
 		"chrono": "cpp",
 		"ctime": "cpp",
-		"ratio": "cpp"
+		"ratio": "cpp",
+		"thread": "cpp"
 	},
 	"cmake.sourceDirectory": "${workspaceFolder}/L1"
 }
