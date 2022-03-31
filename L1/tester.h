@@ -16,6 +16,7 @@
 #include <iostream>
 #include <chrono>
 
+void test_0_0_TSPLIB(const std::string& file);
 void test_0_1_TSPLIB(const std::string& file);
 void test_0_2_TSPLIB(const std::string& file);
 void test_1_2_TSPLIB(const std::string& file);

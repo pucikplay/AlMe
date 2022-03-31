@@ -114,11 +114,12 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 		} else if (mode == 4) {
+			test_0_0_TSPLIB("test00.txt");
 			//test_0_1_TSPLIB("test01.txt");
 			//test_0_2_TSPLIB("test02.txt");
 			//test_1_2_TSPLIB("test12.txt");
 			//test_2_2_TSPLIB("test22.txt");
-			test_Neigh_TSPLIB("testNeigh.txt");
+			//test_Neigh_TSPLIB("testNeigh.txt");
 		}
 	}
 	//Coord Check
