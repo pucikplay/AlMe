@@ -3,10 +3,6 @@
 //
 
 #include "k_random.h"
-#include <chrono>
-#include <thread>
-
-#define no_th 6
 
 typedef std::mt19937 MyRNG;
 MyRNG rng1(time(nullptr));
@@ -72,7 +68,7 @@ std::vector<int> best_random_road_timed(std::size_t n, int** matrix, double time
     return best_permutation;
 }
 
-void thread_shuffle(int** matrix, size_t n, size_t no_tasks, size_t thread_no, size_t lengths[no_th], std::vector<int> paths[no_th]) {
+void thread_shuffle(int** matrix, size_t n, size_t no_tasks, size_t thread_no, size_t *lengths, std::vector<int> *paths) {
 
     size_t length = SIZE_MAX;
     size_t best_length = SIZE_MAX;
@@ -98,16 +94,14 @@ void thread_shuffle(int** matrix, size_t n, size_t no_tasks, size_t thread_no, s
 std::vector<int> best_random_road_parallel(std::size_t k, std::size_t n, int** matrix, size_t no_threads) {
 
     std::vector<int> permutation, best_permutation, new_permutation(n);
-    size_t lengths[no_th];
-	std::vector<int> paths[no_th];
+    auto *lengths = new size_t[no_threads];
+	auto *paths = new std::vector<int>[no_threads];
     size_t best_length = SIZE_MAX;
-    size_t length = 0;
     std::thread th[no_threads];
 
     for (size_t i = 0; i < no_threads; i++) {
-        th[i] = std::thread(thread_shuffle, matrix, n, size_t(k/no_threads), i, lengths, paths);
-        lengths[i] = length;
         paths[i] = new_permutation;
+        th[i] = std::thread(thread_shuffle, matrix, n, size_t(k/no_threads), i, lengths, paths);
     }
 
     for (size_t i = 0; i < no_threads ; i++) {
@@ -120,10 +114,6 @@ std::vector<int> best_random_road_parallel(std::size_t k, std::size_t n, int** m
             best_permutation = paths[i];
         }
     }
-
-//	for (size_t i = 0; i < n; i++) {
-//		printf("%d ", best_permutation[i]);
-//	}
 
     return best_permutation;
 }

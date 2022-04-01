@@ -2,6 +2,7 @@
 // Created by Franek on 12.03.2022.
 //
 #include <iostream>
+#include <utility>
 #include "roadSolver.h"
 #include "k_random.h"
 #include <stdio.h>
@@ -232,6 +233,78 @@ std::vector<int> doBranchingNeighbor(size_t n, int** matrix, int k, int maxDepth
 	}
 
 	return roadList;
+}
+
+void doBranchingThread(std::vector<int> roadList, size_t n, int point, int** matrix, int depthLeft, size_t *tmpDepths, int thread_no) {
+    size_t tmpDepth = doBranching(std::move(roadList), n, point, matrix, depthLeft);
+    tmpDepths[thread_no] = tmpDepth;
+}
+
+std::vector<int> doBranchingNeighborParallel(size_t n, int** matrix, int k, int maxDepth, int max_threads) {
+
+    std::vector<int> roadList;
+    roadList.emplace_back(k);
+
+    int currentPoint = k;
+    bool visited[n];
+
+    for (size_t i = 0; i < n; i ++)
+        visited[i] = false;
+
+    visited[currentPoint] = true;
+
+    for(int i = 1; i < n; i++) {
+
+        std::vector<int> equalNearestList;
+        size_t smallestDist = SIZE_MAX;
+
+        for(int j = 0; j < n; j++) {
+
+            int smaller = (currentPoint <= j) ? currentPoint : j;
+            int bigger = (currentPoint > j) ? currentPoint : j;
+
+            if(j!= currentPoint && !visited[j] && matrix[smaller][bigger] != -1) {
+                if(matrix[smaller][bigger] < smallestDist) {
+
+                    equalNearestList.clear();
+                    equalNearestList.emplace_back(j);
+                    smallestDist = matrix[smaller][bigger];
+
+                } else if(matrix[smaller][bigger] == smallestDist) {
+                    equalNearestList.emplace_back(j);
+                }
+            }
+        }
+
+        if(equalNearestList.size() > 1) {
+
+            std::thread th[equalNearestList.size()];
+            auto *tmpDists = new size_t[equalNearestList.size()];
+            int bestEqualPoint = -1;
+            size_t bestEqualDist = SIZE_MAX;
+
+            for(int j = 0; j < equalNearestList.size(); j++) {
+                th[j] = std::thread(doBranchingThread, roadList, n, equalNearestList[j], matrix, maxDepth, tmpDists, j);
+            }
+            for(int j = 0; j < equalNearestList.size(); j++) {
+                th[j].join();
+            }
+            for(int j = 0; j < equalNearestList.size(); j++) {
+                if(tmpDists[j] < bestEqualDist) {
+                    bestEqualPoint = equalNearestList[j];
+                    bestEqualDist = tmpDists[j];
+                }
+            }
+            currentPoint = bestEqualPoint;
+
+        } else
+            currentPoint = equalNearestList[0];
+
+        roadList.emplace_back(currentPoint);
+        visited[currentPoint] = true;
+    }
+
+    return roadList;
 }
 
 // Simple branchless

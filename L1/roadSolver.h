@@ -14,8 +14,9 @@ std::vector<int> getFullNearestBranch(size_t n, int** matrix, std::vector<int> a
 std::vector<int> bestBranchingNeighbor(size_t n, int** matrix, int maxDepth);
 size_t doBranching(std::vector<int> roadList, size_t n, int point, int** matrix, int depthLeft);
 std::vector<int> doBranchingNeighbor(size_t n, int** matrix, int k, int maxDepth);
+std::vector<int> doBranchingNeighborParallel(size_t n, int** matrix, int k, int maxDepth, int max_threads);
 
-std::vector<int> bestStartingNeighbor(size_t n, int** matrix);
+std::vector<int> bestStartingNeighbor(std::size_t n, int** matrix);
 std::vector<int> doNearestNeighbor(std::size_t coords, int** matrix, int k);
 std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int start, int end);
 
