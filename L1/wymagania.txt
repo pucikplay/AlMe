@@ -3,3 +3,38 @@
 3. Metoda generowania losowego instancji (co najmniej jedna).
 4. Napisanie funkcji celu.
 5. (Opcja) Dla komiwojażera euklidesowego, metoda wizualizacji instancji i rozwiązania.
+
+==========================================================================================
+
+Wymagania na oceny 3 i 4 (na za tydzień):
+Zakończenie implementacji programów wymienionych w lab03.
+Przeprowadzenie oraz zapisanie wyników eksperymentów porównujących parami co najmniej jedną wersję każdego z algorytmów z lab03. Eksperymenty w możliwie obiektywny sposób powinny porównać jakość działania algorytmów (na przykład dając algorytmom ten sam budżet obliczeniowy).
+Wykorzystanie testu Wilcoxona dla par obserwacji do ustalenia na ile istotne statystycznie są różnice pomiędzy algorytmami.
+Przemyśleć złożoność czasową i pamięciową zaimplementowanych algorytmów.
+
+Wymagania na oceną 5 (na za tydzień):
+Przeprowadzenie eksperymentów dla wariantów algorytmów (na przykład przetestować wpływ metody zadawania rozwiązania początkowego dla alg. 2-opt).
+Zbadanie zachowania algorytmów w czasie: jak zmienia się jakość najlepszego rozwiązania w zależności od czasu (oczywiście nie dotyczy alg. najbliższego sąsiada). Jak zmienia się czas konieczny do zakończenia działania algorytmu 2-opt w zależności od jakości rozwiązania startowego (losowe vs. najbliższy sąsiad)? 
+
+Wymagania na ocenę 5,5 (na za tydzień):
+Przemyśleć jak zmienia się złożoność obliczeniowa czasowa i pamięciowa algorytmu (implementacji) w zależności od liczby wykorzystanych procesorów.
+Zbadanie wpływu metody reagowania na jednakowo odległych sąsiadów w dla algorytmu najbliższego sąsiada na jakość rezultatów oraz czas działania algorytmu.
+Przeprowadzenie oraz zapisanie wyników eksperymentów badających wpływ liczby wykorzystanych procesorów na czas działania algorytmów.
+
+
+=========================================================================================
+
+Części składowe sprawozdania:
+	
+Notatka na temat złożoności obliczeniowej (czasowej oraz pamięciowej) implementacji wszystkich Państwa algorytmów.
+	
+Opis eksperymentów:
+	Szczegóły implementacyjne: język programowania, metoda kompilacji, kompilator, interpreter.
+	Parametry sprzętu na którym przeprowadzono eksperymenty (system operacyjny, procesor – model, liczba rdzeni fizycznych, logicznych, taktowanie, ilość pamięci RAM).
+	Opis instancji wykorzystanych w badaniach.
+	DLA KAŻDEGO EKSPERYMENTU ODDZIELNIE:
+		Cel eksperymentu oraz metodologia eksperymentu.
+		Opis rezultatów z wykresami oraz tabelami; każdy wykres oraz tabela musi mieć podpis oraz referencje. Wykresy muszą mieć podpisane osie!
+		Wnioski jakie można wyciągnąć na podstawie eksperymentów
+	
+Gotowe sprawozdanie proszę wyeksportować do formatu PDF i przesłać przez MS Teams lub email.

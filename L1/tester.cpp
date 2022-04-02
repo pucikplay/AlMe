@@ -494,7 +494,7 @@ void mass_test_02_12_TSPLIB(std::string fileName) {
 
 	road2 = best_random_road_timed(n, matrix, diff.count());
 	middle = std::chrono::high_resolution_clock::now();
-	roadOpt1 = get_2_opt_road(road2, matrix, n);
+	roadOpt2 = get_2_opt_road(road2, matrix, n);
 	end = std::chrono::high_resolution_clock::now();
 
 	diff = end - middle;

@@ -126,6 +126,16 @@ int main(int argc, char *argv[]) {
 			//test_1_2_TSPLIB("Tests/test12.txt");
 			//test_2_2_TSPLIB("Tests/test22.txt");
 			//test_Neigh_TSPLIB("Tests/testNeigh.txt");
+
+			/*for(int i = 1; i < argc; i++) {
+				printf("%s\n", argv[i]);
+				std::string fileName = argv[i];	
+				//mass_test_0_1_TSPLIB(fileName);
+				//mass_test_0_2_TSPLIB(fileName);
+				//mass_test_1_2_TSPLIB(fileName);
+				mass_test_02_12_TSPLIB(fileName);
+				mass_test_Neigh_TSPLIB(fileName);
+			}*/
 		}
 	}
 	//Coord Check
