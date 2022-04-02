@@ -3,9 +3,76 @@
 //
 
 #include "tester.h"
+#include <string.h>
+#include <string>
 
 #define test_no 3
 
+//Single Algorithm Part
+void test_0_K_Rand(std::string fileName) {
+
+	int **matrices;
+	std::vector<std::pair<double, double>> coords;
+
+	coords = parse_coords(fileName);
+	matrices = coords_to_matrix(coords);
+
+	std::mt19937 rng1(time(nullptr));
+
+	std::vector<int> permutation;
+	std::vector<std::pair<size_t, size_t>> bestPermutations;
+	size_t best_length = SIZE_MAX;
+	size_t length = 0;
+	size_t n = coords.size();
+	size_t k = 10000;
+
+	if(n < 1000) k *= 2500;
+	else if(n < 2000) k*= 1000;
+	else if(n < 5000) k*= 250;
+	else if(n < 20000) k*= 100;
+
+	//printf("%ld - ", k);
+
+	//k /= 100000;
+
+	auto start = std::chrono::high_resolution_clock::now();
+
+	for (size_t i = 0; i < n; i++)
+		permutation.push_back(i);
+
+	for (size_t i = 0; i < k; i++) {
+		std::shuffle(std::begin(permutation), std::end(permutation), rng1);
+		length = calculate_length(permutation, matrices, n);
+
+		if (length < best_length) {
+			best_length = length;
+			std::pair<size_t, size_t> result;
+			result.first = i;
+			result.second = best_length;
+			bestPermutations.emplace_back(result);
+		}
+	}
+
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> diff = end - start;
+
+	printf("%s\n", fileName.c_str());
+
+	std::size_t pos1 = fileName.rfind('/');
+	std::string rawFName = fileName.substr(pos1 + 1);
+	pos1 = rawFName.rfind('.');
+	rawFName = rawFName.substr(0, pos1);
+	rawFName = "Tests/KrandData/" + rawFName + ".txt";
+
+	//std::ofstream File(rawFName);
+	std::ofstream File("Tests/krandData.txt", std::ios_base::app);
+	for(int i = 0; i < bestPermutations.size(); i++) {
+		File << n << ";" << diff.count() << ";" << bestPermutations[i].first << ";" << bestPermutations[i].second << "\n";
+	}
+
+}
+
+//Comparison Part
 void test_0_0_TSPLIB(const std::string& file) {
 
 	int **matrices[4];

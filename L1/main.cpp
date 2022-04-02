@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string.h>
+#include <string>
 #include "parser.h"
 #include "roadSolver.h"
 #include "visualizer.h"
@@ -114,12 +116,16 @@ int main(int argc, char *argv[]) {
 					break;
 			}
 		} else if (mode == 4) {
-			test_0_0_TSPLIB("test00.txt");
-			//test_0_1_TSPLIB("test01.txt");
-			//test_0_2_TSPLIB("test02.txt");
-			//test_1_2_TSPLIB("test12.txt");
-			//test_2_2_TSPLIB("test22.txt");
-			//test_Neigh_TSPLIB("testNeigh.txt");
+			//for(int i = 1; i < argc; i++) {
+			//	std::string fileName = argv[i];	
+			//	test_0_K_Rand(fileName);
+			//}
+			test_0_0_TSPLIB("Tests/test00.txt");
+			//test_0_1_TSPLIB("Tests/test01.txt");
+			//test_0_2_TSPLIB("Tests/test02.txt");
+			//test_1_2_TSPLIB("Tests/test12.txt");
+			//test_2_2_TSPLIB("Tests/test22.txt");
+			//test_Neigh_TSPLIB("Tests/testNeigh.txt");
 		}
 	}
 	//Coord Check

@@ -16,6 +16,10 @@
 #include <iostream>
 #include <chrono>
 
+//Single Algorithm Part
+void test_0_K_Rand(std::string fileName);
+
+//Comparison Part
 void test_0_0_TSPLIB(const std::string& file);
 void test_0_1_TSPLIB(const std::string& file);
 void test_0_2_TSPLIB(const std::string& file);
