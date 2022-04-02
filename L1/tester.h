@@ -27,4 +27,11 @@ void test_1_2_TSPLIB(const std::string& file);
 void test_2_2_TSPLIB(const std::string& file);
 void test_Neigh_TSPLIB(const std::string& file);
 
+//Mass Comparison Part
+void mass_test_0_1_TSPLIB(std::string fileName);
+void mass_test_0_2_TSPLIB(std::string fileName);
+void mass_test_1_2_TSPLIB(std::string fileName);
+void mass_test_02_12_TSPLIB(std::string fileName);
+void mass_test_Neigh_TSPLIB(std::string fileName);
+
 #endif //ALME_TESTER_H

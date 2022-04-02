@@ -69,7 +69,6 @@ void test_0_K_Rand(std::string fileName) {
 	for(int i = 0; i < bestPermutations.size(); i++) {
 		File << n << ";" << diff.count() << ";" << bestPermutations[i].first << ";" << bestPermutations[i].second << "\n";
 	}
-
 }
 
 //Comparison Part
@@ -379,4 +378,186 @@ void test_Neigh_TSPLIB(const std::string& file) {
 		File << sizes[i] << ";" << neighbor_len[i] << ";" << times1[i] << ";" << best_neighbor_len[i] << ";" << times2[i] << ";" << branch_neighbor_len[i] << ";" << times3[i] << ";" << best_branch_neighbor_len[i] << ";" << times4[i] << "\n";
 	}
 
+}
+
+//Mass Comparison Part
+void mass_test_0_1_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	if(n > 2000) return;
+
+	auto start = std::chrono::high_resolution_clock::now();
+	road = doNearestNeighbor(n, matrix, 0);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff = end - start;
+	double times = diff.count();
+
+	size_t neighbor_len = calculate_length(road, matrix, n);
+	road = best_random_road_timed(n, matrix, diff.count());
+	size_t random_len = calculate_length(road, matrix, n);
+
+	std::ofstream File("Tests/mass01test.txt", std::ios_base::app);
+	File << n << ";" << neighbor_len << ";" << random_len << ";" << times << "\n";
+}
+
+void mass_test_0_2_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	if(n > 2000) return;
+
+	auto start = std::chrono::high_resolution_clock::now();
+	road = get_2_opt_road(best_random_road(1, n, matrix), matrix, n);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff = end - start;
+	double times = diff.count();
+
+	size_t _2_opt_len = calculate_length(road, matrix, n);
+	road = best_random_road_timed(n, matrix, times);
+	size_t random_len = calculate_length(road, matrix, n);
+
+	std::ofstream File("Tests/mass02test.txt", std::ios_base::app);
+	File << n << ";" << _2_opt_len << ";" << random_len << ";" << times << "\n";
+}
+
+void mass_test_1_2_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	if(n > 2000) return;
+
+	auto start = std::chrono::high_resolution_clock::now();
+	road = doNearestNeighbor(n, matrix, 0);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff = end - start;
+	double times_neighbor = diff.count();
+	size_t neighbor_len = calculate_length(road, matrix, n);
+
+	start = std::chrono::high_resolution_clock::now();
+	road = get_2_opt_road(road, matrix, n);
+	end = std::chrono::high_resolution_clock::now();
+	
+	diff = end - start;
+	double times_2_opt = diff.count();
+	size_t _2_opt_len = calculate_length(road, matrix, n);
+
+	std::ofstream File("Tests/mass12test.txt", std::ios_base::app);
+	File << n << ";" << neighbor_len << ";" << times_neighbor << ";" << _2_opt_len << ";" << times_2_opt << "\n";
+}
+
+void mass_test_02_12_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road1, road2, roadOpt1, roadOpt2;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	std::chrono::duration<double> diff;
+
+	if(n > 2000) return;
+
+	auto start = std::chrono::high_resolution_clock::now();
+	road1 = doNearestNeighbor(n, matrix, 0);
+	auto middle = std::chrono::high_resolution_clock::now();
+	roadOpt1 = get_2_opt_road(road1, matrix, n);
+	auto end = std::chrono::high_resolution_clock::now();
+	
+	diff = middle - start;
+	double times = diff.count();
+	diff = end - middle;
+	double timesNeiOpt = diff.count();
+
+	road2 = best_random_road_timed(n, matrix, diff.count());
+	middle = std::chrono::high_resolution_clock::now();
+	roadOpt1 = get_2_opt_road(road2, matrix, n);
+	end = std::chrono::high_resolution_clock::now();
+
+	diff = end - middle;
+	double timesRandOpt = diff.count();
+
+	size_t neighborStart = calculate_length(road1, matrix, n);
+	size_t neighbor2Opt = calculate_length(roadOpt1, matrix, n);
+	size_t krandStart = calculate_length(road2, matrix, n);
+	size_t krand2Opt = calculate_length(roadOpt2, matrix, n);
+
+	std::ofstream File("Tests/mass22test.txt", std::ios_base::app);
+	File << n << ";" << neighborStart << ";" << neighbor2Opt << ";" << timesNeiOpt << ";" << krandStart << ";" << krand2Opt << ";" << timesRandOpt << "\n";
+}
+
+void mass_test_Neigh_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	if(n > 2000) return;
+
+	std::ofstream File("Tests/massNeightest.txt", std::ios_base::app);
+
+	//Single Nearest
+	auto start1 = std::chrono::high_resolution_clock::now();
+	road = doNearestNeighbor(n, matrix, 0);
+	auto end1 = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff1 = end1 - start1;
+	double times1 = diff1.count();
+	size_t neighbor_len = calculate_length(road, matrix, n);
+
+	//Testing every beginning
+	auto start2 = std::chrono::high_resolution_clock::now();
+	road = bestStartingNeighbor(n, matrix);
+	auto end2 = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff2 = end2 - start2;
+	double times2 = diff2.count();
+	size_t best_neighbor_len = calculate_length(road, matrix, n);
+
+	//Single Branching
+	auto start3 = std::chrono::high_resolution_clock::now();
+	road = doBranchingNeighbor(n, matrix, 0, 2);
+	auto end3 = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff3 = end3 - start3;
+	double times3 = diff3.count();
+	size_t branch_neighbor_len = calculate_length(road, matrix, n);
+
+	//Testing every beginning
+	auto start4 = std::chrono::high_resolution_clock::now();
+	road = bestBranchingNeighbor(n, matrix, 2);
+	auto end4 = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> diff4 = end4 - start4;
+	double times4 = diff4.count();
+	size_t best_branch_neighbor_len = calculate_length(road, matrix, n);
+
+	File << n << ";" << neighbor_len << ";" << times1 << ";" << best_neighbor_len << ";" << times2 << ";" << branch_neighbor_len << ";" << times3 << ";" << best_branch_neighbor_len << ";" << times4 << "\n";
 }
