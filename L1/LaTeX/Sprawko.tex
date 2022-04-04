@@ -49,7 +49,7 @@ Algorytm jest modyfikacją powyższego algorytmu, która rozstrzyga, który wier
 Algorytm polega na wybieraniu kawałka istniejącej już trasy, a następnie wstawienie go z powrotem, ale w odwrotnej kolejności. Czynność tę powtarzamy, aż nie będziemy już uzyskiwać zysku długości trasy. Złożoność algorytmu można ulepszyć nie wyliczając za każdym odwróceniem funkcji celu, a jedynie odejmować i dodawać wartości dwóch usuniętych i dwóch dodanych krawędzi $O(4)$ $\approx$ \textit{negl.}. Złożoność obliczeniowa w naszej implementacji jest rzędu $O(n^2\cdot n) = O(n^3)$, ponieważ operacja zmiany kolejności kawałka trasy jest $O(n)$.
 
 \subsection{3-Opt}
-Algorytm jest analogiczny do powyższego, z tą różnicą, że teraz dzielimy trasę na trzy, a nie na dwa kawałki. Co za tym idzie, to także zwiększa nam złożoność obliczeniową, ponieważ przecchodzimy przez wszystkie trójki krawędzi. Zatem mamy tutaj łącznie rząd $O(n^3\cdot n) = O(n^4)$ (operacja sprawdzenia każdego przypadku jest co prawda większa, ale w dalszym ciągu $\approx$ \textit{negl.}, a zamiana kawałka trasy w tym samym czasie co powyżej).
+Algorytm jest analogiczny do powyższego, z tą różnicą, że teraz dzielimy trasę na trzy, a nie na dwa kawałki. Co za tym idzie, to także zwiększa nam złożoność obliczeniową, ponieważ przecchodzimy przez wszystkie trójki krawędzi. Zatem mamy tutaj łącznie rząd $O(n^3\cdot n) = O(n^4)$ (operacja sprawdzenia każdego przypadku jest co prawda większa, ale w dalszym ciągu $O(1)$, a zamiana kawałka trasy w tym samym czasie co powyżej).
 
 \section{Opis eksperymentów}
 \subsection{Implementacja}
@@ -59,9 +59,9 @@ Algorytmy implementujemy w języku \texttt{C/C++}, odległości między wierzcho
 Programy były testowane na dwóch maszynach, laptopie \textit{Lenovo} i komputerze stacjonarnym. Obie jednostki są wyposażone w procesor architektury \texttt{x86} marki \texttt{intel} oraz 16GB pamięci RAM.
 
 \subsubsection{Pececik}
-Komputer stacjonarny posiada procesor i5-10600K (o obniżonym napięciu operacyjnym).
+Komputer stacjonarny posiada procesor sześciordzeniowy i5-10600K (o obniżonym napięciu operacyjnym).
 \subsubsection{Lapek}
-Laptop posiada procesor i7-6700HQ
+Laptop posiada procesor czterordzeniowy i7-6700HQ
 
 \subsection{Instancje}
 \subsubsection{Przykłady TSPLIB}
