@@ -37,36 +37,38 @@ Sprawko na metaheurystykę
 
 \section{Podsumowanie złożoności obliczeniowych implementacji}
 \subsection{K-Random}
-Co nieco o nim
+Algorytm polega na losowaniu kolejności odwiedzania wierzchołków. Każde z wylosowanych rozwiązań jest porównywane z poprzednim najlepszym. W naszej implementacji losowanie rozwiązania odbywało się w czasie liniowym. W takim samym czasie obliczana jest również funkcja celu. Dla $k$ prób złożoność jest w takim razie rzędu $O(k\cdot n\cdot n) = O(k \cdot n^2)$.
 
 \subsection{Nearest Neighbor}
-Co nieco o nim
+Algorytm polega na zachłannym szukaniu ścieżkirozpoczynając od zadanego wierzchołka i przechodząc do najbliższego jeszcze nie odwiedzonego. Złożoność jest rzędu $O(n^2)$, ponieważ w każdym wierzchołku musimy przeszukać zbiór pozostałych, aby znaleźć najbliższy. Chcąc uzyskać lepsze wyniki, możemy zainicjować algorytm we wszystkich wierzchołkach i wybrać najlepszą trasę. Przy takiej modyfikacji złożoność zwiększa się do $O(n^2 \cdot n + n\cdot n) = O(n^3)$, ponieważ pierwotny algorytm wykonujemy $n$ razy i $n$-krotnie musimy obliczyć wartość funkcji celu.
 
-\subsection{Branching Nearest Neighbor}
-Co nieco o nim
+\subsection{Nearest Branching Neighbor}
+Algorytm jest modyfikacją powyższego algorytmu, która rozstrzyga, który wierzchołek obrać jako następny w przypadku równej odległości do nich. Złożoność jest bardzo zależna od stryktury problemu i głębokości zagłębiania przeszukiwań. Zakładając, że problem ma strukturę drzewa, gdzie wierzchołek ma dwa równo odległe od siebie następniki, każdy poziom przeszukiwań ma wzrost wykładniczy.
 
 \subsection{2-Opt}
-Co nieco o nim
+Algorytm polega na wybieraniu kawałka istniejącej już trasy, a następnie wstawienie go z powrotem, ale w odwrotnej kolejności. Czynność tę powtarzamy, aż nie będziemy już uzyskiwać zysku długości trasy. Złożoność algorytmu można ulepszyć nie wyliczając za każdym odwróceniem funkcji celu, a jedynie odejmować i dodawać wartości dwóch usuniętych i dwóch dodanych krawędzi. Złożoność obliczeniowa w naszej implementacji jest rzędu $O(n^2\cdot n) = O(n^3)$, ponieważ operacja zmiany kolejności kawałka trasy jest $O(n)$.
 
 \subsection{3-Opt}
-Co nieco o nim
+Algorytm jest analogiczny do powyższego, z tą różnicą, że teraz dzielimy trasę na trzy, a nie na dwa kawałki.
 
 \section{Opis eksperymentów}
 \subsection{Implementacja}
-C/Cpp
+Algorytmy implementujemy w języku \texttt{C++}, odległości między wierzchołkami są przechowywane jako pełne tablice dwuwymiarowe typu \texttt{int}, a trasy są w kontenerach \texttt{vector}, co ułatwia operacje odwracania i mieszania.
 
 \subsection{Sprzęt}
-16GB Ramu
+Programy były testowane na dwóch maszynach, laptopie \textit{Lenovo} i komputerze stacjonarnym. Obie jednostki są wyposażone w procesor architektury \texttt{x86} marki \texttt{intel} oraz 16GB pamięci RAM.
 
 \subsubsection{Pececik}
-6 rdzonków
+Komputer stacjonarny posiada procesor i5-10600K (o obniżonym napięciu operacyjnym).
 \subsubsection{Lapek}
-4 rdzonki
+Laptop posiada procesor i7-niepamiętamktóry.
 
 \subsection{Instancje}
-\subsubsection{Przykładziki ze stronki}
+\subsubsection{Przykłady TSPLIB}
+W części eksperymentów użyto instancji euklidejskiego problemu komiwojażera.
 
 \subsubsection{Instancje losowe}
+W celu zwiększenia liczności i dokładności testów spreparowano losowo generowane instancje eukidejskiego problemu komiwojażera.
 
 \subsection{Metodologia/cel}
 
