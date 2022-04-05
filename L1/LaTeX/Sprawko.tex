@@ -61,9 +61,9 @@ Algorytmy implementujemy w języku \texttt{C/C++}, odległości między wierzcho
 Programy były testowane na dwóch maszynach, laptopie \textit{Lenovo} i komputerze stacjonarnym. Obie jednostki są wyposażone w procesor architektury \texttt{x86} marki \texttt{intel} oraz 16GB pamięci RAM.
 
 \subsubsection{Pececik}
-Komputer stacjonarny posiada procesor sześciordzeniowy i5-10600K (o obniżonym napięciu operacyjnym).
+Komputer stacjonarny posiada procesor sześciordzeniowy i5-10600K 4,1 GHz (o obniżonym napięciu operacyjnym).
 \subsubsection{Lapek}
-Laptop posiada procesor czterordzeniowy i7-6700HQ
+Laptop posiada procesor czterordzeniowy i7-6700HQ 2,6 GHz
 
 \subsection{Instancje}
 \subsubsection{Przykłady TSPLIB}
@@ -73,6 +73,8 @@ W części eksperymentów użyto instancji euklidejskiego problemu komiwojażera
 W celu zwiększenia liczności i dokładności testów spreparowano losowo generowane instancje eukidejskiego problemu komiwojażera.
 
 \subsection{Metodologia/cel}
+
+Testy przeprowadzono za pomocą zaimplementowanych w tym celu funkcji ku jak największej automatyzacji. Dane o przeprowadzonych testach zapisywano do plików tekstowych w formacie CSV, a następnie poddane analizie. Testowanie miało na celu wskazanie mocnych i słabych stron zaimplementowanych heurystyk, jak i ich porównanie.
 
 \subsection{Opis wyników}
 Testy Wilcoxona dla poszczególnych algorytmów:
@@ -304,9 +306,18 @@ Gdzie mamy od lewej do prawej jako od najszybciej działającego, do najdłuższ
 
 \subsubsection{Algorytmy uwspółbieżnione}
 
-Przeprowadzono testy w celu sprawdzenia wpływu ilości rdzeni dostępnych przez algorytm k-random na czas działania algorytmu. Wartości funkcji celu dla algortymu wielowątkowego pozostały praktycznie nie zmienione (zmiany rzędu $<$ 1\%).
+Przeprowadzono testy w celu sprawdzenia wpływu ilości rdzeni dostępnych przez algorytm k-random na czas działania algorytmu. Wartości funkcji celu dla algortymu wielowątkowego pozostały praktycznie nie zmienione (zmiany rzędu $<$ 1\%).\\
+Uwspółbieżniony algorytm najbliższego sąsiada nie dał tak dobrych wyników prawdopodobnie ze względu na wadliwą implementację. Ze względów czasowych przeprowadzono testy tylko na małym przykładzie ze 100 poziomami przeszukiwań. Płytkie zagłębienie powodowało jeszcze mniejsze zyski związane z uwspółbieżnieniem.
 
-\includegraphics[scale=0.7]{k_random_parallel.png}
+\begin{figure}[H]
+\includegraphics[scale=0.65]{k_random_parallel.png}
+\caption{k-random}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.65]{nearest_neighbor_parallel.png}
+\caption{Braching nearest neighbor}
+\end{figure}
 
 \subsection{Wnioski}
 

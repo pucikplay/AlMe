@@ -601,3 +601,26 @@ void mass_k_random_parallel(std::string fileName) {
     File << "\n";
 
 }
+
+void mass_neighbor_parallel(std::string fileName) {
+    int **matrix;
+    std::vector<std::pair<double, double>> coords;
+    std::vector<int> road;
+    std::chrono::time_point<std::chrono::system_clock> start;
+    std::chrono::time_point<std::chrono::system_clock> end;
+    size_t length;
+
+    coords = parse_coords(fileName);
+    matrix = coords_to_matrix(coords);
+    int n = coords.size();
+
+    start = std::chrono::high_resolution_clock::now();
+    road = doBranchingNeighborParallel(n, matrix, 0, 15, 6);
+    end = std::chrono::high_resolution_clock::now();
+    length = calculate_length(road, matrix, n);
+
+    std::ofstream File("../Tests/massNeighborParallelTest.txt", std::ios_base::app);
+
+    File << n << ";" << length << ";" << (end - start).count() << "\n";
+
+}
