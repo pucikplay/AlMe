@@ -561,3 +561,43 @@ void mass_test_Neigh_TSPLIB(std::string fileName) {
 
 	File << n << ";" << neighbor_len << ";" << times1 << ";" << best_neighbor_len << ";" << times2 << ";" << branch_neighbor_len << ";" << times3 << ";" << best_branch_neighbor_len << ";" << times4 << "\n";
 }
+
+void mass_k_random_parallel(std::string fileName) {
+    int **matrix;
+    std::vector<std::pair<double, double>> coords;
+    std::vector<int> road;
+    std::chrono::time_point<std::chrono::system_clock> starts[7];
+    std::chrono::time_point<std::chrono::system_clock> ends[7];
+    size_t lengths[7];
+
+    coords = parse_coords(fileName);
+    matrix = coords_to_matrix(coords);
+    int n = coords.size();
+
+    for (size_t i = 6; i > 1; i--) {
+        starts[i] = std::chrono::high_resolution_clock::now();
+        road = best_random_road_parallel(10000, n, matrix, i);
+        ends[i] = std::chrono::high_resolution_clock::now();
+        lengths[i] = calculate_length(road, matrix, n);
+    }
+
+    starts[1] = std::chrono::high_resolution_clock::now();
+    road = best_random_road(10000, n, matrix);
+    ends[1] = std::chrono::high_resolution_clock::now();
+    lengths[1] = calculate_length(road, matrix, n);
+
+    std::ofstream File("../Tests/massParallelTest.txt", std::ios_base::app);
+
+    File << n;
+
+    for (size_t i = 1; i < 7; i++) {
+        File << ";" << lengths[i];
+    }
+
+    for (size_t i = 1; i < 7; i++) {
+        File << ";" << (ends[i] - starts[i]).count();
+    }
+
+    File << "\n";
+
+}

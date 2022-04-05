@@ -33,5 +33,6 @@ void mass_test_0_2_TSPLIB(std::string fileName);
 void mass_test_1_2_TSPLIB(std::string fileName);
 void mass_test_02_12_TSPLIB(std::string fileName);
 void mass_test_Neigh_TSPLIB(std::string fileName);
+void mass_k_random_parallel(std::string fileName);
 
 #endif //ALME_TESTER_H

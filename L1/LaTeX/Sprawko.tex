@@ -20,6 +20,8 @@
 	\usepackage{amsmath}
 	\usepackage{amsfonts}
 	\usepackage{tikz}
+
+	\usepackage{float}	
 	
 % pakiety do automatów
 	\usetikzlibrary{automata, arrows.meta, positioning, arrows}
@@ -299,6 +301,13 @@ Zapisanie wszystkich obliczeń potrzebnych do wykkonania testu Wilcoxona zajęł
 Jeżeli chodzi zaś o czas działania, to z części z czasem ('XY(T)') widać, że pojawia się nam dosyć jednoznaczne porównanie co do prędkości (choć tu także się pojawiło 1 odstępstwo, dla instancji nr 10 \textit{Branching} okazał się szybszy od zwykłego algorytmu, choć przy tak małej różnicy w czasie, możne to 'zaniedbać'):
 \[1N > 1B > FN > FB\]
 Gdzie mamy od lewej do prawej jako od najszybciej działającego, do najdłuższego. Takich wyników można się było zresztą spodziewać, ponieważ wynikają one z samych konstrukcji i złożoności poszczególnych algorytmów.
+
+\subsubsection{Algorytmy uwspółbieżnione}
+
+Przeprowadzono testy w celu sprawdzenia wpływu ilości rdzeni dostępnych przez algorytm k-random na czas działania algorytmu. Wartości funkcji celu dla algortymu wielowątkowego pozostały praktycznie nie zmienione (zmiany rzędu $<$ 1\%).
+
+\includegraphics[scale=0.7]{k_random_parallel.png}
+
 \subsection{Wnioski}
 
 \section*{Drobne uwagi}
