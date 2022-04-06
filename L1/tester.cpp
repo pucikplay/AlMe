@@ -509,6 +509,44 @@ void mass_test_02_12_TSPLIB(std::string fileName) {
 	File << n << ";" << neighborStart << ";" << neighbor2Opt << ";" << timesNeiOpt << ";" << krandStart << ";" << krand2Opt << ";" << timesRandOpt << "\n";
 }
 
+void mass_test_2_3_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road, roadOpt1, roadOpt2;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	std::chrono::duration<double> diff;
+
+	if(n > 500) return;
+
+	road = bestStartingNeighbor(n, matrix);
+
+	auto middle = std::chrono::high_resolution_clock::now();
+	roadOpt1 = get_2_opt_road(road, matrix, n);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	diff = end - middle;
+	double times2Opt = diff.count();
+
+	middle = std::chrono::high_resolution_clock::now();
+	roadOpt2 = get_3_opt_road(road, matrix, n);
+	end = std::chrono::high_resolution_clock::now();
+
+	diff = end - middle;
+	double times3Opt = diff.count();
+
+	size_t algStart = calculate_length(road, matrix, n);
+	size_t result2Opt = calculate_length(roadOpt1, matrix, n);
+	size_t result3Opt = calculate_length(roadOpt2, matrix, n);
+
+	std::ofstream File("Tests/mass23test.txt", std::ios_base::app);
+	File << n << ";" << algStart << ";" << result2Opt << ";" << times2Opt << ";" << result3Opt << ";" << times3Opt << "\n";
+}
+
 void mass_test_Neigh_TSPLIB(std::string fileName) {
 
 	int **matrix;

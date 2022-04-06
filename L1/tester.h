@@ -7,6 +7,7 @@
 
 #include "parser.h"
 #include "2_opt.h"
+#include "3_opt.h"
 #include "roadSolver.h"
 #include "k_random.h"
 #include <vector>
@@ -32,6 +33,7 @@ void mass_test_0_1_TSPLIB(std::string fileName);
 void mass_test_0_2_TSPLIB(std::string fileName);
 void mass_test_1_2_TSPLIB(std::string fileName);
 void mass_test_02_12_TSPLIB(std::string fileName);
+void mass_test_2_3_TSPLIB(std::string fileName);
 void mass_test_Neigh_TSPLIB(std::string fileName);
 void mass_k_random_parallel(std::string fileName);
 void mass_neighbor_parallel(std::string fileName);

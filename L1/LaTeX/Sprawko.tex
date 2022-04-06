@@ -82,6 +82,7 @@ Testy Wilcoxona dla poszczególnych algorytmów:
 	\item W pierwszej dużej tabeli będziemy mieli zestawienie 3 algorytmów
 	\item W drugiej (Już nieco 'ciekawszej') Zobaczymy jak na rozwiązanie \textit{2-Opt} wpływają warunki początkowe (zarówno czasowo, jak i w kontekście funkcji Celu)
 	\item W trzeciej otrzymamy większe zestawienie różnych przypadków dla wariantów \textit{Nearest Neighbor}
+	\item W czwartej zobaczymy porownanie działania \textit{2-Opta} z \textit{3-Optem}, wraz z zestawieneim, ile procentowo polepszył się wynik, oraz z jakim nakładem kosztu to się stało.
 \end{itemize}
 
 \newpage
@@ -267,8 +268,6 @@ Nr.In & 1N & FN & 1B & FB &  & 1N(T) & FN(T) & 1B(T) & FB(T) \\
 37 & 830 & 796 & 801 & 751 &  & 7.09E-05 & 0.00241989 & 0.000155393 & 0.0108239 \\
 38 & 152493 & 140486 & 152493 & 140486 &  & 0.000206588 & 0.049608 & 0.00139074 & 0.239691 \\
 39 & 5030 & 4578 & 4941 & 4691 &  & 0.000318213 & 0.0560495 & 0.000668361 & 0.163452 \\
-
-
 \end{tabular}
 \end{table}
 
@@ -304,6 +303,79 @@ Jeżeli chodzi zaś o czas działania, to z części z czasem ('XY(T)') widać, 
 \[1N > 1B > FN > FB\]
 Gdzie mamy od lewej do prawej jako od najszybciej działającego, do najdłuższego. Takich wyników można się było zresztą spodziewać, ponieważ wynikają one z samych konstrukcji i złożoności poszczególnych algorytmów.
 
+\newpage
+\subsubsection{Część IV}
+Tabela numer 4:
+\begin{table}[h!]
+\centering
+\begin{tabular}{c||c|c|c|c|c c c|c}
+Nr.Inst & Start & 2-O R & 2-O T & 3-O R & 3-O T &  & 3O R Adv. & 3O T C \\
+\hline
+1 & 2975 & 2741 & 0.124986 & 2622 & 47.7313 &  & 0.04 & 381.893172035268 \\
+2 & 8181 & 8181 & 0.000171163 & 7542 & 0.0598344 &  & 0.078107810781078 & 349.575550790767 \\
+3 & 133953 & 128126 & 0.0182142 & 121549 & 2.83359 &  & 0.049099310952349 & 155.570379154725 \\
+4 & 7129 & 6678 & 0.0146034 & 6203 & 1.42473 &  & 0.066629260765886 & 97.561526767739 \\
+5 & 7113 & 6815 & 0.0184333 & 6559 & 5.19192 &  & 0.035990440039365 & 281.65982216966 \\
+6 & 746 & 675 & 0.00796331 & 635 & 1.12242 &  & 0.053619302949062 & 140.94892701653 \\
+7 & 482 & 473 & 0.000239988 & 427 & 0.0454607 &  & 0.095435684647303 & 189.429054786073 \\
+8 & 608 & 566 & 0.00213278 & 552 & 0.190506 &  & 0.023026315789474 & 89.3228556156753 \\
+9 & 24698 & 21807 & 0.00884338 & 21389 & 0.600951 &  & 0.01692444732367 & 67.9548995972128 \\
+10 & 31479 & 29147 & 0.0397161 & 27315 & 6.31122 &  & 0.058197528511071 & 158.908352028522 \\
+11 & 34543 & 30682 & 0.0889522 & 29600 & 13.598 &  & 0.031323278232927 & 152.868619325885 \\
+12 & 25884 & 23375 & 0.00855502 & 22826 & 0.58029 &  & 0.021210013908206 & 67.8303498998249 \\
+13 & 31611 & 28079 & 0.0442487 & 26916 & 4.42155 &  & 0.036790990477998 & 99.924969547128 \\
+14 & 35389 & 31820 & 0.0968744 & 29868 & 8.89944 &  & 0.05515838254825 & 91.8657560717795 \\
+15 & 23660 & 21622 & 0.0130221 & 21341 & 0.745022 &  & 0.011876584953508 & 57.2121240045768 \\
+16 & 24852 & 23538 & 0.00716928 & 21404 & 1.19654 &  & 0.085868340576211 & 166.898210141046 \\
+17 & 24782 & 23137 & 0.0109679 & 22350 & 0.606017 &  & 0.031756920345412 & 55.253694873221 \\
+18 & 16935 & 15237 & 0.0113048 & 14484 & 0.67488 &  & 0.044464127546501 & 59.6985351355177 \\
+19 & 49201 & 44826 & 0.287924 & 43209 & 90.8267 &  & 0.032865185666958 & 315.45373084564 \\
+20 & 49201 & 44826 & 0.286022 & 43209 & 93.6429 &  & 0.032865185666958 & 327.397542846354 \\
+21 & 46680 & 45340 & 0.00654229 & 44577 & 0.305209 &  & 0.016345329905741 & 46.6517075825132 \\
+22 & 67055 & 60663 & 0.0138139 & 59246 & 1.33616 &  & 0.0211319066438 & 96.7257617327475 \\
+23 & 114553 & 105440 & 0.020296 & 103080 & 3.94201 &  & 0.020601817499324 & 194.22595585337 \\
+24 & 60964 & 60754 & 0.00672133 & 58763 & 1.8088 &  & 0.032658618200906 & 269.113404638665 \\
+25 & 79564 & 76104 & 0.0316716 & 74149 & 2.07173 &  & 0.024571414207431 & 65.4128619962364 \\
+26 & 92552 & 83137 & 0.111207 & 80877 & 17.5516 &  & 0.024418705160342 & 157.828194268346 \\
+27 & 54491 & 53507 & 0.0650241 & 50150 & 39.9601 &  & 0.06160650382632 & 614.542915626668 \\
+28 & 58279 & 51241 & 0.376743 & 49151 & 66.0215 &  & 0.035861974296059 & 175.242804776731 \\
+29 & 127230 & 115013 & 0.747886 & 111189 & 304.462 &  & 0.030055804448636 & 407.096803523532 \\
+30 & 130921 & 117709 & 0.0036771 & 109055 & 0.535062 &  & 0.066100931095852 & 145.511952353757 \\
+31 & 2612 & 2479 & 0.0253908 & 2372 & 12.0045 &  & 0.040964777947933 & 472.789356774895 \\
+32 & 1437 & 1269 & 0.00769565 & 1261 & 0.743045 &  & 0.005567153792624 & 96.5538973316094 \\
+33 & 796 & 734 & 0.00401357 & 694 & 0.22891 &  & 0.050251256281407 & 57.0340121139036 \\
+34 & 140486 & 130301 & 0.0438273 & 127763 & 14.3303 &  & 0.018065857096081 & 326.972001469404 \\
+35 & 4578 & 4182 & 0.0961123 & 3990 & 33.3919 &  & 0.041939711664482 & 347.425875772404 \\
+\end{tabular}
+\end{table}
+
+Przy czym kolejne kolumny oznaczają:
+\begin{itemize}
+	\item Start - Wartość funkcji Celu dla rozwiązania startowego dla obu algorytmów
+	\item 2-O R - Wartość funkcji Celu dla algorytmu \textit{2-Opt} o wykonaniu algorytmu
+	\item 2-O T - Czas działania dla algorytmu \textit{2-Opt} o wykonaniu algorytmu
+	\item 3-O R - Wartość funkcji Celu dla algorytmu \textit{3-Opt} o wykonaniu algorytmu
+	\item 3-O T - Czas działania dla algorytmu \textit{3-Opt} o wykonaniu algorytmu
+	\item 3-O R Adv. - Procentowa 'poprawa jakości' przy użyciu \textit{3-Opta}, wyliczana jako $(2OR/Start) - (3OR/Start)$
+	\item 3-O T C - Inforacja o dodatkowym nakładzie czasu potrzebnym dla algorytmu \textit{3-Opt} liczona jako wielokrotność względem \textit{2-Opta} ($3OT / 2Ot$)
+\end{itemize}
+
+Zapiszmy jeszcze jedną mini-tabelę uwzględniającą kilka przydatnych tutaj statystyk:
+\begin{table}[h!]
+\centering
+\begin{tabular}{c||c|c}
+Statystyka & Przewaga \textit{3-O} & Nakład czasowy \\
+\hline
+Min & 0.005567153792624 & 46.6517075825132 \\
+Avg & 0.039752882107118 & 193.724445099084 \\
+Max & 0.095435684647303 & 614.542915626668 \\
+Std.Dev & 0.021205236789745 & 139.524093828591 \\
+\end{tabular}
+\end{table}
+
+Ogólnie mówiąc, można (mniej więcej) stwierdzić, że przy użyciu algorytmu \textit{3-Opt} znajdziemy średnio rozwiązanie lepsze o około 4\% niż w przypadku \textit{3-Opta}, jednak będzie się to wiązało z około 200 razy dłuższym czasem działania.
+
+\newpage
 \subsubsection{Algorytmy uwspółbieżnione}
 
 Przeprowadzono testy w celu sprawdzenia wpływu ilości rdzeni dostępnych przez algorytm k-random na czas działania algorytmu. Wartości funkcji celu dla algortymu wielowątkowego pozostały praktycznie nie zmienione (zmiany rzędu $<$ 1\%).\\
