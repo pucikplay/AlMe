@@ -547,6 +547,41 @@ void mass_test_2_3_TSPLIB(std::string fileName) {
 	File << n << ";" << algStart << ";" << result2Opt << ";" << times2Opt << ";" << result3Opt << ";" << times3Opt << "\n";
 }
 
+void mass_test_breachDepth_TSPLIB(std::string fileName) {
+
+	int **matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::vector<int> road, roadOpt;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	std::chrono::duration<double> diff;
+
+	if(n > 5000) return;
+	for(int i = 0; i <= 24; i++) {
+
+		auto start = std::chrono::high_resolution_clock::now();
+		road = bestBranchingNeighbor(coords.size(), matrix, i);
+		auto middle = std::chrono::high_resolution_clock::now();
+		roadOpt = get_2_opt_road(road, matrix, n);
+		auto end = std::chrono::high_resolution_clock::now();
+
+		diff = middle - start;
+		double timesBranch = diff.count();
+
+		diff = end - middle;
+		double times2Opt = diff.count();
+
+		size_t branchStart = calculate_length(road, matrix, n);
+		size_t result2Opt = calculate_length(roadOpt, matrix, n);
+
+		std::ofstream File("Tests/massBranchTest.txt", std::ios_base::app);
+		File << n << ";" << i << ";" << branchStart << ";" << result2Opt << ";" << timesBranch << ";" << times2Opt << "\n";
+	}
+}
+
 void mass_test_Neigh_TSPLIB(std::string fileName) {
 
 	int **matrix;

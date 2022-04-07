@@ -25,6 +25,12 @@
 	
 % pakiety do automatów
 	\usetikzlibrary{automata, arrows.meta, positioning, arrows}
+	
+% wykresiki
+	\usepackage{pgfplots}
+	\pgfplotsset{compat = newest}
+	\usepackage{graphicx}
+	\usepackage{subcaption}
 
     \title{\textbf{Algorytmy Metaheurystyczne\\Komiwojażer Heurystycznie}}
     \author{Gabriel Budziński(254609)\\Franciszek Stepek (256310)}
@@ -374,6 +380,51 @@ Std.Dev & 0.021205236789745 & 139.524093828591 \\
 \end{table}
 
 Ogólnie mówiąc, można (mniej więcej) stwierdzić, że przy użyciu algorytmu \textit{3-Opt} znajdziemy średnio rozwiązanie lepsze o około 4\% niż w przypadku \textit{3-Opta}, jednak będzie się to wiązało z około 200 razy dłuższym czasem działania.
+
+\newpage
+\subsubsection{Bliższe przypatrzenie się \textit{Branching Neighbor}, oraz \textit{2-Opt}}
+Dodatkowo przypatrzy się jeszcze (na wykresach) co się dzieje z rozwiązaniem, kiedy podczas działania \textit{Branching} będziemy modyfikować maksymalny stopień zagłębienia (\textit{maxDepth}):
+\begin{figure}[h!]
+ 	\centering
+ 	\begin{subfigure}[b]{0.9\linewidth}
+    	\includegraphics[width=\linewidth]{branch_roads_perc.png}
+    	\caption{Porównanie procentowe względem rozwiązania bez branchingu (depth = 0)}
+	\end{subfigure}
+ 	\begin{subfigure}[b]{0.9\linewidth}
+    	\includegraphics[width=\linewidth]{branch_times_2Opt.png}
+    	\caption{czas działania dla 2-Opt'a względem rozwiązania z różną głębokością}
+	\end{subfigure}
+\end{figure}
+
+\begin{figure}[h!]
+ 	\centering
+ 	\begin{subfigure}[b]{0.325\linewidth}
+    	\includegraphics[width=\linewidth]{branch_times_70.png}
+    	\caption{Instatncja dla n = 70}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.325\linewidth}
+    	\includegraphics[width=\linewidth]{branch_times_280.png}
+    	\caption{Instatncja dla n = 280}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.325\linewidth}
+    	\includegraphics[width=\linewidth]{branch_times_1002.png}
+    	\caption{Instatncja dla n = 1002}
+	\end{subfigure}
+  	\caption{Wielokrotność działania dla poszczególnych iteracji względem rozwiązania bez \textit{branchingu}}
+\end{figure}
+
+Teraz przejdźmy do analizy:
+\begin{itemize}
+	\item Jak widać z rysunku 3, czas działania może się drastycznie różnić w zależności od zadanego przypadku:
+	\begin{itemize}
+		\item a) Czas rośnie około kwadratowo
+		\item b) Czas rośnie około wykładniczo
+		\item c) Czas rośnie około liniowo'
+	\end{itemize}
+	Doskonale pokazuje to, jak bardzo algorytm jest uzależniony od konkretnej instanji, jako że najbardziej 'kosztowna' operacja to właśnie 'branchowanie' w przypadku równoodległych sąsiadów, zatem jeżeli jest dużo takich przypadków (jak dla n = 280), to także czas znacznie przyśpiesza, a kiedy jest ich bardzo mało (jak dla n = 1002) to wzrost czasu jest 'względnie' niewielki
+	\item Dalej w kontekście czas: Jak to widać dla wykresu czasu 2-Opta na Rysunku 1b), w zależności od przypadku jego czas działania może być dłuższy, lub krótszy, jednak cały czas będąc w przedziale $(0.2; 1.5)$ względem rozwiązania pierwotnego, zatem można zaryzykować stwierdzenie, że jego czas działania jest mało od tego zależny.
+	\item Na koniec jeszcze przypatrzmy się, na wykres na rysunku 1a), gdzie widzimy porównanie funkcji celu względem rozwiązania startowego. Widzimy tutaj, że zarówno dla \textit{Branching} jak i dla \textit{2-Opt} wartości te raz skaczą 'do góry', a raz spadają 'w dół', cały czas wachając się w okolicach rzędu co najwyżej 5\%. Jakaś poprawa to jest, jednakże  w połączeniu z zestawieniami czasu, widać, że jest to mimo wszystko dosyć 'kosztowny' zysk.
+\end{itemize}
 
 \newpage
 \subsubsection{Algorytmy uwspółbieżnione}
