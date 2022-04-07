@@ -226,7 +226,7 @@ A teraz policzmy jeszcze tylko 2 sumy dla Wilcoxona:
 Zatem nasza statystyka końcowa będzie wynosiła $315.5$. No jest to dosyć dużo, a fakt, że wynosi ona około 1/2 sumy obu statystyk sugeruje, że w istocie obie metody działają 'bardzo podobnie'\\
 
 Prawa strona tabeli jest analogiczna do lewej, ale tym razem zamiast wartości Celu mamy czas działania samej części \textit{2-Opt}.\\
-Jak widać, wszytskie różnice są ujemne, ale (w połączeniu z danymi otrzymanymi w tabeli 1) można powiedzieć, że łatwo uzależnić czas działania algorytmu 2-Opt od pierwotnego rozwiązania - jeżeli jest znacznie 'lepsze', to także widać, że różnice w czasie są znacznie wyższe.\\
+Jak widać, czas działania przy starcie z \textit{K-Randoma} jest znacznie dłuższy, ale (w połączeniu z danymi otrzymanymi w tabeli 1) można powiedzieć, że łatwo uzależnić czas działania algorytmu 2-Opt od pierwotnego rozwiązania - jeżeli jest znacznie 'lepsze', to także widać, że różnice w czasie są znacznie wyższe (później zobaczymy, że przy względnie niewielkich różnicach warunków początkowych ta zależność znika).\\
 
 \newpage
 \subsubsection{Część III}
@@ -383,15 +383,25 @@ Std.Dev & 0.021205236789745 & 139.524093828591 \\
 Ogólnie mówiąc, można (mniej więcej) stwierdzić, że przy użyciu algorytmu \textit{3-Opt} znajdziemy średnio rozwiązanie lepsze o około 4\% niż w przypadku \textit{3-Opta}, jednak będzie się to wiązało z około 200 razy dłuższym czasem działania.
 
 \newpage
+\subsubsection{Bliższe spojrzenie na \textit{K-Random}}
+W naszych eksperymentach uwzględniliśmy również wpływ liczby wylosowanych rozwiązań na najlepsze rozwiązanie.
+Dane na wykresie są w odniesieniu do pierwszego wylosowanego rozwiązania, kolejne punkty natomiast oznaczają w której iteracji znaleziono poprawę.\\
+\begin{figure}[H]
+\includegraphics[scale=0.7]{k-random.png}
+\caption{k-random big}
+\end{figure}
+Dzięki przedstawieniu wykresów w skali logarytmicznej widać, jak zachowuje się sam algorytm (w kontekście 'poprawy' rozwiązania), oraz widać jak na dłoni, że w na samym początku zazwyczaj względnie szybko znajduje nowe rozwiązania, jednak w miarę działania coraz trudniej jest wylosować rozwiązanie, które byłoby 'lepsze' od dotychczasowego najlepszego, oraz (z uwagi na jego losowość) nie jest się w stanie przewidzieć optymalnego momentu na skończenie działania (dobrze to widać dla linii 'czarne'-najwyższej, kiedy to z serii w miarę podobnych rozwiązań z małymi skokami polepszeń rzędu < 1\% - okolice 10000 do 1000000 - mamy nagle rozwiązanie lepsze o około 5\%)
+
+\newpage
 \subsubsection{Bliższe przypatrzenie się \textit{Branching Neighbor}, oraz \textit{2-Opt}}
 Dodatkowo przypatrzy się jeszcze (na wykresach) co się dzieje z rozwiązaniem, kiedy podczas działania \textit{Branching} będziemy modyfikować maksymalny stopień zagłębienia (\textit{maxDepth}):
 \begin{figure}[h!]
  	\centering
- 	\begin{subfigure}[b]{0.9\linewidth}
+ 	\begin{subfigure}[b]{1\linewidth}
     	\includegraphics[width=\linewidth]{branch_roads_perc.png}
     	\caption{Porównanie procentowe względem rozwiązania bez branchingu (depth = 0)}
 	\end{subfigure}
- 	\begin{subfigure}[b]{0.9\linewidth}
+ 	\begin{subfigure}[b]{1\linewidth}
     	\includegraphics[width=\linewidth]{branch_times_2Opt.png}
     	\caption{czas działania dla 2-Opt'a względem rozwiązania z różną głębokością}
 	\end{subfigure}
@@ -434,19 +444,25 @@ Przeprowadzono testy w celu sprawdzenia wpływu ilości rdzeni dostępnych przez
 Uwspółbieżniony algorytm najbliższego sąsiada nie dał tak dobrych wyników prawdopodobnie ze względu na wadliwą implementację. Ze względów czasowych przeprowadzono testy tylko na małym przykładzie ze 100 poziomami przeszukiwań. Płytkie zagłębienie powodowało jeszcze mniejsze zyski związane z uwspółbieżnieniem.
 
 \begin{figure}[H]
-\includegraphics[scale=0.65]{k_random_parallel.png}
+\includegraphics[scale=0.55]{k_random_parallel.png}
 \caption{k-random}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.65]{nearest_neighbor_parallel.png}
+\includegraphics[scale=0.55]{nearest_neighbor_parallel.png}
 \caption{Braching nearest neighbor}
 \end{figure}
 
 \subsection{Wnioski}
 W większości zawarte były podczas opisu wyników, oraz przewijały się gdzieniegdzie wcześniej, jednak jednoznacznie można powiedzieć, że w znacznej większości algorytm \textit{2-Opt} okazał się zwracać najlepsze rozwiązanie w powiedzmy 'jeszcze przystępnym czasie'. 
 
-\section*{Drobna uwaga}
-Powyżej ujęte zostały 'ciekawsze' przypadki, oraz oczywiście nie opisaliśmy tutaj eksperymentów przeprowadzonch na każdej możliwej instancji z TSPLIB, ponieważ objętościowo znacznie powiększyłoby to (i tak już dosyć obszerne) sprawozdanie.
+\section*{Drobne uwagi}
+Powyżej ujęte zostały 'ciekawsze' przypadki, oraz oczywiście nie opisaliśmy tutaj eksperymentów przeprowadzonch na każdej możliwej instancji z TSPLIB, ponieważ objętościowo znacznie powiększyłoby to (i tak już dosyć obszerne) sprawozdanie.\\
+\\
+Jako przykład takich eksperymentów, odamy tutaj wykres zrobiony dla większej liczby instancji przy testowaniu poprawy jakośći rozwiązania względem działania \textit{K-Random'a}:
+\begin{figure}[H]
+\includegraphics[scale=0.7]{k-randomFull.png}
+\caption{k-random big}
+\end{figure}
 
 \end{document}
