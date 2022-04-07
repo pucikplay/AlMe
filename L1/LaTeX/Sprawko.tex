@@ -41,7 +41,7 @@
 \maketitle
 
 \section*{Przedmowa}
-Sprawko na metaheurystykę
+Na samym początku omówimy po krótce użyte algorytmy, oraz zastanowimy się nad ich złożonością obliczeniową, natomiast dalej dopiero przejdziemy do opisu eksperymentów.
 
 \section{Podsumowanie złożoności obliczeniowych implementacji}
 \subsection{K-Random}
@@ -61,7 +61,8 @@ Algorytm jest analogiczny do powyższego, z tą różnicą, że teraz dzielimy t
 
 \section{Opis eksperymentów}
 \subsection{Implementacja}
-Algorytmy implementujemy w języku \texttt{C/C++}, odległości między wierzchołkami są przechowywane jako pełne tablice dwuwymiarowe typu \texttt{int}, a trasy są w kontenerach \texttt{vector}, co ułatwia operacje odwracania i mieszania.
+Algorytmy implementujemy w języku \texttt{C/C++}, odległości między wierzchołkami są przechowywane jako pełne tablice dwuwymiarowe typu \texttt{int}, a trasy są w kontenerach \texttt{vector}, co ułatwia operacje odwracania i mieszania.\\
+Korzystaliśmy z kompilatora g++ wraz z użyciem flag -lSDL2 (używanej przy wizualizacji, wraz z odpowiednim dla danego systemu operacyjnego podlinkowania do folderu zawierającego) oraz -lpthread (przy korzystaniu z wielowątkowości)
 
 \subsection{Sprzęt}
 Programy były testowane na dwóch maszynach, laptopie \textit{Lenovo} i komputerze stacjonarnym. Obie jednostki są wyposażone w procesor architektury \texttt{x86} marki \texttt{intel} oraz 16GB pamięci RAM.
@@ -419,7 +420,7 @@ Teraz przejdźmy do analizy:
 	\begin{itemize}
 		\item a) Czas rośnie około kwadratowo
 		\item b) Czas rośnie około wykładniczo
-		\item c) Czas rośnie około liniowo'
+		\item c) Czas rośnie około liniowo
 	\end{itemize}
 	Doskonale pokazuje to, jak bardzo algorytm jest uzależniony od konkretnej instanji, jako że najbardziej 'kosztowna' operacja to właśnie 'branchowanie' w przypadku równoodległych sąsiadów, zatem jeżeli jest dużo takich przypadków (jak dla n = 280), to także czas znacznie przyśpiesza, a kiedy jest ich bardzo mało (jak dla n = 1002) to wzrost czasu jest 'względnie' niewielki
 	\item Dalej w kontekście czas: Jak to widać dla wykresu czasu 2-Opta na Rysunku 1b), w zależności od przypadku jego czas działania może być dłuższy, lub krótszy, jednak cały czas będąc w przedziale $(0.2; 1.5)$ względem rozwiązania pierwotnego, zatem można zaryzykować stwierdzenie, że jego czas działania jest mało od tego zależny.
@@ -443,7 +444,9 @@ Uwspółbieżniony algorytm najbliższego sąsiada nie dał tak dobrych wyników
 \end{figure}
 
 \subsection{Wnioski}
+W większości zawarte były podczas opisu wyników, oraz przewijały się gdzieniegdzie wcześniej, jednak jednoznacznie można powiedzieć, że w znacznej większości algorytm \textit{2-Opt} okazał się zwracać najlepsze rozwiązanie w powiedzmy 'jeszcze przystępnym czasie'. 
 
-\section*{Drobne uwagi}
+\section*{Drobna uwaga}
+Powyżej ujęte zostały 'ciekawsze' przypadki, oraz oczywiście nie opisaliśmy tutaj eksperymentów przeprowadzonch na każdej możliwej instancji z TSPLIB, ponieważ objętościowo znacznie powiększyłoby to (i tak już dosyć obszerne) sprawozdanie.
 
 \end{document}
