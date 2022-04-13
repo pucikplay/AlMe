@@ -31,6 +31,7 @@ void drawNearestNeigh(std::vector<std::pair<double, double>> coords, int** matri
 void drawKRandom(std::vector<std::pair<double, double>> coords, int** matrix, int k);
 void draw2Opt(std::vector<std::pair<double, double>> coords, int** matrix);
 void draw3Opt(std::vector<std::pair<double, double>> coords, int** matrix);
+void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange);
 void doSimpleVisual();
 
 #endif //ALME_VISUALIZER_H

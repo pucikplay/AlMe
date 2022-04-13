@@ -8,6 +8,7 @@
 #include "k_random.h"
 #include "2_opt.h"
 #include "3_opt.h"
+#include "tabu_search.h"
 #include "tester.h"
 #include <time.h>
 
@@ -21,8 +22,8 @@ int main(int argc, char *argv[]) {
 	//Control flags
 	bool euclideanFlag = true;
 	bool randomFlag = false;
-	bool drawFlag = false;
-	int mode = 4; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt
+	bool drawFlag = true;
+	int mode = 5; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu
 
 	//Euclidean
 	if(euclideanFlag) {
@@ -62,6 +63,15 @@ int main(int argc, char *argv[]) {
 			draw2Opt(coords, matrix);
 		else if(mode == 3)
 			draw3Opt(coords, matrix);
+		else if(mode == 5) {
+//			size_t tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange
+			int tabuSize = 50;
+			size_t enhancedLimit = 1000;
+			double time = 1.0 * 1000000000;
+			std::pair<size_t, size_t> kickRange = {10, 20};
+
+			drawTabu(coords, matrix, tabuSize, time, enhancedLimit, kickRange);
+		}
 	} else {
 		if(mode == 0) {
 			
@@ -120,22 +130,24 @@ int main(int argc, char *argv[]) {
 			//	std::string fileName = argv[i];	
 			//	test_0_K_Rand(fileName);
 			//}
-			test_0_0_TSPLIB("Tests/test00.txt");
+			//test_0_0_TSPLIB("Tests/test00.txt");
 			//test_0_1_TSPLIB("Tests/test01.txt");
 			//test_0_2_TSPLIB("Tests/test02.txt");
 			//test_1_2_TSPLIB("Tests/test12.txt");
 			//test_2_2_TSPLIB("Tests/test22.txt");
 			//test_Neigh_TSPLIB("Tests/testNeigh.txt");
 
-			/*for(int i = 1; i < argc; i++) {
+			for(int i = 1; i < argc; i++) {
 				printf("%s\n", argv[i]);
 				std::string fileName = argv[i];	
 				//mass_test_0_1_TSPLIB(fileName);
 				//mass_test_0_2_TSPLIB(fileName);
 				//mass_test_1_2_TSPLIB(fileName);
-				mass_test_02_12_TSPLIB(fileName);
-				mass_test_Neigh_TSPLIB(fileName);
-			}*/
+				//mass_test_02_12_TSPLIB(fileName);
+				//mass_test_2_3_TSPLIB(fileName);
+				//mass_test_Neigh_TSPLIB(fileName);
+				mass_test_breachDepth_TSPLIB(fileName);
+			}
 		}
 	}
 	//Coord Check

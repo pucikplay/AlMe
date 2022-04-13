@@ -8,6 +8,7 @@
 #include "k_random.h"
 #include "2_opt.h"
 #include "3_opt.h"
+#include "tabu_search.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -374,6 +375,61 @@ void draw3Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 			int x4 = changeList[actionCounter - 2].second.second;
 			roadList = swap_3_opt(roadList, x1, x2, x3, x4);
 			make3OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
+			SDL_Delay(delayTime);
+		}
+		else if(actionCounter == changeList.size() + 2)
+			SDL_Delay(2000);
+		else
+			quit = true;
+
+		actionCounter += 1;
+	}
+
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange) {
+
+	SDL_Window* window = windowInitializing();
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+
+	double fittedScale = computeScale(coords);
+	int delayTime = (20000 / coords.size() < 100) ? 20000 / coords.size() : 100;
+
+	//Roads
+	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+	std::vector<std::pair<int, int>> changeList = get_tabu_road_visual(roadList, matrix, roadList.size(), tabuSize, time, enhancedLimit, kickRange);
+
+	//Animation Loop logic
+	bool quit = false;
+	int actionCounter = 0;
+	SDL_Event e;
+
+	while(!quit) {
+
+		while(SDL_PollEvent(&e) != 0)
+			if(e.type == SDL_QUIT)
+				quit = true;
+
+		if(actionCounter == 0) {
+			makeFirstPoints(renderer, coords, fittedScale);
+			SDL_Delay(1000);
+		}
+		else if(actionCounter == 1) {
+			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
+			SDL_Delay(2000);
+		} else if(actionCounter < changeList.size() + 2) {
+			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
+			SDL_Delay(delayTime);
+			roadList = swap_2_opt(roadList, changeList[actionCounter - 2].first, changeList[actionCounter - 2].second);
+			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
 			SDL_Delay(delayTime);
 		}
 		else if(actionCounter == changeList.size() + 2)
