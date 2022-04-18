@@ -405,7 +405,10 @@ void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int t
 	//Roads
 	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
-	std::vector<std::pair<int, int>> changeList = get_tabu_road_visual(roadList, matrix, roadList.size(), tabuSize, time, enhancedLimit, kickRange);
+	std::pair<std::vector<std::pair<int, int>>, std::vector<std::vector<int>>> bigPair = get_tabu_road_visual(roadList, matrix, roadList.size(), tabuSize, time, enhancedLimit, kickRange);
+	std::vector<std::pair<int, int>> changeList = bigPair.first;
+	std::vector<std::vector<int>> startRoadChangeList = bigPair.second;
+	int roadChangeCounter = 0;
 
 	//Animation Loop logic
 	bool quit = false;
@@ -426,6 +429,13 @@ void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int t
 			makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
 			SDL_Delay(2000);
 		} else if(actionCounter < changeList.size() + 2) {
+			if(changeList[actionCounter - 2].first == -1) {
+				roadChangeCounter += 1;
+				roadList = startRoadChangeList[roadChangeCounter];
+				makeFirstRoad(renderer, coords, fittedScale, matrix, roadList);
+				SDL_Delay(1000);
+				actionCounter += 1;
+			}
 			make2OptSwap(renderer, coords, fittedScale, matrix, roadList, changeList[actionCounter - 2]);
 			SDL_Delay(delayTime);
 			roadList = swap_2_opt(roadList, changeList[actionCounter - 2].first, changeList[actionCounter - 2].second);

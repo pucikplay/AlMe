@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 		else if(mode == 5) {
 //			size_t tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange
 			int tabuSize = 50;
-			size_t enhancedLimit = 1000;
+			size_t enhancedLimit = 100;
 			double time = 1.0 * 1000000000;
 			std::pair<size_t, size_t> kickRange = {10, 20};
 
