@@ -67,6 +67,11 @@ size_t swapLength(size_t length, const std::vector<int>& road, int** matrix, siz
 
 	size_t newLength = length;
 
+	if(i + 1 == j) {
+		newLength = invertLength(length, road, matrix, (i - 1 + n) % n, j, n);
+		return newLength;
+	}
+
 	int smaller = (road[(i - 1 + n) % n] < road[i]) ? road[(i - 1 + n) % n] : road[i];
 	int bigger = (road[(i - 1 + n) % n] >= road[i]) ? road[(i - 1 + n) % n] : road[i];
 	newLength -= matrix[smaller][bigger];
@@ -249,28 +254,32 @@ std::vector<int> deterministicKik(std::vector<int> road, int rseed) {
 	return result;
 }
 
-neiResult checkNeighbourhood(std::vector<int> road, int** matrix, std::size_t n, size_t length, std::pair<size_t, size_t>* tabuList, int elementsOnTabu, int mode) {
+neiResult checkNeighbourhood(std::vector<int> road, int** matrix, std::size_t n, size_t length, std::pair<size_t, size_t>* tabuList, int elementsOnTabu, int mode, size_t globalBestLen) {
 
 	std::pair<size_t, size_t> bestPair;
 	size_t bestLen = -1, computedLen;
 
 	bool road_changed = false;
 	for (size_t i = 0; i < n - 1; i++) {
-		for (size_t j = i + 2; j < n - 1; j++) {
-			//TODO: add aspiration!!!
+		for (size_t j = i + 1; j < n - 1; j++) {
+			//printf("%ld, %ld\n", i, j);
+
+			if(mode == 0) computedLen = invertLength(length, road, matrix, i, j, n);
+			else if(mode == 1) computedLen = insertLength(length, road, matrix, i, j, n);
+			else if(mode == 2) computedLen = swapLength(length, road, matrix, i, j, n);
+
 			if(checkTabuList(tabuList, elementsOnTabu, i, j) == false) {
-				//printf("%ld, %ld\n", i, j);
-
-				if(mode == 0) computedLen = invertLength(length, road, matrix, i, j, n);
-				else if(mode == 1) computedLen = insertLength(length, road, matrix, i, j, n);
-				else if(mode == 2) computedLen = swapLength(length, road, matrix, i, j, n);
-
 				if (computedLen < bestLen || bestLen == -1) {
 					//printf("b - %ld ", computedLen);
 					bestPair = {i, j};
 					bestLen = computedLen;
 					road_changed = true;
 				}
+			} else if (computedLen < globalBestLen) {
+				printf("Aspiration!!! : (%ld)\n", computedLen);
+				bestPair = {i, j};
+				bestLen = computedLen;
+				road_changed = true;
 			}
 		}
 	}
@@ -303,7 +312,7 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 	auto start = std::chrono::high_resolution_clock::now();
 	do {
 
-		neiResult res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode);
+		neiResult res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode, globalBestLen);
 		road_changed = res.first.first;
 		bestPair = res.second;
 
@@ -355,6 +364,7 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 
 			best_length = calculate_length(road, matrix, n);
 			length = best_length;
+			lastEnhance = 0;
 		}
 
 		stop1 = ((std::chrono::high_resolution_clock::now() - start).count() < time) ? true : false;
