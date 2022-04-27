@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 	//Control flags
 	bool euclideanFlag = true;
 	bool randomFlag = false;
-	bool drawFlag = true;
+	bool drawFlag = false;
 	int mode = 5; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu
 
 	//Euclidean
@@ -65,10 +65,10 @@ int main(int argc, char *argv[]) {
 			draw3Opt(coords, matrix);
 		else if(mode == 5) {
 //			size_t tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange
-			int tabuSize = 50;
-			size_t enhancedLimit = 100;
-			double time = 1.0 * 1000000000;
-			std::pair<size_t, size_t> kickRange = {10, 20};
+			int tabuSize = 7;
+			size_t enhancedLimit = 15;
+			double time = 32.0 * 1000000000;
+			std::pair<size_t, size_t> kickRange = {8, 32};
 
 			drawTabu(coords, matrix, tabuSize, time, enhancedLimit, kickRange);
 		}
@@ -148,24 +148,48 @@ int main(int argc, char *argv[]) {
 				//mass_test_Neigh_TSPLIB(fileName);
 				mass_test_breachDepth_TSPLIB(fileName);
 			}
+		} else if (mode == 5) {
+
+			for(int i = 0; i <= 2; i++) {
+			if(i == 0) printf("Invert:\n");
+			else if(i == 1) printf("\nInsert:\n");
+			else if(i == 2) printf("\nSwap:\n");
+
+			std::vector<int> road;
+			int tabuSize = 7;
+			size_t enhancementLimit = 15;
+			double time = 4.0 * 1000000000;
+			int mode = i; // 0 - invert, 1 - insert, 2 - swap
+			int kikMode = 0; // 0 - noKik, 1 - invert, 2 - insert, 3 - swap
+
+			clock_t start = clock();
+			std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+			//std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+			//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
+			clock_t middle = clock();
+			
+			road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode);
+			clock_t almost = clock();
+			size_t score = calculate_length(road, matrix, road.size());
+			size_t scoreBefore = calculate_length(roadList, matrix, road.size());
+			clock_t end = clock();
+
+			double elapsed = double(end - start) / CLOCKS_PER_SEC;
+			double elapsed1 = double(middle - start) / CLOCKS_PER_SEC;
+			double elapsed2 = double(almost - middle) / CLOCKS_PER_SEC;
+			double elapsed3 = double(end - almost) / CLOCKS_PER_SEC;
+
+			printf("\nStart Road Cost: %ld\n", scoreBefore);
+			printf("Final Road Cost: %ld\n", score);
+			printf("Time Overall:			%f seconds.\n", elapsed);
+			printf("Time For Generation of Start:	%f seconds.\n", elapsed1);
+			printf("Time For Tabu Used:		%f seconds.\n", elapsed2);
+			printf("Time For length calculation:	%f seconds.\n", elapsed3);
+
+			}
+
 		}
 	}
-	//Coord Check
-	/*for (size_t i = 0; i < n; i++) {
-		printf("%ld %d %d\n", i, (int)coords[i].first, (int)coords[i].second);
-	}*/
-
-	//Matrix Check
-	/*int counter = 0;
-	for (size_t i = 0; i < n; i++) {
-		for (size_t j = 0; j < n; j++) {
-			counter += 1;
-			printf("%d ", matrix[i][j]);
-		}
-		printf("\n");
-	}
-	printf("%d\n", counter);*/
-
 	printf("Bye!\n");
 
 	return 0;
