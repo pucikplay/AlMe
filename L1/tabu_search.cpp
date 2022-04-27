@@ -233,22 +233,25 @@ std::vector<int> get_tabu_road(std::vector<int> road, int** matrix, std::size_t 
 	return globalBestRoad;
 }
 
-std::vector<int> deterministicKik(std::vector<int> road, int rseed) {
+std::vector<int> deterministicKik(std::vector<int> road, int rseed, int mode, int size) {
 	std::vector<int> result = road;
 
-	std::vector<std::pair<int, int>> kikVec;
-	std::pair<int, int> pair1 = {(1 * rseed) % road.size(), (2 * rseed) % road.size()};
-	std::pair<int, int> pair2 = {(4 * rseed) % road.size(), (8 * rseed) % road.size()};
-	std::pair<int, int> pair3 = {(11 * rseed) % road.size(), (25 * rseed) % road.size()};
-	std::pair<int, int> pair4 = {(37 * rseed) % road.size(), (55 * rseed) % road.size()};
-	kikVec.emplace_back(pair1);
-	kikVec.emplace_back(pair2);
-	kikVec.emplace_back(pair3);
-	kikVec.emplace_back(pair4);
+	int x1 = road.size() / 2 + 1;
+	int x2 = road.size() - 1;
 
-	for(int i = 0; i < kikVec.size(); i++) {
-		if(kikVec[i].first < kikVec[i].second) road = swap_2_opt(road, kikVec[i].first, kikVec[i].second);
-		else if(kikVec[i].first > kikVec[i].second) road = swap_2_opt(road, kikVec[i].second, kikVec[i].first);
+	std::vector<std::pair<int, int>> kikVec;
+	for(int i = 0; i < size; i++) {
+
+		x1 += (int)(sqrt(road.size()) * log2(road.size()));
+		x1 %= (road.size() * road.size());
+		x2 += (int)(sqrt(road.size()) * log2(road.size()));
+		x2 %= (road.size() * road.size());
+
+		int shuffle1 = (x1 * rseed) % road.size();
+		int shuffle2 = (x2 * rseed) % road.size();
+
+		if(shuffle1 < shuffle2) result = doStep(result, shuffle1, shuffle2, mode);
+		else if(shuffle1 > shuffle2) result = doStep(result, shuffle2, shuffle1, mode);
 	}
 
 	return result;
@@ -287,7 +290,7 @@ neiResult checkNeighbourhood(std::vector<int> road, int** matrix, std::size_t n,
 	return {{road_changed, bestLen}, bestPair};
 }
 
-std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, int mode, int kikMode) {
+std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, int mode, int kikMode, int kikSize) {
 
 	size_t best_length = calculate_length(road, matrix, n);
 	size_t length = best_length, computed_length;
@@ -359,7 +362,7 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 				firstRun = false;
 			}
 			//printf("K");
-			road = deterministicKik(road, rseed);
+			road = deterministicKik(road, rseed, kikMode, kikSize);
 			rseed += 13;
 
 			best_length = calculate_length(road, matrix, n);

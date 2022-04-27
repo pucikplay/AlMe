@@ -55,14 +55,10 @@ int main(int argc, char *argv[]) {
 		coords = genCords(n);
 	}
 	if(drawFlag) {
-		if(mode == 0)
-			drawKRandom(coords, matrix, 100000); //Still poor
-		else if(mode == 1)
-			drawNearestNeigh(coords, matrix);
-		else if(mode == 2)
-			draw2Opt(coords, matrix);
-		else if(mode == 3)
-			draw3Opt(coords, matrix);
+		if(mode == 0) drawKRandom(coords, matrix, 100000); //Still poor
+		else if(mode == 1) drawNearestNeigh(coords, matrix);
+		else if(mode == 2) draw2Opt(coords, matrix);
+		else if(mode == 3) draw3Opt(coords, matrix);
 		else if(mode == 5) {
 //			size_t tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange
 			int tabuSize = 7;
@@ -151,40 +147,42 @@ int main(int argc, char *argv[]) {
 		} else if (mode == 5) {
 
 			for(int i = 0; i <= 2; i++) {
-			if(i == 0) printf("Invert:\n");
-			else if(i == 1) printf("\nInsert:\n");
-			else if(i == 2) printf("\nSwap:\n");
 
-			std::vector<int> road;
-			int tabuSize = 7;
-			size_t enhancementLimit = 15;
-			double time = 4.0 * 1000000000;
-			int mode = i; // 0 - invert, 1 - insert, 2 - swap
-			int kikMode = 0; // 0 - noKik, 1 - invert, 2 - insert, 3 - swap
+				if(i == 0) printf("Invert:\n");
+				else if(i == 1) printf("\nInsert:\n");
+				else if(i == 2) printf("\nSwap:\n");
 
-			clock_t start = clock();
-			std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
-			//std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
-			//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
-			clock_t middle = clock();
-			
-			road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode);
-			clock_t almost = clock();
-			size_t score = calculate_length(road, matrix, road.size());
-			size_t scoreBefore = calculate_length(roadList, matrix, road.size());
-			clock_t end = clock();
+				std::vector<int> road;
+				int tabuSize = 7;
+				size_t enhancementLimit = 15;
+				double time = 4.0 * 1000000000;
+				int mode = i; // 0 - invert, 1 - insert, 2 - swap
+				int kikMode = i; // 0 - invert, 1 - insert, 2 - swap
+				int kikSize = 7; // elements to 'shuffle' count
 
-			double elapsed = double(end - start) / CLOCKS_PER_SEC;
-			double elapsed1 = double(middle - start) / CLOCKS_PER_SEC;
-			double elapsed2 = double(almost - middle) / CLOCKS_PER_SEC;
-			double elapsed3 = double(end - almost) / CLOCKS_PER_SEC;
+				clock_t start = clock();
+				std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+				//std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
+				//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
+				clock_t middle = clock();
+				
+				road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+				clock_t almost = clock();
+				size_t score = calculate_length(road, matrix, road.size());
+				size_t scoreBefore = calculate_length(roadList, matrix, road.size());
+				clock_t end = clock();
 
-			printf("\nStart Road Cost: %ld\n", scoreBefore);
-			printf("Final Road Cost: %ld\n", score);
-			printf("Time Overall:			%f seconds.\n", elapsed);
-			printf("Time For Generation of Start:	%f seconds.\n", elapsed1);
-			printf("Time For Tabu Used:		%f seconds.\n", elapsed2);
-			printf("Time For length calculation:	%f seconds.\n", elapsed3);
+				double elapsed = double(end - start) / CLOCKS_PER_SEC;
+				double elapsed1 = double(middle - start) / CLOCKS_PER_SEC;
+				double elapsed2 = double(almost - middle) / CLOCKS_PER_SEC;
+				double elapsed3 = double(end - almost) / CLOCKS_PER_SEC;
+
+				printf("\nStart Road Cost: %ld\n", scoreBefore);
+				printf("Final Road Cost: %ld\n", score);
+				printf("Time Overall:			%f seconds.\n", elapsed);
+				printf("Time For Generation of Start:	%f seconds.\n", elapsed1);
+				printf("Time For Tabu Used:		%f seconds.\n", elapsed2);
+				printf("Time For length calculation:	%f seconds.\n", elapsed3);
 
 			}
 
