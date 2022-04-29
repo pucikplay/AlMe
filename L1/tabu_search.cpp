@@ -8,6 +8,8 @@
 typedef std::mt19937 MyRNG;
 MyRNG rng2(time(nullptr));
 typedef std::pair<std::pair<bool, size_t>, std::pair<size_t, size_t>> neiResult;
+// {roadVector, score}, {tabuList, tabuCounter}
+typedef std::pair<std::pair<std::vector<int>, size_t>, std::pair<std::pair<size_t, size_t>*, int>> structLTM;
 
 size_t invertLength(size_t length, const std::vector<int>& road, int** matrix, size_t i, size_t j, size_t n) {
 
@@ -121,7 +123,7 @@ std::vector<int> doStep(std::vector<int> road, size_t i, size_t j, int mode) {
 	return road;
 }
 
-std::vector<int> doParametrizedKick(std::vector<int> road, size_t n, size_t shuffleSize, size_t startingPoint) {
+std::vector<int> parametrizedKick(std::vector<int> road, size_t n, size_t shuffleSize, size_t startingPoint) {
 
 	std::vector<int> shuffledPart, result;
 
@@ -152,7 +154,38 @@ bool checkTabuList(std::pair<size_t, size_t> *tabuList, size_t tabuSize, size_t 
 	return false;
 }
 
-//based on 2_opt
+//Last place = best score
+std::vector<structLTM> addThingToLTM(std::vector<structLTM> returnList, structLTM newThing) {
+	int n = returnList.size();
+	std::vector<structLTM> result;
+	int counter = 0;
+
+	while(counter < n && returnList[counter].first.second > newThing.first.second) {
+		result.emplace_back(returnList[counter]);
+		counter += 1;
+	}
+	result.emplace_back(newThing);
+	while(counter < n) {
+		result.emplace_back(returnList[counter]);
+		counter += 1;
+	}
+	return result;
+}
+
+//Removes last element from vector
+std::vector<structLTM> cutLast(std::vector<structLTM> returnList) {
+	int n = returnList.size();
+	std::vector<structLTM> result;
+	int counter = 0;
+
+	while(counter < n - 1) {
+		result.emplace_back(returnList[counter]);
+		counter += 1;
+	}
+	return result;
+}
+
+//based on 2_opt -> propably to delete/change
 std::vector<int> get_tabu_road(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, std::pair<size_t, size_t> kickRange) {
 
 	size_t best_length = calculate_length(road, matrix, n);
@@ -220,7 +253,7 @@ std::vector<int> get_tabu_road(std::vector<int> road, int** matrix, std::size_t 
 			size_t shuffleRange = kickRange.second - kickRange.first;
 			size_t shuffleSize = rng2() % shuffleRange + kickRange.first;
 			size_t startPoint = rng2() % (n - kickRange.second - 1);
-			road = doParametrizedKick(road, n, shuffleSize, startPoint);
+			road = parametrizedKick(road, n, shuffleSize, startPoint);
 			best_length = calculate_length(road, matrix, n);
 			length = best_length;
 		}
@@ -279,7 +312,7 @@ neiResult checkNeighbourhood(std::vector<int> road, int** matrix, std::size_t n,
 					road_changed = true;
 				}
 			} else if (computedLen < globalBestLen) {
-				printf("Aspiration!!! : (%ld)\n", computedLen);
+				//printf("Aspiration!!! : (%ld)\n", computedLen);
 				bestPair = {i, j};
 				bestLen = computedLen;
 				road_changed = true;
@@ -298,9 +331,11 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 
 	size_t globalBestLen = best_length;
 	std::vector<int> globalBestRoad = road;
+	int globalBestTabuCounter = 0;
 
 	bool stop1 = true;
 	bool firstRun = true;
+	bool devHelpFlag = true;
 	int lastEnhance = 0, rseed = 7;
 
 	std::pair<size_t, size_t> bestPair;
@@ -310,10 +345,14 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 		tabuList[i] = std::pair<size_t, size_t> {n + 1, n + 1};
 	int tabuCounter = 0, elementsOnTabu = 0;
 
-	std::vector<std::pair<std::vector<int>, std::pair<size_t, size_t>*>> returnList;
+	std::vector<structLTM> returnList;
+	int counterLTM = 0;
+	//int mode = smode;
 
 	auto start = std::chrono::high_resolution_clock::now();
 	do {
+		//mode += 1;
+		//mode %= 3;
 
 		neiResult res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode, globalBestLen);
 		road_changed = res.first.first;
@@ -333,41 +372,57 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 			best_length = res.first.second;
 			length = best_length;
 			//printf("(%d)", lastEnhance);
+			//printf("Change: %ld\n", length);
 			// If found best solution for now
 			if(best_length < globalBestLen) {
 				globalBestLen = best_length;
 				globalBestRoad = road;
+				globalBestTabuCounter = tabuCounter;
 				if(firstRun)
 					for(int i = 0; i < tabuSize; i++)
 						globBestTabuList[i] = tabuList[i];
 
-				printf("New Minimum!!! : %ld\n", globalBestLen);
-				if(lastEnhance > 1) {
-					printf("Adding to LTM (After %d cycles)\n", lastEnhance);
+				if (devHelpFlag) printf("New Minimum!!! : %ld\n", globalBestLen);
+				if(lastEnhance > 1 && !firstRun) {
+					if (devHelpFlag) printf("Adding to LTM (After %d cycles)\n", lastEnhance);
 					//Adding to Long-term
-					std::pair<std::vector<int>, std::pair<size_t, size_t>*> newThingOnLTM = {globalBestRoad, tabuList};
-					returnList.emplace_back(newThingOnLTM);
+					structLTM newThingOnLTM = {{globalBestRoad, globalBestLen}, {tabuList, tabuCounter}};
+					returnList = addThingToLTM(returnList, newThingOnLTM);
+					counterLTM = returnList.size();
 				}
 				lastEnhance = 0;
 			}
 		}
 
-		// When long stagnation, perform kick
+		// When long stagnation, go back to place from LTM
 		if(lastEnhance >= enhancementLimit) {
 			//First best local minimum
 			if(firstRun) {
-				printf("Adding First Local Min to LTM\n");
-				std::pair<std::vector<int>, std::pair<size_t, size_t>*> newThingOnLTM = {globalBestRoad, globBestTabuList};
+				if (devHelpFlag) printf("Adding First Local Min to LTM\n");
+				structLTM newThingOnLTM = {{globalBestRoad, globalBestLen}, {globBestTabuList, globalBestTabuCounter}};
 				returnList.emplace_back(newThingOnLTM);
 				firstRun = false;
 			}
-			//printf("K");
-			road = deterministicKik(road, rseed, kikMode, kikSize);
-			rseed += 13;
+			//If there is no nodes in LTM left, perform kik
+			else if(counterLTM == 0) {
+				road = deterministicKik(road, rseed, kikMode, kikSize);
+				rseed += 13;
 
-			best_length = calculate_length(road, matrix, n);
-			length = best_length;
-			lastEnhance = 0;
+				best_length = calculate_length(road, matrix, n);
+				length = best_length;
+				lastEnhance = 0;
+			}
+			//Go one place back on LTM list
+			else {
+				structLTM lastThingOnLTM;
+				counterLTM -= 1;
+				lastThingOnLTM = returnList[counterLTM];
+				returnList = cutLast(returnList);
+				for(int i = 0; i < tabuSize; i++)
+					tabuList[i] = lastThingOnLTM.second.first[i];
+				road = lastThingOnLTM.first.first;
+				if (devHelpFlag) printf("Go back to %ld\n", lastThingOnLTM.first.second);
+			}
 		}
 
 		stop1 = ((std::chrono::high_resolution_clock::now() - start).count() < time) ? true : false;
@@ -448,7 +503,7 @@ std::pair<std::vector<std::pair<int, int>>, std::vector<std::vector<int>>> get_t
 			size_t shuffleRange = kickRange.second - kickRange.first;
 			size_t shuffleSize = rng2() % shuffleRange + kickRange.first;
 			size_t startPoint = rng2() % (n - kickRange.second - 1);
-			road = doParametrizedKick(road, n, shuffleSize, startPoint);
+			road = parametrizedKick(road, n, shuffleSize, startPoint);
 			best_length = calculate_length(road, matrix, n);
 			length = best_length;
 			startRoadChangeList.emplace_back(road);
