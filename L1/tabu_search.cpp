@@ -36,29 +36,40 @@ size_t invertLength(size_t length, const std::vector<int>& road, int** matrix, s
 size_t insertLength(size_t length, const std::vector<int>& road, int** matrix, size_t i, size_t j, size_t n) {
 
 	size_t newLength = length;
+	int smaller, bigger;
 
-	int smaller = (road[(i - 1 + n) % n] < road[i]) ? road[(i - 1 + n) % n] : road[i];
-	int bigger = (road[(i - 1 + n) % n] >= road[i]) ? road[(i - 1 + n) % n] : road[i];
+	if(i < j) {
+		smaller = (road[(i - 1 + n) % n] < road[i]) ? road[(i - 1 + n) % n] : road[i];
+		bigger = (road[(i - 1 + n) % n] >= road[i]) ? road[(i - 1 + n) % n] : road[i];
+	} else {
+		smaller = (road[(i + 1) % n] < road[i]) ? road[(i + 1) % n] : road[i];
+		bigger = (road[(i + 1) % n] >= road[i]) ? road[(i + 1) % n] : road[i];
+	}
 	newLength -= matrix[smaller][bigger];
 
-	smaller = (road[j - 1] < road[(j) % n]) ? road[j - 1] : road[(j) % n];
-	bigger = (road[j - 1] >= road[(j) % n]) ? road[j - 1] : road[(j) % n];
+	smaller = (road[(j - 1 + n) % n] < road[j % n]) ? road[(j - 1 + n) % n] : road[j % n];
+	bigger = (road[(j - 1 + n) % n] >= road[j % n]) ? road[(j - 1 + n) % n] : road[j % n];
 	newLength -= matrix[smaller][bigger];
 
 	smaller = (road[j] < road[(j + 1) % n]) ? road[j] : road[(j + 1) % n];
 	bigger = (road[j] >= road[(j + 1) % n]) ? road[j] : road[(j + 1) % n];
 	newLength -= matrix[smaller][bigger];
 
-	smaller = (road[(i - 1 + n) % n] < road[j]) ? road[(i - 1 + n) % n] : road[j];
-	bigger = (road[(i - 1 + n) % n] >= road[j]) ? road[(i - 1 + n) % n] : road[j];
+	if(i < j) {
+		smaller = (road[(i - 1 + n) % n] < road[j]) ? road[(i - 1 + n) % n] : road[j];
+		bigger = (road[(i - 1 + n) % n] >= road[j]) ? road[(i - 1 + n) % n] : road[j];
+	} else {
+		smaller = (road[(i + 1) % n] < road[j]) ? road[(i + 1) % n] : road[j];
+		bigger = (road[(i + 1) % n] >= road[j]) ? road[(i + 1) % n] : road[j];
+	}
 	newLength += matrix[smaller][bigger];
 
 	smaller = (road[i] < road[j]) ? road[i] : road[j];
 	bigger = (road[i] >= road[j]) ? road[i] : road[j];
 	newLength += matrix[smaller][bigger];
 
-	smaller = (road[j - 1] < road[(j + 1) % n]) ? road[j - 1] : road[(j + 1) % n];
-	bigger = (road[j - 1] >= road[(j + 1) % n]) ? road[j - 1] : road[(j + 1) % n];
+	smaller = (road[(j - 1 + n) % n] < road[(j + 1) % n]) ? road[(j - 1 + n) % n] : road[(j + 1) % n];
+	bigger = (road[(j - 1 + n) % n] >= road[(j + 1) % n]) ? road[(j - 1 + n) % n] : road[(j + 1) % n];
 	newLength += matrix[smaller][bigger];
 
 	return newLength;
@@ -113,8 +124,13 @@ std::vector<int> doStep(std::vector<int> road, size_t i, size_t j, int mode) {
 	if(mode == 0) {
 		std::reverse(road.begin() + i + 1, road.begin() + j + 1);
 	} else if(mode == 1) {
-		std::reverse(road.begin() + i, road.begin() + j + 1);
-		std::reverse(road.begin() + i + 1, road.begin() + j + 1);
+		if(i < j) {
+			std::reverse(road.begin() + i, road.begin() + j + 1);
+			std::reverse(road.begin() + i + 1, road.begin() + j + 1);
+		} else {
+			std::reverse(road.begin() + j, road.begin() + i + 1);
+			std::reverse(road.begin() + j, road.begin() + i);
+		}
 	} else if(mode == 2) {
 		std::reverse(road.begin() + i, road.begin() + j + 1);
 		std::reverse(road.begin() + i + 1, road.begin() + j);
@@ -313,6 +329,22 @@ std::pair<size_t, std::pair<size_t, size_t>> checkNeighbourhood(std::vector<int>
 				bestPair = {i, j};
 				bestLen = computedLen;
 			}
+
+			//When in insert mode, then check second possibility
+			if(mode == 9) {
+				computedLen = insertLength(length, road, matrix, j, i, n);
+				if(checkTabuList(tabuList, elementsOnTabu, j, i) == false) {
+					if (computedLen < bestLen || bestLen == -1) {
+						//printf("b - %ld ", computedLen);
+						bestPair = {j, i};
+						bestLen = computedLen;
+					}
+				} else if (computedLen < globalBestLen) {
+					//printf("Aspiration!!! : (%ld)\n", computedLen);
+					bestPair = {j, i};
+					bestLen = computedLen;
+				}
+			}
 		}
 	}
 
@@ -353,7 +385,8 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 		std::pair<size_t, std::pair<size_t, size_t>> res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode, globalBestLen);
 		bestPair = res.second;
 
-		tabuList[tabuCounter] = bestPair;
+		if(mode == 1) tabuList[tabuCounter] = {bestPair. second, bestPair.first};
+		else tabuList[tabuCounter] = bestPair;
 		tabuCounter += 1;
 		tabuCounter %= tabuSize;
 		elementsOnTabu += 1;
