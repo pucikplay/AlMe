@@ -394,7 +394,7 @@ void draw3Opt(std::vector<std::pair<double, double>> coords, int** matrix) {
 	SDL_Quit();
 }
 
-void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange) {
+void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int tabuSize, double time, size_t enhancedLimit, std::pair<size_t, size_t> kickRange, int neiMode) {
 
 	SDL_Window* window = windowInitializing();
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
@@ -405,7 +405,7 @@ void drawTabu(std::vector<std::pair<double, double>> coords, int** matrix, int t
 	//Roads
 	//std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 	std::vector<int> roadList = best_random_road(10000, coords.size(), matrix);
-	std::pair<std::vector<std::pair<int, int>>, std::vector<std::vector<int>>> bigPair = get_tabu_road_visual(roadList, matrix, roadList.size(), tabuSize, time, enhancedLimit, kickRange);
+	std::pair<std::vector<std::pair<int, int>>, std::vector<std::vector<int>>> bigPair = get_tabu_road_visual(roadList, matrix, roadList.size(), tabuSize, time, enhancedLimit, kickRange, neiMode);
 	std::vector<std::pair<int, int>> changeList = bigPair.first;
 	std::vector<std::vector<int>> startRoadChangeList = bigPair.second;
 	int roadChangeCounter = 0;
