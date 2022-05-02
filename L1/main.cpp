@@ -65,8 +65,9 @@ int main(int argc, char *argv[]) {
 			size_t enhancedLimit = 15;
 			double time = 32.0 * 1000000000;
 			std::pair<size_t, size_t> kickRange = {8, 32};
+			int neiMode = 0;
 
-			drawTabu(coords, matrix, tabuSize, time, enhancedLimit, kickRange);
+			drawTabu(coords, matrix, tabuSize, time, enhancedLimit, kickRange, neiMode);
 		}
 	} else {
 		if(mode == 0) {
@@ -159,6 +160,7 @@ int main(int argc, char *argv[]) {
 				int mode = i; // 0 - invert, 1 - insert, 2 - swap
 				int kikMode = i; // 0 - invert, 1 - insert, 2 - swap
 				int kikSize = 7; // elements to 'shuffle' count
+				std::pair<size_t, size_t> kickRange = {8, 32}; // range for random kick
 
 				clock_t start = clock();
 				std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
@@ -166,7 +168,8 @@ int main(int argc, char *argv[]) {
 				//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
 				clock_t middle = clock();
 				
-				road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+				road = get_tabu_road(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, kickRange, mode);
+				//road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
 				clock_t almost = clock();
 				size_t score = calculate_length(road, matrix, road.size());
 				size_t scoreBefore = calculate_length(roadList, matrix, road.size());
