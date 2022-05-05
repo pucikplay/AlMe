@@ -284,7 +284,7 @@ std::vector<int> get_tabu_road(std::vector<int> road, int** matrix, std::size_t 
 
 	bool stop1 = true;
 	bool firstRun = true;
-	bool devHelpFlag = true;
+	bool devHelpFlag = false;
 	bool devHelpKikFlag = false;
 	int lastEnhance = 0, rseed = 7;
 
@@ -386,7 +386,7 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 
 	bool stop1 = true;
 	bool firstRun = true;
-	bool devHelpFlag = true;
+	bool devHelpFlag = false;
 	bool devHelpKikFlag = false;
 	int lastEnhance = 0, rseed = 7;
 

@@ -168,8 +168,8 @@ int main(int argc, char *argv[]) {
 				//std::vector<int> roadList = doNearestNeighbor(coords.size(), matrix, 0);
 				clock_t middle = clock();
 				
-				road = get_tabu_road(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, kickRange, mode);
-				//road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+				//road = get_tabu_road(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, kickRange, mode);
+				road = deterministicTabu(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
 				clock_t almost = clock();
 				size_t score = calculate_length(road, matrix, road.size());
 				size_t scoreBefore = calculate_length(roadList, matrix, road.size());
