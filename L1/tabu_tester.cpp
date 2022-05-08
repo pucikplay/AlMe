@@ -99,6 +99,7 @@ void parameter_tuner(const std::string& file) {
 		else if(i == 1) coords = parse_coords("Data/Euc2D/a280.tsp");
 		else if(i == 2) coords = parse_coords("Data/Euc2D/pr1002.tsp");
 		matrix = coords_to_matrix(coords);
+		std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 
 	for(int timeInt = 0; timeInt < times[i].size(); timeInt += 1) {
 		time = (double)times[i][timeInt] * 1000000000;
@@ -123,8 +124,6 @@ void parameter_tuner(const std::string& file) {
 	for(int kikMode = 0; kikMode <= 2; kikMode++) {
 	for(int mode = 0; mode <= 2; mode++) {
 		counter += 1;
-
-		std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
 		
 		result = deterministicTabuWithKikCount(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
 		road = result.first;

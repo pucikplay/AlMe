@@ -483,7 +483,9 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 	return globalBestRoad;
 }
 
-std::pair<std::vector<int>, int> deterministicTabuWithKikCount(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, int mode, int kikMode, int kikSize) {
+std::pair<std::vector<int>, int> deterministicTabuWithKikCount(std::vector<int> roadStart, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, int mode, int kikMode, int kikSize) {
+
+	std::vector<int> road = roadStart;
 
 	size_t length = calculate_length(road, matrix, n);
 
