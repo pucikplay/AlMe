@@ -71,140 +71,208 @@ void tabu_neiComp_T(const std::string& file) {
 	}
 }
 
+//Parameters tuning
+void parameter_tuner(const std::string& file) {
+
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+
+	std::ofstream File(file);
+
+	std::vector<int> road;
+	std::pair<std::vector<int>, int> result;
+	int tabuSize;
+	size_t enhancementLimit;
+	double time;
+	int kikSize; // elements to 'shuffle' count
+	int counter = 0;
+	std::vector<std::vector<int>> times;
+	std::vector<int> times1 = {2, 4, 6};
+	std::vector<int> times2 = {6, 12};
+	std::vector<int> times3 = {20, 30};
+	times.emplace_back(times1);
+	times.emplace_back(times2);
+	times.emplace_back(times3);
+
+	for(int i = 0; i <= 2; i++) {
+		if(i == 0) coords = parse_coords("Data/Euc2D/st70.tsp");
+		else if(i == 1) coords = parse_coords("Data/Euc2D/a280.tsp");
+		else if(i == 2) coords = parse_coords("Data/Euc2D/pr1002.tsp");
+		matrix = coords_to_matrix(coords);
+
+	for(int timeInt = 0; timeInt < times[i].size(); timeInt += 1) {
+		time = (double)times[i][timeInt] * 1000000000;
+
+	for(int tabuSizeCounter = 0; tabuSizeCounter <= 3; tabuSizeCounter += 1) {
+		if(tabuSizeCounter == 0) tabuSize = 7;
+		else if(tabuSizeCounter == 1) tabuSize = coords.size() / 10;
+		else if(tabuSizeCounter == 2) tabuSize = (int)sqrt((double)coords.size());
+		else if(tabuSizeCounter == 3) tabuSize = (int)log2((double)coords.size());
+
+	for(int enhancementLimitCounter = 0; enhancementLimitCounter <= 3; enhancementLimitCounter += 1) {
+		if(enhancementLimitCounter == 0) enhancementLimit = tabuSize * 2 + 1;
+		else if(enhancementLimitCounter == 1) enhancementLimit = tabuSize * 10;
+		else if(enhancementLimitCounter == 2) enhancementLimit = tabuSize * (int)sqrt((double)coords.size());
+		else if(enhancementLimitCounter == 3) enhancementLimit = tabuSize * (int)log2((double)coords.size());
+
+	for(int kikSizeCounter = 0; kikSizeCounter <= 2; kikSizeCounter += 1) {
+		if(kikSizeCounter == 0) kikSize = 7;
+		else if(kikSizeCounter == 1) kikSize = coords.size() / 10;
+		else if(kikSizeCounter == 2) kikSize = (int)sqrt((double)coords.size());
+
+	for(int kikMode = 0; kikMode <= 2; kikMode++) {
+	for(int mode = 0; mode <= 2; mode++) {
+		counter += 1;
+
+		std::vector<int> roadList = bestStartingNeighbor(coords.size(), matrix);
+		
+		result = deterministicTabuWithKikCount(roadList, matrix, roadList.size(), tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+		road = result.first;
+		size_t score = calculate_length(road, matrix, road.size());
+		//size_t scoreBefore = calculate_length(roadList, matrix, road.size());
+
+		File << coords.size() << ";" << mode << ";" << kikMode << ";" << kikSize << ";";
+		File << tabuSizeCounter << ";" << tabuSize << ";" << enhancementLimitCounter << ";" << enhancementLimit << ";" << times[i][timeInt] << ";";
+		File << score << ";" << result.second << "\n";
+
+		printf("%d\n", counter);
+	}}}}}}}
+}
+
 void test_variants_random(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, std::pair<size_t, size_t> kickRange, int mode)
 {
-    std::vector<int> road;
-    std::vector<int> roadList;
-    std::ofstream File(file);
-    int** matrix;
-    std::vector<std::pair<double, double>> coords;
-    size_t n;
-    double time;
+	std::vector<int> road;
+	std::vector<int> roadList;
+	std::ofstream File(file);
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+	size_t n;
+	double time;
 
-    File << time << ";" << init_rode << ";" << enhancementLimit << ";" << \
-    kickRange.first << ";" << kickRange.second << ";" << mode << "\n";
+	File << time << ";" << init_rode << ";" << enhancementLimit << ";" << \
+	kickRange.first << ";" << kickRange.second << ";" << mode << "\n";
 
-    for (size_t i = 0; i < 3; i++) {
+	for (size_t i = 0; i < 3; i++) {
 
-        if (i == 0) {
-            coords = parse_coords("../Data/Euc2D/st70.tsp");
-            n = 70;
-            time = double(n * n * 2000);
-        }
-        if (i == 1) {
-            coords = parse_coords("../Data/Euc2D/a280.tsp");
-            n = 280;
-            time = double(n * n * 2000);
-        }
-        if (i == 2) {
-            coords = parse_coords("../Data/Euc2D/pr1002.tsp");
-            n = 1002;
-            time = double(n * n * 2000);
-        }
+		if (i == 0) {
+			coords = parse_coords("../Data/Euc2D/st70.tsp");
+			n = 70;
+			time = double(n * n * 2000);
+		}
+		if (i == 1) {
+			coords = parse_coords("../Data/Euc2D/a280.tsp");
+			n = 280;
+			time = double(n * n * 2000);
+		}
+		if (i == 2) {
+			coords = parse_coords("../Data/Euc2D/pr1002.tsp");
+			n = 1002;
+			time = double(n * n * 2000);
+		}
 
-        matrix = coords_to_matrix(coords);
+		matrix = coords_to_matrix(coords);
 
-        if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
-        if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
-        if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
+		if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
+		if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
+		if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
 
-        road = get_tabu_road(roadList, matrix, n, tabuSize, time, enhancementLimit, kickRange, mode);
+		road = get_tabu_road(roadList, matrix, n, tabuSize, time, enhancementLimit, kickRange, mode);
 
-        size_t score = calculate_length(road, matrix, n);
+		size_t score = calculate_length(road, matrix, n);
 
-        File << n << ";" << time << ";" << score << "\n";
-    }
+		File << n << ";" << time << ";" << score << "\n";
+	}
 }
 
 void test_variants_deterministic(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, int mode, int kikMode, int kikSize)
 {
-    std::vector<int> road;
-    std::vector<int> roadList;
-    std::ofstream File(file);
-    int** matrix;
-    std::vector<std::pair<double, double>> coords;
-    size_t n;
-    double time;
+	std::vector<int> road;
+	std::vector<int> roadList;
+	std::ofstream File(file);
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+	size_t n;
+	double time;
 
-    File << init_rode << ";" << enhancementLimit << ";" << \
-    mode << ";" << kikMode << ";" << kikSize << "\n";
+	File << init_rode << ";" << enhancementLimit << ";" << \
+	mode << ";" << kikMode << ";" << kikSize << "\n";
 
-    for (size_t i = 0; i < 3; i++) {
+	for (size_t i = 0; i < 3; i++) {
 
-        if (i == 0) {
-            coords = parse_coords("../Data/Euc2D/st70.tsp");
-            n = 70;
-            time = double(n * n * 2000);
-        }
-        if (i == 1) {
-            coords = parse_coords("../Data/Euc2D/a280.tsp");
-            n = 280;
-            time = double(n * n * 2000);
-        }
-        if (i == 2) {
-            coords = parse_coords("../Data/Euc2D/pr1002.tsp");
-            n = 1002;
-            time = double(n * n * 2000);
-        }
+		if (i == 0) {
+			coords = parse_coords("../Data/Euc2D/st70.tsp");
+			n = 70;
+			time = double(n * n * 2000);
+		}
+		if (i == 1) {
+			coords = parse_coords("../Data/Euc2D/a280.tsp");
+			n = 280;
+			time = double(n * n * 2000);
+		}
+		if (i == 2) {
+			coords = parse_coords("../Data/Euc2D/pr1002.tsp");
+			n = 1002;
+			time = double(n * n * 2000);
+		}
 
-        matrix = coords_to_matrix(coords);
+		matrix = coords_to_matrix(coords);
 
-        if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
-        if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
-        if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
+		if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
+		if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
+		if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
 
-        road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+		road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
 
-        size_t score = calculate_length(road, matrix, n);
+		size_t score = calculate_length(road, matrix, n);
 
-        File << n << ";" << time << ";" << score << "\n";
-    }
+		File << n << ";" << time << ";" << score << "\n";
+	}
 }
 
 void test_variants_parallel(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, std::pair<size_t, size_t> kickRange, int mode)
 {
-    std::vector<int> road;
-    std::vector<int> roadList;
-    std::ofstream File(file);
-    int** matrix;
-    std::vector<std::pair<double, double>> coords;
-    size_t n;
-    double time;
+	std::vector<int> road;
+	std::vector<int> roadList;
+	std::ofstream File(file);
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+	size_t n;
+	double time;
 
-    File << init_rode << ";" << enhancementLimit << ";" << \
-    kickRange.first << ";" << kickRange.second << ";" << mode << "\n";
+	File << init_rode << ";" << enhancementLimit << ";" << \
+	kickRange.first << ";" << kickRange.second << ";" << mode << "\n";
 
-    for (size_t i = 0; i < 3; i++) {
+	for (size_t i = 0; i < 3; i++) {
 
-        if (i == 0) {
-            coords = parse_coords("../Data/Euc2D/st70.tsp");
-            n = 70;
-            time = double(n * n * 2000);
-        }
-        if (i == 1) {
-            coords = parse_coords("../Data/Euc2D/a280.tsp");
-            n = 280;
-            time = double(n * n * 2000);
-        }
-        if (i == 2) {
-            coords = parse_coords("../Data/Euc2D/pr1002.tsp");
-            n = 1002;
-            time = double(n * n * 2000);
-        }
+		if (i == 0) {
+			coords = parse_coords("../Data/Euc2D/st70.tsp");
+			n = 70;
+			time = double(n * n * 2000);
+		}
+		if (i == 1) {
+			coords = parse_coords("../Data/Euc2D/a280.tsp");
+			n = 280;
+			time = double(n * n * 2000);
+		}
+		if (i == 2) {
+			coords = parse_coords("../Data/Euc2D/pr1002.tsp");
+			n = 1002;
+			time = double(n * n * 2000);
+		}
 
-        matrix = coords_to_matrix(coords);
+		matrix = coords_to_matrix(coords);
 
-//        if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
-//        if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
-//        if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
+//		if (init_rode == 0) roadList = bestStartingNeighbor(n, matrix);
+//		if (init_rode == 1) roadList = best_random_road(10000, n, matrix);
+//		if (init_rode == 2) roadList = doNearestNeighbor(n, matrix, 0);
 
 
-        for (size_t j = 1; j <= 6; j++){
-            road = get_tabu_road_parallel(coords, matrix, n, tabuSize, time, enhancementLimit, kickRange, mode, j);
+		for (size_t j = 1; j <= 6; j++){
+			road = get_tabu_road_parallel(coords, matrix, n, tabuSize, time, enhancementLimit, kickRange, mode, j);
 
-            size_t score = calculate_length(road, matrix, n);
+			size_t score = calculate_length(road, matrix, n);
 
-            File << n << ";" << time << ";" << j << ";" << score << "\n";
-        }
-    }
+			File << n << ";" << time << ";" << j << ";" << score << "\n";
+		}
+	}
 }

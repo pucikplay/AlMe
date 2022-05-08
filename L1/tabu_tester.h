@@ -25,9 +25,10 @@ void tabu_test_0_K_Rand(std::string fileName);
 //Comparison Part
 void tabu_test_Neigh_TSPLIB(const std::string& file);
 
-//Mass Comparison Part
-void tabu_mass_k_random_parallel(std::string fileName);
+//Parameters tuning
+void parameter_tuner(const std::string& file);
 
+//Mass Comparison Part
 void test_variants_random(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, std::pair<size_t, size_t> kickRange, int mode);
 
 void test_variants_deterministic(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, int mode, int kikMode, int kikSize);

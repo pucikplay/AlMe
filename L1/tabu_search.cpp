@@ -483,6 +483,116 @@ std::vector<int> deterministicTabu(std::vector<int> road, int** matrix, std::siz
 	return globalBestRoad;
 }
 
+std::pair<std::vector<int>, int> deterministicTabuWithKikCount(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, int mode, int kikMode, int kikSize) {
+
+	size_t length = calculate_length(road, matrix, n);
+
+	size_t globalBestLen = length;
+	std::vector<int> globalBestRoad = road;
+	int globalBestTabuCounter = 0;
+
+	bool stop1 = true;
+	bool firstRun = true;
+	bool devHelpFlag = false;
+	bool devHelpKikFlag = false;
+	int lastEnhance = 0, rseed = 7;
+
+	std::pair<size_t, size_t> bestPair;
+	std::pair<size_t, size_t>* tabuList = new std::pair<size_t, size_t>[tabuSize];
+	std::pair<size_t, size_t>* globBestTabuList = new std::pair<size_t, size_t>[tabuSize];
+	for(int i = 0; i < tabuSize; i++)
+		tabuList[i] = std::pair<size_t, size_t> {n + 1, n + 1};
+	int tabuCounter = 0, elementsOnTabu = 0;
+
+	std::vector<structLTM> returnList;
+	int counterLTM = 0;
+	int kikCount = 0;
+	//int mode = smode;
+
+	auto start = std::chrono::high_resolution_clock::now();
+	do {
+		//mode += 1;
+		//mode %= 3;
+
+		//{bestLen, bestPair}
+		std::pair<size_t, std::pair<size_t, size_t>> res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode, globalBestLen);
+		bestPair = res.second;
+
+		if(mode == 1) tabuList[tabuCounter] = {bestPair. second, bestPair.first};
+		else tabuList[tabuCounter] = bestPair;
+		tabuCounter += 1;
+		tabuCounter %= tabuSize;
+		elementsOnTabu += 1;
+		if(elementsOnTabu > tabuSize)
+			elementsOnTabu = tabuSize;
+
+		lastEnhance += 1;
+
+		//Step doing and interpretation
+		road = doStep(road, bestPair.first, bestPair.second, mode);
+		length = res.first;
+
+		// If found best solution remember it
+		if(length < globalBestLen) {
+			globalBestLen = length;
+			globalBestRoad = road;
+			globalBestTabuCounter = tabuCounter;
+			if(firstRun)
+				for(int i = 0; i < tabuSize; i++)
+					globBestTabuList[i] = tabuList[i];
+
+			if (devHelpFlag) printf("New Minimum!!! : %ld\n", globalBestLen);
+			if(!firstRun) {
+				if (devHelpFlag) printf("Adding to LTM (After %d cycles)\n", lastEnhance);
+				//Adding to Long-term
+				structLTM newThingOnLTM = {{globalBestRoad, globalBestLen}, {tabuList, tabuCounter}};
+				returnList = addThingToLTM(returnList, newThingOnLTM);
+				counterLTM = returnList.size();
+			}
+			lastEnhance = 0;
+		}
+
+		// When long stagnation, go back to place from LTM
+		if(lastEnhance >= enhancementLimit) {
+			//First best local minimum (only happens once in the beginning)
+			if(firstRun) {
+				if (devHelpFlag) printf("Adding First Local Min to LTM\n");
+				structLTM newThingOnLTM = {{globalBestRoad, globalBestLen}, {globBestTabuList, globalBestTabuCounter}};
+				returnList.emplace_back(newThingOnLTM);
+				firstRun = false;
+			}
+			//If there is no nodes in LTM left, perform kik
+			else if(counterLTM == 0) {
+				if (devHelpKikFlag) printf(" (Kik) ");
+				road = deterministicKik(road, rseed, kikMode, kikSize);
+				rseed += 13;
+
+				length = calculate_length(road, matrix, n);
+				lastEnhance = 0;
+				kikCount += 1;
+			}
+			//Go one place back on LTM list
+			else {
+				structLTM lastThingOnLTM;
+				counterLTM -= 1;
+				lastThingOnLTM = returnList[counterLTM];
+				returnList = cutLast(returnList);
+				for(int i = 0; i < tabuSize; i++)
+					tabuList[i] = lastThingOnLTM.second.first[i];
+				road = lastThingOnLTM.first.first;
+				length = calculate_length(road, matrix, n);
+				if (devHelpFlag) printf("Go back to %ld\n", lastThingOnLTM.first.second);
+			}
+		}
+
+		stop1 = ((std::chrono::high_resolution_clock::now() - start).count() < time) ? true : false;
+
+	} while (stop1);
+
+	return {globalBestRoad, kikCount};
+}
+
+
 std::pair<std::vector<std::pair<int, int>>, std::vector<std::vector<int>>> get_tabu_road_visual(std::vector<int> road, int** matrix, std::size_t n, int tabuSize, double time, size_t enhancementLimit, std::pair<size_t, size_t> kickRange, int mode) {
 
 	std::vector<std::pair<int, int>> changeList;
