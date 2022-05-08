@@ -74,6 +74,13 @@ Testy przeprowadzono za pomocą zaimplementowanych w tym celu funkcji ku jak naj
 
 \subsubsection{Algorytmy uwspółbieżnione}
 
+Uwspółbieżnienie zaimplementowano na zasadzie równoległego uruchamiania kilku instancji algorytmu \texttt{TABU-Search} jednocześnie. Z oczywistych względów nie testowano zachowania deterministycznej wersji algorytmu. Niestety, ta metoda uwspółbieżnienia nie dała dobrych rezultatów:
+
+\includegraphics[scale=0.4]{parallel_n=70}
+
+Dla każdego otoczenia i każdego rodzaju trasy startowej nie uzyskano w ten sposób polepszenia trasy.
+
+
 
 \subsection{Wnioski}
 
