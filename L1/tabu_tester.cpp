@@ -89,7 +89,7 @@ void parameter_tuner(const std::string& file) {
 	std::vector<std::vector<int>> times;
 	std::vector<int> times1 = {2, 4, 6};
 	std::vector<int> times2 = {6, 12};
-	std::vector<int> times3 = {20, 30};
+	std::vector<int> times3 = {18, 36};
 	times.emplace_back(times1);
 	times.emplace_back(times2);
 	times.emplace_back(times3);
