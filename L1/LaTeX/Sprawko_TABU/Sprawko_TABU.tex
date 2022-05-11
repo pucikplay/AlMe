@@ -71,6 +71,24 @@ Testy przeprowadzono za pomocą zaimplementowanych w tym celu funkcji ku jak naj
 
 \subsection{Opis wyników}
 
+\subsection{Porównanie wariantów dla optymalnych parametrów}
+
+Po przetestowaniu optymalnych parametrów przeprowadzono testy dla ustalonych instancji TSPLIB. Wykresy podzielono na dwie grupy, po lewej operacja \texttt{kick} była losowa w zadanym przedziale, po prawej deterministyczna.
+\\
+
+\includegraphics[scale=0.36]{70_rand}
+\includegraphics[scale=0.36]{70_deter}
+\includegraphics[scale=0.36]{280_rand}
+\includegraphics[scale=0.36]{280_deter}
+\includegraphics[scale=0.36]{1002_rand}
+\includegraphics[scale=0.36]{1002_deter}
+
+W obydwu wariantach operacji \texttt{kick} można zauważyć zbliżone wyniki przy wszystkich wielkościach problemu. Co więcej, wraz ze zwiększaniem się problemu bardziej klarownie widać różnice między wersjami. 
+\begin{itemize}
+	\item Początkowa trasa na podstawie Nearest Neighbour daje lepsze wyniki niż k-random
+	\item Wszystkie otoczenia są porównywalne, najlepszy Invert, następnie Insert, najgorszy Swap
+\end{itemize}
+
 
 \subsubsection{Algorytmy uwspółbieżnione}
 

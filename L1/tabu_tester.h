@@ -35,4 +35,6 @@ void test_variants_deterministic(const std::string& file, int init_rode, int tab
 
 void test_variants_parallel(const std::string& file, int init_rode, int tabuSize, size_t enhancementLimit, std::pair<size_t, size_t> kickRange, int mode);
 
+void batch_test(const std::string& file1, const std::string& file2);
+
 #endif //ALME_TABU_TESTER_H

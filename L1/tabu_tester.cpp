@@ -275,3 +275,69 @@ void test_variants_parallel(const std::string& file, int init_rode, int tabuSize
 		}
 	}
 }
+
+void batch_test(const std::string& file1, const std::string& file2)
+{
+    std::vector<int> road;
+    std::vector<int> roadList;
+    std::ofstream File1(file1);
+    std::ofstream File2(file2);
+    int** matrix;
+    std::vector<std::pair<double, double>> coords;
+    size_t n;
+    int tabuSize = 7;
+    size_t enhancementLimit = 15;
+    double time;
+    int mode = 0; // 0 - invert, 1 - insert, 2 - swap
+    int kikMode = 0; // 0 - invert, 1 - insert, 2 - swap
+    int kikSize = 7; // elements to 'shuffle' count
+    std::pair<size_t, size_t> kickRange = {8, 32};
+    size_t score;
+
+    File1 << "n" << ";" << "0_0" << ";" << "0_1" << ";" << "0_2" << ";" << "1_0" << ";" << "1_1" << ";" << "1_2" << ";" << "2_0" << ";" << "2_1" << ";" << "2_2" << "\n";
+    File2 << "n" << ";" << "0_0" << ";" << "0_1" << ";" << "0_2" << ";" << "1_0" << ";" << "1_1" << ";" << "1_2" << ";" << "2_0" << ";" << "2_1" << ";" << "2_2" << "\n";
+
+    for (size_t i = 0; i < 3; i++) {
+        if (i == 0) {
+            coords = parse_coords("../Data/Euc2D/st70.tsp");
+            n = 70;
+            time = 4.0 * 1000000000;
+        }
+        if (i == 1) {
+            coords = parse_coords("../Data/Euc2D/a280.tsp");
+            n = 280;
+            time = 12.0 * 1000000000;
+        }
+        if (i == 2) {
+            coords = parse_coords("../Data/Euc2D/pr1002.tsp");
+            n = 1002;
+            time = 36.0 * 1000000000;
+        }
+        printf("N is %ld\n", n);
+
+        matrix = coords_to_matrix(coords);
+
+        File1 << n;
+        File2 << n;
+
+        for (size_t j = 0; j < 3; j++) {
+            mode = j;
+            for (size_t k = 0; k < 3; k++) {
+                if (k == 0) roadList = bestStartingNeighbor(n, matrix);
+                if (k == 1) roadList = best_random_road(10000, n, matrix);
+                if (k == 2) roadList = doNearestNeighbor(n, matrix, 0);
+
+                road = get_tabu_road(roadList, matrix, n, tabuSize, time, enhancementLimit, kickRange, mode);
+                score = calculate_length(road, matrix, n);
+                File1 << ";" << score;
+                road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+                score = calculate_length(road, matrix, n);
+                File2 << ";" << score;
+            }
+        }
+        File1 << "\n";
+        File2 << "\n";
+    }
+    File1.close();
+    File2.close();
+}
