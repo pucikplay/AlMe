@@ -37,4 +37,6 @@ void test_variants_parallel(const std::string& file, int init_rode, int tabuSize
 
 void batch_test(const std::string& file1, const std::string& file2);
 
+void mass_test_ltm(std::string fileName);
+
 #endif //ALME_TABU_TESTER_H

@@ -20,6 +20,7 @@
 	\usepackage{amsmath}
 	\usepackage{amsfonts}
 	\usepackage{tikz}
+	\usepackage{multirow}
 
 	\usepackage{float}	
 	
@@ -146,6 +147,111 @@ W kontekście analizy tabeli 1.:
 \end{itemize}
 
 \newpage
+\subsection{porównanie wpływu listy długoterminowej}
+
+Dla porównania wpływu korzystania z listy długoterminowej (LTM) przetestowane zostały instancje o 'prosperujących' hiperparametrach ustalonych wcześniej (jakie dokładnie - zaraz), oraz przy czasie równym 60 sekund na każdy przebieg. W tabeli 4. zostały umieszczone wyniki uzyskane z- i bez LTM, oraz (aby być może zobaczyć różnicę w zależności od parametrów) zrobione to zostało dla 2 wariantów:
+\begin{itemize}
+	\item Lista tabu długości = 7
+	\item Lista tabu długości = $\sqrt{n}$
+\end{itemize}
+Wartości stałe dla każdego przebiegu:
+\begin{itemize}
+	\item Rodzaj otoczenia - \textit{Invert}
+	\item Rodzaj 'Kika' - \textit{Invert}
+	\item Wielkość 'Kika' - 7
+	\item Liczba iteracji bez poprawy - $|Tabu|*2 + 1$
+\end{itemize}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c}
+	Tabela 4.\\
+n & LTM 7 & LTM Sqrt & No LTM 7 & No LTM Sqrt \\
+\hline
+51 & 0.887966804979253 & 0.887966804979253 & 0.887966804979253 & 0.887966804979253 \\
+52 & 0.961129446277961 & 0.961129446277961 & 0.961129446277961 & 0.961129446277961 \\
+70 & 0.847989949748744 & 0.858040201005025 & 0.85929648241206 & 0.858040201005025 \\
+76(1) & 0.899671052631579 & 0.894736842105263 & 0.894736842105263 & 0.893092105263158 \\
+76(2) & 0.834281742424821 & 0.829515509352969 & 0.829187067009876 & 0.834304657006897 \\
+99 & 0.856645789839944 & 0.846903270702853 & 0.848295059151009 & 0.856645789839944 \\
+100(1) & 0.866021540205685 & 0.863227791724026 & 0.866021540205685 & 0.863227791724026 \\
+100(2) & 0.863545047133364 & 0.860531602534384 & 0.868567454798331 & 0.863429145418019 \\
+100(3) & 0.889518174133559 & 0.889391377852916 & 0.889814032121724 & 0.89429416737109 \\
+100(4) & 0.867777241268308 & 0.869628198937711 & 0.86934653146628 & 0.866288427490745 \\
+100(5) & 0.903881849729642 & 0.906827536114922 & 0.898232588168832 & 0.901904608183359 \\
+101 & 0.865951742627346 & 0.857908847184987 & 0.859249329758713 & 0.867292225201072 \\
+105 & 0.854738706820195 & 0.854738706820195 & 0.854738706820195 & 0.854738706820195 \\
+107 & 0.957647814910026 & 0.953770351328192 & 0.956319622964867 & 0.954755784061697 \\
+124 & 0.900335545447767 & 0.900335545447767 & 0.900335545447767 & 0.900335545447767 \\
+127 & 0.903279508484319 & 0.892126342821736 & 0.900218733436354 & 0.902428463714885 \\
+130 & 0.901809510450274 & 0.899424884275494 & 0.915556178987235 & 0.882311684668256 \\
+136 & 0.86353914781804 & 0.870348223093241 & 0.85543809415729 & 0.861278185643327 \\
+144 & 0.963224197887278 & 0.963224197887278 & 0.962682894823174 & 0.962682894823174 \\
+150(1) & 0.934064389146633 & 0.934064389146633 & 0.934064389146633 & 0.934064389146633 \\
+150(2) & 0.885638044410559 & 0.870612154134502 & 0.865942374281267 & 0.879411671272912 \\
+150(3) & 0.847647970643131 & 0.846920375818544 & 0.844642687672013 & 0.848723545601215 \\
+152 & 0.946244532703233 & 0.943994771504701 & 0.947451108541551 & 0.941267407370167 \\
+195 & 0.916156202143951 & 0.916156202143951 & 0.916156202143951 & 0.916156202143951 \\
+200(1) & 0.87395420200909 & 0.87395420200909 & 0.87395420200909 & 0.87395420200909 \\
+200(2) & 0.869422701969538 & 0.867077340416514 & 0.857441577891435 & 0.858939218401198 \\
+225(1) & 0.907264780832254 & 0.913685349429836 & 0.907264780832254 & 0.913685349429836 \\
+225(2) & 0.886194844910441 & 0.887287024901704 & 0.887505460899956 & 0.884010484927916 \\
+226 & 0.886301754689256 & 0.886215316794883 & 0.885858760480595 & 0.885858760480595 \\
+264 & 0.909911728542328 & 0.910168651703951 & 0.922133930373823 & 0.922133930373823 \\
+280 & 0.888403361344538 & 0.88436974789916 & 0.889747899159664 & 0.893109243697479 \\
+299 & 0.860103982566619 & 0.860103982566619 & 0.860103982566619 & 0.860103982566619 \\
+318(1) & 0.887664884860064 & 0.887664884860064 & 0.883132456657385 & 0.885124286091746 \\
+318(2) & 0.887664884860064 & 0.887664884860064 & 0.883132456657385 & 0.885124286091746 \\
+439 & 0.885270769472609 & 0.891880845712489 & 0.859081977521025 & 0.891880845712489 \\
+575 & 0.888527461528838 & 0.890404103590642 & 0.889153008882772 & 0.890404103590642 \\
+783 & 0.883111954459203 & 0.883111954459203 & 0.883111954459203 & 0.883111954459203 \\
+1002 & 0.88141324961354 & 0.88141324961354 & 0.88141324961354 & 0.88141324961354 \\
+
+\end{tabular}
+\end{table}
+
+Na danej tabeli zostało wykonane kilka testów Wilcoxona (przy użyciu pythonowej biblioteki \textbf{\textit{scipy.stats}}, aby móc w miarę rzetelny sposób zbadać dane zjawisko. Wyniki danych testów przedstawione zostały w Tabeli 5, wraz z przyjętymi oznaczeniami z Tabeli 4. oraz z dodatkowymi (przy trybie - Mode):
+\begin{itemize}
+	\item L. (\textit{less}) - Hipoteza, że Lewa strona wyrażenia jest 'Lepsza' od Prawej
+	\item 2. - (\textit{two-sided}) - Hipoteza, że obie strony są od siebie niezależne
+	\item P. (\textit{pratt}) - uwzględnienie zer przy wyliczeniu rang, ale pominięcie ich przy końcowej statystyce
+	\item W. (\textit{wilcox}) - odrzucenie różnic zerowych
+	\item Z. (\textit{zsplit}) - uwzględnienie zer przy wyliczaniu rang, oraz równomierna dystrybucja przy wyliczaniu końcowej statystyki.
+\end{itemize}
+
+Przejdźmy do tabelki:
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c|c|c|c|c}
+	Tabela 5.\\
+\multirow {2}{*}{Mode} & \multicolumn{2}{c|}{LTM-7 : LTM-Sqrt} & \multicolumn{2}{c|}{NoLTM-7 : NoLTM-Sqrt} & \multicolumn{2}{c|}{LTM-7 : NoLTM-7} & \multicolumn{2}{c}{LTM-Sqrt : NoLTM-Sqrt} \\
+\cline{2-9}
+ & Stat & P-Val & Stat & P-Val & Stat & P-Val & Stat & P-Val \\
+ \hline
+L.P. & 420 & 0.920489778898223 & 220 & 0.059777402992287 & 427 & 0.920623436703554 & 299 & 0.43152360785135 \\
+L.W. & 212 & 0.90855218158477 & 103 & 0.054684728027371 & 235 & 0.93463641598738 & 119 & 0.281659901157887 \\
+L.Z. & 465.5 & 0.916875235701623 & 265.5 & 0.062996261780571 & 466 & 0.917769251905686 & 359 & 0.43328385710822 \\
+\hline
+2.P. & 230 & 0.159020442203553 & 220 & 0.119554805984574 & 236 & 0.158753126592892 & 299 & 0.8630472157027 \\
+2.W. & 113 & 0.182895636830461 & 103 & 0.109369456054742 & 116 & 0.13072716802524 & 119 & 0.563319802315774 \\
+2.Z. & 275.5 & 0.166249528596755 & 265.5 & 0.125992523561142 & 275 & 0.164461496188629 & 359 & 0.866567714216441 \\
+
+\end{tabular}
+\end{table}
+
+Analiza tabeli :
+\begin{itemize}
+	\item Najpierw zauważmy, że w większości przypadków sposoby wliczania zerowych różnic niewiele zmieniły, poza przyppadkiem ostatnim, dlatego w kolejnych podpunktach nie będziemy o tym wspominali, a ostatni przykład omówimy (niespodziewane!) na końcu 
+	\item Spójrzmy teraz na porównanie ze sobą tych wariantów, gdzie w obu przypadkach była użyta LTM, albo nie. Przy Hipotezie, że jeden z tych wariantów jest 'lepszy', przy użyciu LTM można z około 91\% pewnością stwierdzić, że Lista tabu długości 7 daje lepsze wyniki niż $\sqrt{n}$. Jednakże, jeżeli nie będziemy z niej korzystać, to z około 96\% pewnością można powiedzieć, że jest całkowicie na odwrót! Jednak samo zjawisko, że jedne parametry lepiej działają w porównaniu z innymi jest samo w sobie wpisane w definicję algorytmu \textit{Tabu Search}
+	\item Przy porównywaniu ze sobą opcji z- i bez użycia LTM dla długości Tabu = 7 (W dalszym ciągu przy hipotezie o 'byciu llepszym') można zauważyć, że rzeczywiście jest to na korzyść użytku
+	\item W kontekście bycia 'jednakowo skutecznym' dla omawianych powyżej statystyk widać, że nie otrzymujemy zbyt wysokich wyników - są one rzędu 10-20 \%, czego można by się spodziewać, ponieważ z powyższego stwierdziliśmy, że można znacząco stwierdzić, co 'zazwyczaj' działa lepiej
+	\item Zastanówmy się jeszcze nad ostatnią kolumną, czyli porównania użycia LTM dla wariantu z długością listy Tabu = $\sqrt{n}$. Przy hipotezie, że użycie LTM porawia wynik, nie otrzymujemy zbyt dobrych wyników, jednakże dla założenia, że są one sobie podobne, wartość statystyki sięga nawet 86\% pewności, że rzeczywiście są sobie jednakowe. Jednak, jest tak dla statystyk uwzględniających zerowe różnice. Kiedy je wykluczymy (Tryb W.), to wtedy nasza pewność spada aż do 56\%.\\\\
+	Można by tutaj wysnuć wniosek, że w tym przypadku względnie często użycie LTM całkowicie nie wpływało na rozwiązanie (zerowe różnice), a kiedy już jakoś wpływało, to niestety rzadko kiedy coś popprawiało (ze statystyki wyżej - również dla trybu W. - widać, że z tylko 28\% pewnością stwierdzamy poprawę, czyli na 72\% lepiej jej nie używać)
+\end{itemize}
+
+Podsumowując, nie można powiedzieć, że LTM zawsze pomaga, jednakże dzieje się to na tyle często, że warto (w naszej subiektywnej ocenie) ją stosować. Dodatkowo mamy tutaj idealny przykład jak jeden parametr może diametralnie zmienić ostatecznie otrzymywane wartości.
+
+\newpage
 \subsection{Porównanie wariantów dla optymalnych parametrów}
 
 Po przetestowaniu optymalnych parametrów przeprowadzono testy dla ustalonych instancji TSPLIB. Wykresy podzielono na dwie grupy, po lewej operacja \texttt{kick} była losowa w zadanym przedziale, po prawej deterministyczna.
@@ -164,7 +270,7 @@ W obydwu wariantach operacji \texttt{kick} można zauważyć zbliżone wyniki pr
 	\item Wszystkie otoczenia są porównywalne, najlepszy Invert, następnie Insert, najgorszy Swap
 \end{itemize}
 
-
+\newpage
 \subsubsection{Algorytmy uwspółbieżnione}
 
 Uwspółbieżnienie zaimplementowano na zasadzie równoległego uruchamiania kilku instancji algorytmu \texttt{TABU-Search} jednocześnie. Z oczywistych względów nie testowano zachowania deterministycznej wersji algorytmu. Niestety, ta metoda uwspółbieżnienia nie dała dobrych rezultatów:

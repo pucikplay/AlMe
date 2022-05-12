@@ -341,3 +341,50 @@ void batch_test(const std::string& file1, const std::string& file2)
     File1.close();
     File2.close();
 }
+
+void mass_test_ltm(std::string fileName) {
+
+    std::vector<int> road;
+    std::vector<int> roadList;
+    int** matrix;
+    std::vector<std::pair<double, double>> coords;
+    int tabuSize;
+    size_t enhancementLimit;
+    double time = 60.0 * 1000000000;;
+    int mode = 0; // 0 - invert, 1 - insert, 2 - swap
+    int kikMode = 0; // 0 - invert, 1 - insert, 2 - swap
+    int kikSize = 7; // elements to 'shuffle' count
+    size_t score0, score1, score2, score3, score4;
+
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	if(n > 1200) return;
+
+	roadList = bestStartingNeighbor(n, matrix);
+	score0 = calculate_length(roadList, matrix, n);
+
+	tabuSize = 7;
+	enhancementLimit = 2 * tabuSize + 1;
+	road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+	score1 = calculate_length(road, matrix, n);
+
+	tabuSize = (int)sqrt(n);
+	enhancementLimit = 2 * tabuSize + 1;
+	road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize);
+	score2 = calculate_length(road, matrix, n);
+
+	tabuSize = 7;
+	enhancementLimit = 2 * tabuSize + 1;
+	road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize, false);
+	score3 = calculate_length(road, matrix, n);
+
+	tabuSize = (int)sqrt(n);
+	enhancementLimit = 2 * tabuSize + 1;
+	road = deterministicTabu(roadList, matrix, n, tabuSize, time, enhancementLimit, mode, kikMode, kikSize, false);
+	score4 = calculate_length(road, matrix, n);
+
+	std::ofstream File("Tests/TabuTests/LTMtest.txt", std::ios_base::app);
+	File << n << ";" << score0 << ";" << score1 << ";" << score2 << ";" << score3 << ";" << score4 << "\n";
+}
