@@ -146,6 +146,83 @@ W kontekście analizy tabeli 1.:
 	\item Iteracje do poprawy - tutaj już widać, że jest to mocno uzależnione od pozostałych parametrów, oraz że różne wartości zachowują się najlepiej w połączeniu z innymi ustawieniami (Wysoka różnorodność rozłożenia najlepszego wyniku w danych 'sekcjach')
 \end{itemize}
 
+Załączymy także wykresy dystrybucji wyniku względem liczby wykonananych 'Kików' (3 w podziale na tryb 'Kika', ora jeden zbiorczy). Tutaj także rozważamy jedynie otoczenie invert, ponieważ jak już zostało wspomniane, pozostałe zwracały te same wyniki.
+
+\includegraphics[scale=0.36]{InvertDist}
+\includegraphics[scale=0.36]{InsertDist}
+\includegraphics[scale=0.36]{SwapDist}
+\includegraphics[scale=0.36]{OverallDist}
+
+Jak można (albo i nie) zauważyć, różne tryby kików zupełnie inaczej wpływają na ich efektywność - najlepiej to widać dal Inverta, dla którego albo mała ich liczba jest 'bardzo trafiona', albo względnie słaba, ale jest mało wartości pośrednich, natomiast dla posostałych 2 trybów jest zupełnie na odwrót, przy czym widać, że Insert osiąga nieco lepsze pod względem dystrybucji (większa koncentracja ze strony 'lewej') wyniki od swapa (który jednak bardziej koncentruje się w 'środku')
+
+\newpage
+Przejdźmy teraz do Tabeli 2, w której to zawrzemy wyniki analogiczne do tych z Tabeli 1.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c|c|c||c|c|c|c}
+	Tabela 2.\\
+KikMode & TabuSizeMode & EnhanceMode & Min & Average & Max & StDev \\
+\hline
+Invert & 7 & Tabu * 2 + 1 & \textbf{\textit{2663}} & 2673.(3) & 2685 & 9.89275829415974 \\
+ &  & Rest & 2672 & 2680 & 2685 & 6.26099033699945 \\
+\cline{2-7}
+ & Size / 10 & Tabu * 2 + 1 & \textbf{\textit{2659}} & 2673.(3) & 2679 & 7.81451640644948 \\
+ &  & Rest & 2672 & 2676.(6) & 2679 & 3.61478445646025 \\
+\cline{2-7}
+ & $\sqrt(Size)$ & Tabu * 2 + 1 & \textbf{2657} & 2669.(3) & 2679 & 10.0531918646103 \\
+ &  & Rest & 2672 & 2676.(6) & 2679 & 3.61478445646025 \\
+\cline{2-7}
+ & $log_2(Size)$ & Tabu * 2 + 1 &  \textbf{\textit{2672}} & 2679.(3) & 2685 & 6.47044563122727 \\
+ &  & Rest &  \textbf{\textit{2672}} & 2680 & 2685 & 6.26099033699945 \\
+\hline
+Insert & 7 & Tabu * 2 + 1 & 2685 & 2685 & 2685 & 0 \\
+ &  & Rest &  \textbf{\textit{2682}} & 2684 & 2685 & 1.54919333848294 \\
+\cline{2-7}
+ & Size / 10 & Any &  \textbf{\textit{2679}} & 2679 & 2679 & 0 \\
+\cline{2-7}
+ & $\sqrt(Size)$ & Tabu * 2 + 1 &  \textbf{\textit{2670}} & 2676 & 2679 & 4.64758001544889 \\
+ &  & Rest & 2679 & 2679 & 2679 & 0 \\
+\cline{2-7}
+ & $log_2(Size)$ & Tabu * 2 + 1 & 2685 & 2685 & 2685 & 0 \\
+ &  & Rest &  \textbf{\textit{2682}} & 2684 & 2685 & 1.54919333848294 \\
+\hline
+Swap & 7 & Tabu * 2 + 1 & 2685 & 2685 & 2685 & 0 \\
+ &  & Rest & 2671 & 2680.(3) & 2685 & 7.22956891292053 \\
+\cline{2-7}
+ & Size / 10 & Tabu * $\sqrt(Size)$ &  \textbf{\textit{2665}} & 2676.(6) & 2679 & 5.71547606649408 \\
+ &  & Rest &  \textbf{\textit{2665}} & 2674.(3) & 2679 & 7.22956891292053 \\
+\cline{2-7}
+ & $\sqrt(Size)$ & Any &  \textbf{\textit{2665}} & 2674.(3) & 2679 & 7.22956891292053 \\
+\cline{2-7}
+ & $log_2(Size)$ & Any &  \textbf{\textit{2671}} & 2680.(3) & 2685 & 7.22956891292053 \\
+\end{tabular}
+\end{table}
+
+Wypunktujmy kilka obserwacji na podstawie tej tabeli:
+\begin{itemize}
+	\item Jak można tutaj zauważyć, niektóre przypadki się nam 'zlepiły ze sobą' (Tam gdzie cała kategoria osiągała takie same wyniki zaznaczone to zostało jako 'Any', natomiast tam, gdzie jedna się wyróżniła, to została nazwana, a pozostałe zbiorczo funkcjonują pod nazwą 'Rest').
+	\item Jednak zauważalne jest to że mimmo wszystko najepsz wynik został osiągnięty między innymi dzięki zastosowaniu długości listy Tabu równej $\sqrt{n}$.
+	\item Pojawia się nam tutaj także ciekawa własność, że zaraz po najlepszym, wyniku - 2657 - bardzo blisko są wyniki osiągane przez Kika tryby Swap - w przeciwieństwie do przypadku poprzedniego, gdzie Swap prezentował się dobrze, ale nie wyróżniająco.
+	\item Na koniec jeszcze tylko zwróćmy uwagę na to, jak mało od siebie się różnią wartości maksymalne - co oznacza, że wiele zaczyna 'asymptocznie' zbiegać do podobnego wyniku.
+\end{itemize}
+
+I na koniec w tej sekcji jeszcze mini-tabela 3, w której to jedynie pokażemy, jakie były najmniejsze, oraz największe osiągnięte wartości funkcji celu dla poszczególnych trybów otoczenia (Wszystkie wyniki osiągnęły łącznie jedynie 12 różnych wartości, dlatego uznajemy ten przypadek za 'zdegenerowany' dla naszych potrzeb i tak samo najmniej się zajmiemy jego analizą):
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c}
+	Tabela 3.\\
+NeiMode & Min Score & Max Score \\
+\hline
+Invert & 276539 & 278997 \\
+Insert & 301883 & 301883 \\
+Swap & 302798 & 303465 \\
+\end{tabular}
+\end{table}
+
+Jak widać, granice są bardzo wyraźne, oraz można stwierdzić, że bezsprzecznie otoczenie rodzaju Invert zadziałał tu najlepiej.
+
 \newpage
 \subsection{porównanie wpływu listy długoterminowej}
 
