@@ -11,6 +11,7 @@
 #include "tabu_search.h"
 #include "tabu_tester.h"
 #include "tester.h"
+#include "genAlgo.h"
 #include <time.h>
 
 int main(int argc, char *argv[]) {
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
 	bool euclideanFlag = true;
 	bool randomFlag = false;
 	bool drawFlag = false;
-	int mode = 4; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu
+	int mode = 6; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu, 6 - genetic
 
 	//Euclidean
 	if(euclideanFlag) {
@@ -192,6 +193,11 @@ int main(int argc, char *argv[]) {
 
 			}
 
+		} else if(mode == 6) {
+			std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 100);
+			size_t score = calculate_length(road, matrix, road.size());
+
+			printf("Best: %ld\n", score);
 		}
 	}
 	printf("Bye!\n");
