@@ -61,9 +61,63 @@ vecPair orderBasedCross(std::vector<int> parent1, std::vector<int> parent2) {
 	return {parent1, parent2};
 }
 
-populationStruct doCrossover(populationStruct parents, int size) {
+vecPair ModifiedOrderCross(std::vector<int> parent1, std::vector<int> parent2) {
+
+	int crossSize = 5;
+	int divideStart = rngMut() % (parent1.size() - crossSize);
+
+	// Remember vals at given positions
+	int vals1[crossSize], vals2[crossSize];
+	for(int i = 0; i < crossSize; i++) {
+		vals1[i] = parent1[divideStart + i];
+		vals2[i] = parent2[divideStart + i];
+	}
+
+	// Remembering places at sliced positions
+	std::vector<int> child1, child2;
+	int par1Val, par2Val;
+	for(int i = 0; i < parent1.size(); i++) {
+
+		par1Val = -1;
+		par2Val = -1;
+
+		for(int j = 0; j < crossSize; j++) {
+			if(parent1[i] == vals2[j])
+				par1Val = vals2[j];
+			if(parent2[i] == vals1[j])
+				par2Val = vals1[j];
+		}
+		child1.emplace_back(par1Val);
+		child2.emplace_back(par2Val);
+
+	}
+
+	// Filling rest
+	int par1Counter = 0, par2Counter = 0;
+
+	for(int i = 0; i < parent1.size(); i++) {
+
+		// Avoiding sliced part
+		if(par1Counter == divideStart) par1Counter += crossSize;
+		if(par2Counter == divideStart) par2Counter += crossSize;
+
+		if(child1[i] == -1) {
+			child1[i] = parent2[par2Counter];
+			par2Counter += 1;
+		}
+		if(child2[i] == -1) {
+			child2[i] = parent1[par1Counter];
+			par1Counter += 1;
+		}
+	}
+
+	return {child1, child2};
+}
+
+populationStruct doCrossover(populationStruct parents, int size, int crossMode) {
 
 	populationStruct children;
+	vecPair childs;
 
 	std::mt19937 rngC(time(nullptr));
 	std::shuffle(std::begin(parents), std::end(parents), rngC);
@@ -77,7 +131,9 @@ populationStruct doCrossover(populationStruct parents, int size) {
 				printf("%d, ", parents[1][j]);
 			printf("\n\n");
 		}*/
-		vecPair childs = orderBasedCross(parents[i], parents[i + 1]);
+
+		if(crossMode == 0) childs = orderBasedCross(parents[i], parents[i + 1]);
+		else if(crossMode == 1) childs = ModifiedOrderCross(parents[i], parents[i + 1]);
 		/*if(i == 0) {
 			for(int j = 0; j < childs.first.size(); j++)
 				printf("%d, ", childs.first[j]);
@@ -144,7 +200,7 @@ populationStruct doSelection(populationStruct parents, populationStruct children
 	return smallPop;
 }
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int iterations) {
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int iterations, int crossMode) {
 
 	std::vector<int> road = best_random_road(10, n, matrix);
 	populationStruct population, children;
@@ -155,7 +211,7 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	for(int i = 0; i < iterations; i++) {
 		printf("\nIteration %d; ", i);
 		population = doSelection(population, children, matrix, n);
-		children = doCrossover(population, populationSize);
+		children = doCrossover(population, populationSize, crossMode);
 		printf("Child Mutations: ");
 		children = doChildrenMutation(children, mutationThreshold, n);
 	}
