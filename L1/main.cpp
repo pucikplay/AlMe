@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
 			}
 
 		} else if(mode == 6) {
-			std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 100, 1);
+			std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 4, 100, 0, 5);
 			size_t score = calculate_length(road, matrix, road.size());
 
 			printf("Best: %ld\n", score);

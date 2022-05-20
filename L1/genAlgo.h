@@ -7,6 +7,6 @@
 
 #include <vector>
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize = 20, double mutationThreshold = 0.05, int iterations = 100, int crossMode = 0);
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize = 20, double mutationThreshold = 0.05, int mutMode = 3, int mutationIntensification = 4, int iterations = 100, int crossMode = 0, int crossSize = 5);
 
 #endif //ALME_GENALGO_H

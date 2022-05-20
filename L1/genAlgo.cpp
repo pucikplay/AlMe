@@ -15,9 +15,7 @@ typedef std::vector<std::vector<int>> populationStruct;
 typedef std::pair<std::vector<int>, std::vector<int>> vecPair;
 std::mt19937 rngMut(time(nullptr));
 
-vecPair orderBasedCross(std::vector<int> parent1, std::vector<int> parent2) {
-
-	int crossSize = 5;
+vecPair orderBasedCross(std::vector<int> parent1, std::vector<int> parent2, int crossSize) {
 
 	// Generate random positions
 	int numVals[parent1.size()];
@@ -61,9 +59,8 @@ vecPair orderBasedCross(std::vector<int> parent1, std::vector<int> parent2) {
 	return {parent1, parent2};
 }
 
-vecPair ModifiedOrderCross(std::vector<int> parent1, std::vector<int> parent2) {
+vecPair modifiedOrderCross(std::vector<int> parent1, std::vector<int> parent2, int crossSize) {
 
-	int crossSize = 5;
 	int divideStart = rngMut() % (parent1.size() - crossSize);
 
 	// Remember vals at given positions
@@ -114,7 +111,63 @@ vecPair ModifiedOrderCross(std::vector<int> parent1, std::vector<int> parent2) {
 	return {child1, child2};
 }
 
-populationStruct doCrossover(populationStruct parents, int size, int crossMode) {
+vecPair partiallMappedyCross(std::vector<int> parent1, std::vector<int> parent2, int crossSize) {
+
+	int divideStart = rngMut() % (parent1.size() - crossSize);
+
+	// Remember vals at given positions
+	int vals1[crossSize], vals2[crossSize];
+	for(int i = 0; i < crossSize; i++) {
+		vals1[i] = parent1[divideStart + i];
+		vals2[i] = parent2[divideStart + i];
+	}
+
+	// Remembering places at sliced positions
+	std::vector<int> child1, child2;
+	int par1Val, par2Val;
+	for(int i = 0; i < parent1.size(); i++) {
+
+		// 'intersecting' part
+		if(divideStart <= i && i < divideStart + crossSize) {
+			child1.emplace_back(parent2[i]);
+			child2.emplace_back(parent1[i]);
+			continue;
+		}
+
+		par1Val = parent1[i];
+		par2Val = parent2[i];
+
+		//child1 part
+		bool isBad = true;
+		while(isBad) {
+			isBad = false;
+			for(int j = 0; j < crossSize; j++) {
+				if(par1Val == vals2[j]) {
+					par1Val = vals1[j];
+					isBad = true;
+				}
+			}
+		}
+
+		//child2 part
+		isBad = true;
+		while(isBad) {
+			isBad = false;
+			for(int j = 0; j < crossSize; j++) {
+				if(par2Val == vals1[j]) {
+					par2Val = vals2[j];
+					isBad = true;
+				}
+			}
+		}
+		child1.emplace_back(par1Val);
+		child2.emplace_back(par2Val);
+	}
+
+	return {child1, child2};
+}
+
+populationStruct doCrossover(populationStruct parents, int size, int crossMode, int crossSize) {
 
 	populationStruct children;
 	vecPair childs;
@@ -132,8 +185,9 @@ populationStruct doCrossover(populationStruct parents, int size, int crossMode) 
 			printf("\n\n");
 		}*/
 
-		if(crossMode == 0) childs = orderBasedCross(parents[i], parents[i + 1]);
-		else if(crossMode == 1) childs = ModifiedOrderCross(parents[i], parents[i + 1]);
+		if(crossMode == 0) childs = orderBasedCross(parents[i], parents[i + 1], crossSize);
+		else if(crossMode == 1) childs = modifiedOrderCross(parents[i], parents[i + 1], crossSize);
+		else if(crossMode == 2) childs = partiallMappedyCross(parents[i], parents[i + 1], crossSize);
 		/*if(i == 0) {
 			for(int j = 0; j < childs.first.size(); j++)
 				printf("%d, ", childs.first[j]);
@@ -152,18 +206,38 @@ populationStruct doCrossover(populationStruct parents, int size, int crossMode) 
 	return children;
 }
 
-populationStruct doChildrenMutation(populationStruct children, double threshold, int size) {
+populationStruct doChildrenMutation(populationStruct children, double threshold, int size, int mutMode, int intensification) {
 
 	std::uniform_real_distribution<double> unif(0.0, 1.0);
 	
 	for(int i = 0; i < children.size(); i++) {
 		if(unif(rngMut) < threshold) {
-			int x1 = rngMut() % (size - 1);
-			int x2 = rngMut() % (size - 1);
-			int smaller = x1 < x2 ? x1 : x2;
-			int bigger = x1 >= x2 ? x1 : x2;
-			std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger + 1);
-			printf("(%d)", i);
+			int mutationVal = 1 + rngMut() % intensification;
+			printf("(%d-%d-", i, mutationVal);
+
+			for(int j = 0; j < mutationVal; j++) {
+
+				int x1 = rngMut() % (size - 1);
+				int x2 = rngMut() % (size - 1);
+				int smaller = x1 < x2 ? x1 : x2;
+				int bigger = x1 >= x2 ? x1 : x2;
+
+				// 0 - Invert, 1 - Insert, 2 - Swap, 3 - Random
+				int modeMut = mutMode;
+				if(mutMode == 3) modeMut = rngMut() % 3;
+
+				if(modeMut == 0) std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger + 1);
+				else if(modeMut == 1) {
+					std::reverse(children[i].begin() + smaller, children[i].begin() + bigger + 1);
+					std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger + 1);
+				}
+				else if(modeMut == 2) {
+					std::reverse(children[i].begin() + smaller, children[i].begin() + bigger + 1);
+					std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger);
+				}
+				printf("%d", modeMut);
+			}
+			printf(")");
 		}
 	}
 
@@ -200,7 +274,7 @@ populationStruct doSelection(populationStruct parents, populationStruct children
 	return smallPop;
 }
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int iterations, int crossMode) {
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize) {
 
 	std::vector<int> road = best_random_road(10, n, matrix);
 	populationStruct population, children;
@@ -211,9 +285,9 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	for(int i = 0; i < iterations; i++) {
 		printf("\nIteration %d; ", i);
 		population = doSelection(population, children, matrix, n);
-		children = doCrossover(population, populationSize, crossMode);
+		children = doCrossover(population, populationSize, crossMode, crossSize);
 		printf("Child Mutations: ");
-		children = doChildrenMutation(children, mutationThreshold, n);
+		children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
 	}
 
 	printf("\n Last Check; ");
