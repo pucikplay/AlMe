@@ -6,12 +6,14 @@
 #include <time.h>
 #include <algorithm>
 #include <random>
+#include <thread>
 
 #include "genAlgo.h"
 #include "roadSolver.h"
 #include "k_random.h"
 
 typedef std::vector<std::vector<int>> populationStruct;
+typedef std::vector<populationStruct> islandStruct;
 typedef std::pair<std::vector<int>, std::vector<int>> vecPair;
 std::mt19937 rngMut(time(nullptr));
 
@@ -304,4 +306,70 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	}
 
 	return road;
+}
+
+void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize) {
+    populationStruct children;
+
+    for(int i = 0; i < iterations; i++) {
+        printf("\nIteration %d; ", i);
+        population = doSelection(population, children, matrix, n);
+        children = doCrossover(population, populationSize, crossMode, crossSize);
+        printf("Child Mutations: ");
+        children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
+    }
+
+    population = doSelection(population, children, matrix, n);
+}
+
+std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int wholeIterations, int crossMode, int crossSize, int islandsNumber, int swappingInterval, int swapSize) {
+    islandStruct islands;
+    std::thread threads[islandsNumber];
+    std::vector<int> road;
+    size_t bestScore = SIZE_MAX, score;
+    populationStruct swapPool;
+    int idx;
+
+    for (size_t i = 0; i < islandsNumber; i++) {
+        for (size_t j = 0; j < populationSize * 2; j++) {
+            islands[i].emplace_back(best_random_road(10, n, matrix));
+        }
+    }
+
+    for (size_t i = 0; i < wholeIterations; i++) {
+        for (size_t j = 0; j < islandsNumber; j++) {
+            threads[i] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize);
+        }
+
+        for (size_t j = 0; j < islandsNumber; j++) {
+            for (size_t k = 0; k < swapSize; k++) {
+                idx = rngMut() % islands[j].size();
+                swapPool.emplace_back(islands[j][idx]);
+                islands[j].erase(islands[j].begin() + idx);
+            }
+        }
+
+        std::shuffle(std::begin(swapPool), std::end(swapPool), rngMut);
+
+        idx = 0;
+        for (size_t j = 0; j < islandsNumber; j++) {
+            for (size_t k = 0; k < swapSize; k++) {
+                islands[j].emplace_back(swapPool[idx]);
+                idx++;
+            }
+        }
+        swapPool.clear();
+    }
+
+    for (size_t i = 0; i < islandsNumber; i++) {
+        for (size_t j = 0; j < islands[i].size(); j++) {
+            score = calculate_length(islands[i][j], matrix, n);
+            if(score < bestScore) {
+                bestScore = score;
+                road = islands[i][j];
+            }
+        }
+    }
+
+    return road;
 }
