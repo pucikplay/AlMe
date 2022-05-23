@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) {
 
 			/*for(int i = 1; i < argc; i++) {
 				printf("%s\n", argv[i]);
-				std::string fileName = argv[i];	
+				std::string fileName = argv[i];
 				//mass_test_0_1_TSPLIB(fileName);
 				//mass_test_0_2_TSPLIB(fileName);
 				//mass_test_1_2_TSPLIB(fileName);
@@ -194,7 +194,8 @@ int main(int argc, char *argv[]) {
 			}
 
 		} else if(mode == 6) {
-			std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 4, 100, 0, 5);
+			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 4, 100, 0, 5);
+            std::vector<int> road = geneticIslands(coords.size(), matrix, 20, 0.05, 3, 4, 10, 0, 5, 6, 10, 5);
 			size_t score = calculate_length(road, matrix, road.size());
 
 			printf("Best: %ld\n", score);
