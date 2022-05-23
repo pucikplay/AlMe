@@ -308,22 +308,26 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	return road;
 }
 
-void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize) {
+void geneticThread(populationStruct population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int threadID) {
     populationStruct children;
 
     for(int i = 0; i < iterations; i++) {
-        printf("\nIteration %d; ", i);
+        printf("\nThread: %d, Iteration %d;", threadID, i);
         population = doSelection(population, children, matrix, n);
+        //printf("\ntu ok %d\n", threadID);
         children = doCrossover(population, populationSize, crossMode, crossSize);
+        //printf("tu też %d\n", threadID);
         printf("Child Mutations: ");
         children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
+        //printf("tu pewnie też %d\n", threadID);
     }
 
     population = doSelection(population, children, matrix, n);
 }
 
 std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int wholeIterations, int crossMode, int crossSize, int islandsNumber, int swappingInterval, int swapSize) {
-    islandStruct islands;
+    auto *islands = new populationStruct[islandsNumber];
+    populationStruct population;
     std::thread threads[islandsNumber];
     std::vector<int> road;
     size_t bestScore = SIZE_MAX, score;
@@ -336,9 +340,21 @@ std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, doub
         }
     }
 
+//    for (size_t i = 0; i < islandsNumber; i++) {
+//        printf("wyspa %d:\n", i);
+//        for (size_t j = 0; j < islands[i].size(); j++) {
+//            printf("osobnik %d: ", j);
+//            for (size_t k = 0; k < islands[i][j].size(); k++) {
+//                printf("%d ", islands[i][j][k]);
+//            }
+//            printf("\n");
+//        }
+//        printf("\n");
+//    }
+
     for (size_t i = 0; i < wholeIterations; i++) {
         for (size_t j = 0; j < islandsNumber; j++) {
-            threads[i] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize);
+            threads[j] = std::thread(geneticThread, islands[j], n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize, j);
         }
 
         for (size_t j = 0; j < islandsNumber; j++) {
