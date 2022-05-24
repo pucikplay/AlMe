@@ -38,3 +38,51 @@ Opis eksperymentów:
 		Wnioski jakie można wyciągnąć na podstawie eksperymentów
 	
 Gotowe sprawozdanie proszę wyeksportować do formatu PDF i przesłać przez MS Teams lub email.
+
+=========================================================================================
+Lista 3
+
+
+
+
+Ocena 3.0 
+	Działający GA dla TSP, który jest w stanie pokonać 2-opta dla mniejszych instancji TSPLib i budżetu obliczeniowego rzędu 10 minut. 
+	
+
+Ocena 4.0 
+
+Wymagania te same co dla oceny niżej, a dodatkowo:
+	Przetestowanie co najmniej 2 metod generowania populacji początkowej. 	
+	Przetestowanie co najmniej 2 metod selekcji osobników (do krzyżowania). 
+	Przetestowanie co najmniej 2 operatorów krzyżowania. 
+	Przetestowanie co najmniej 2 operatorów mutacji. 
+	Eksperymenty przeprowadzone na co najmniej 12 instancjach. 
+	Test statystyczny Friedman + Wilcoxona dla wybranych. 
+	Budżet czasowy eksperymentu co najmniej 1 minuta dla każdej instancji i wariantu (łącznie 192 minuty). 
+	
+
+Ocena 5.0 
+
+Wymagania te same co dla oceny niżej, a dodatkowo: 
+	Przetestować co najmniej jedna specyficzną dla TSP metodę generowania populacji początkowej. 
+	Przetestować co najmniej jedną metodę krzyżowania specyficzną dla TSP. 
+	Przetestować co najmniej jedną metodę mutacji specyficzną dla TSP. 
+	Przetestować co najmniej 2 metody wyboru osobników do kolejnej generacji (elitaryzm). 
+	Eksperymenty na co najmniej 16 instancjach, w tym co najmniej 8 instancji symetrycznych i 8 asymetrycznych. 
+	Rozważane warianty testować oddzielnie dla symetrycznego i asymetrycznego TSP oraz każdy parametr oddzielnie (czyli GA odniesienia + badanie wpływu danego parametru). 
+	Zbadać kombinację najlepszych wartości parametrów z poprzedniego punktu. 
+	Metodą losowego próbkowania, zbadać co najmniej 100 kombinacji parametrów (łącznie 3000 minut). Narysować histogram wyników, porównać najlepszą kombinację z tą z poprzedniego punktu. 
+	Friedman 1xN, porównanie z algorytmem odniesienia + dodatkowe testy + porównanie z naiwnym zastosowaniem Wilcoxona. 
+
+
+Ocena 5.5 
+
+Wymagania te same co dla oceny niżej, a dodatkowo wybrane z (lista nie jest wyczerpująca): 
+
+	Zbadanie wpływu zastosowania modelu wyspowego. 
+	Nietrywialna implementacja równoległa. 
+	Jako GA odniesienia wykorzystać algorytm z publikacji o TSP z czasopisma z Impact Factor z roku 2010 lub późniejszego. 
+	Zbadanie wpływu dodatkowych mechanizmów GA, takich jak wiek lub położenie osobnika. 
+	Wykrywanie i przeciwdziałanie stagnacji. 
+	Porównanie z Tabu Search z poprzedniego zadania. 
+	Eksperymenty na wygenerowanych losowo instancjach, których rozwiazania optymalne wyznaczono za pomocą solvera (na przykład Concorde).
