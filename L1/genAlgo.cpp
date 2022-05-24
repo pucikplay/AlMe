@@ -169,7 +169,7 @@ vecPair partiallMappedyCross(std::vector<int> parent1, std::vector<int> parent2,
 	return {child1, child2};
 }
 
-populationStruct doCrossover(populationStruct parents, int size, int crossMode, int crossSize) {
+populationStruct orderizedCrossover(populationStruct parents, int size, int crossMode, int crossSize) {
 
 	populationStruct children;
 	vecPair childs;
@@ -178,32 +178,50 @@ populationStruct doCrossover(populationStruct parents, int size, int crossMode, 
 	std::shuffle(std::begin(parents), std::end(parents), rngC);
 
 	for(int i = 0; i < size; i += 2) {
-		/*if(i == 0) {
-			for(int j = 0; j < parents[0].size(); j++)
-				printf("%d, ", parents[0][j]);
-			printf("\n");
-			for(int j = 0; j < parents[1].size(); j++)
-				printf("%d, ", parents[1][j]);
-			printf("\n\n");
-		}*/
 
 		if(crossMode == 0) childs = orderBasedCross(parents[i], parents[i + 1], crossSize);
 		else if(crossMode == 1) childs = modifiedOrderCross(parents[i], parents[i + 1], crossSize);
 		else if(crossMode == 2) childs = partiallMappedyCross(parents[i], parents[i + 1], crossSize);
-		/*if(i == 0) {
-			for(int j = 0; j < childs.first.size(); j++)
-				printf("%d, ", childs.first[j]);
-			printf("\n");
-			for(int j = 0; j < childs.second.size(); j++)
-				printf("%d, ", childs.second[j]);
-			printf("\n\n");
-		}*/
 		children.emplace_back(childs.first);
 		children.emplace_back(childs.second);
 	}
 
 	if(parents.size() % 2 == 1)
 		children.emplace_back(parents[parents.size()]);
+
+	return children;
+}
+
+populationStruct randomizedCrossover(populationStruct parents, int size, int crossMode, int crossSize, int crossCount) {
+
+	populationStruct children;
+	vecPair childs;
+
+	int par1 = 0, par2 = 0;
+
+	for(int i = 0; i < crossCount; i += 1) {
+
+		do {
+			par1 = rngMut() % size;
+			par2 = rngMut() % size;
+		} while(par1 == par2);
+
+		if(crossMode == 0) childs = orderBasedCross(parents[par1], parents[par2], crossSize);
+		else if(crossMode == 1) childs = modifiedOrderCross(parents[par1], parents[par2], crossSize);
+		else if(crossMode == 2) childs = partiallMappedyCross(parents[par1], parents[par2], crossSize);
+		children.emplace_back(childs.first);
+		children.emplace_back(childs.second);
+	}
+
+	return children;
+}
+
+populationStruct doCrossover(populationStruct parents, int size, int crossMode, int crossSize, int crossType, int crossCount) {
+
+	populationStruct children;
+
+	if(crossType == 0) children = orderizedCrossover(parents, size, crossMode, crossSize);
+	else if(crossType == 1) children = randomizedCrossover(parents, size, crossMode, crossSize, crossCount);
 
 	return children;
 }
@@ -246,25 +264,28 @@ populationStruct doChildrenMutation(populationStruct children, double threshold,
 	return children;
 }
 
-populationStruct doSelection(populationStruct parents, populationStruct children, int** matrix, size_t n) {
+populationStruct bestSelection(populationStruct parents, populationStruct children, int** matrix, size_t n) {
 
 	std::vector<std::pair<size_t, std::vector<int>>> bigPop;
 	std::pair<size_t, std::vector<int>> resultPair;
 	populationStruct smallPop;
 	size_t score;
 
+	// Adding parents
 	for(int i = 0; i < parents.size(); i++) {
 		score = calculate_length_asm(parents[i], matrix, n);
 		resultPair = {score, parents[i]};
 		bigPop.emplace_back(resultPair);
 	}
 
+	// Adding childrens
 	for(int i = 0; i < children.size(); i++) {
 		score = calculate_length_asm(children[i], matrix, n);
 		resultPair = {score, children[i]};
 		bigPop.emplace_back(resultPair);
 	}
 
+	// Sorting all
 	sort(bigPop.begin(), bigPop.end());
 
 	// Only best are going further
@@ -276,7 +297,75 @@ populationStruct doSelection(populationStruct parents, populationStruct children
 	return smallPop;
 }
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize) {
+populationStruct semiRandomSelection(populationStruct parents, populationStruct children, int** matrix, size_t n) {
+
+	std::vector<std::pair<size_t, std::vector<int>>> bigPop;
+	std::pair<size_t, std::vector<int>> resultPair;
+	populationStruct smallPop;
+	size_t score;
+
+	// Adding parents
+	for(int i = 0; i < parents.size(); i++) {
+		score = calculate_length_asm(parents[i], matrix, n);
+		resultPair = {score, parents[i]};
+		bigPop.emplace_back(resultPair);
+	}
+
+	// Adding childrens
+	for(int i = 0; i < children.size(); i++) {
+		score = calculate_length_asm(children[i], matrix, n);
+		resultPair = {score, children[i]};
+		bigPop.emplace_back(resultPair);
+	}
+
+	// Sorting all
+	sort(bigPop.begin(), bigPop.end());
+
+	// Giving reverse weights to square (^2) (worst = 1, best = many(1000))
+	int summarizer = 0;
+	int weightTable[bigPop.size()];
+	int popVal;
+	for(int i = 0; i < bigPop.size(); i++) {
+		popVal = (bigPop.size() - i) * (bigPop.size() - i);
+		weightTable[i] = popVal;
+		summarizer += popVal;
+	}
+
+	// Taking random in each step
+	int val, counter;
+	for(int i = 0; i < parents.size(); i++) {
+
+		// Choosing Species
+		val = rngMut() % summarizer;
+		counter = -1;
+		while(val >= 0) {
+			counter += 1;
+			val -= weightTable[counter];
+		}
+
+		// removing species from selection
+		summarizer -= weightTable[counter];
+		weightTable[counter] = 0;
+
+		smallPop.emplace_back(bigPop[counter].second);
+	}
+
+	printf("First choosen: %ld; ", calculate_length_asm(smallPop[0], matrix, n));
+
+	return smallPop;
+}
+
+populationStruct doSelection(populationStruct parents, populationStruct children, int** matrix, size_t n, int selectionMode) {
+
+	populationStruct smallPop;
+
+	if(selectionMode == 0) smallPop = bestSelection(parents, children, matrix, n);
+	else if(selectionMode == 1) smallPop = semiRandomSelection(parents, children, matrix, n);
+
+	return smallPop;
+}
+
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode) {
 
 	std::vector<int> road = best_random_road(10, n, matrix);
 	populationStruct population, children;
@@ -286,14 +375,14 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 
 	for(int i = 0; i < iterations; i++) {
 		printf("\nIteration %d; ", i);
-		population = doSelection(population, children, matrix, n);
-		children = doCrossover(population, populationSize, crossMode, crossSize);
+		population = doSelection(population, children, matrix, n, selectionMode);
+		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
 		printf("Child Mutations: ");
 		children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
 	}
 
 	printf("\n Last Check; ");
-	population = doSelection(population, children, matrix, n);
+	population = doSelection(population, children, matrix, n, selectionMode);
 
 	//choosing best at the end
 	size_t bestScore = SIZE_MAX, score;
@@ -308,21 +397,21 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	return road;
 }
 
-void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int threadID) {
+void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int threadID) {
     populationStruct children;
 
     for(int i = 0; i < iterations; i++) {
         printf("\nThread: %d, Iteration %d;", threadID, i);
-        population = doSelection(population, children, matrix, n);
-        children = doCrossover(population, populationSize, crossMode, crossSize);
+        population = doSelection(population, children, matrix, n, selectionMode);
+        children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
         printf("Child Mutations: ");
         children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
     }
 
-    population = doSelection(population, children, matrix, n);
+    population = doSelection(population, children, matrix, n, selectionMode);
 }
 
-std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int wholeIterations, int crossMode, int crossSize, int islandsNumber, int swappingInterval, int swapSize) {
+std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int wholeIterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int islandsNumber, int swappingInterval, int swapSize) {
     //auto *islands = new populationStruct[islandsNumber];
     islandStruct islands(islandsNumber);
     populationStruct population;
@@ -340,7 +429,7 @@ std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, doub
 
     for (size_t i = 0; i < wholeIterations; i++) {
         for (size_t j = 0; j < islandsNumber; j++) {
-            threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize, j);
+            threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize, crossType, crossCount, selectionMode, j);
         }
 
         for (size_t j = 0; j < islandsNumber; j++) {
