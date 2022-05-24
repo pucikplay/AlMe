@@ -48,6 +48,7 @@ int** coords_to_matrix(std::vector<std::pair<double, double>> coords) {
 	for (size_t i = 0; i < n; i++) {
 		for (size_t j = i + 1; j < n; j++) {
 			matrix[i][j] = distance(coords[i], coords[j]);
+			matrix[j][i] = matrix[i][j];
 		}
 	}
 	return matrix;
@@ -84,6 +85,7 @@ std::pair<int**, int> parse_matrix(const std::string& file) {
 		for (size_t i = 0; i < n; i++) {
 			for (size_t j = i + 1; j < n; j++) {
 				File >> matrix[i][j];
+				matrix[j][i] = matrix[i][j];
 			}
 		}
 		File.close();

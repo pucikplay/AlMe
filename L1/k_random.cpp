@@ -19,6 +19,16 @@ size_t calculate_length(const std::vector<int>& permutation, int** matrix, size_
 	return length;
 }
 
+size_t calculate_length_asm(const std::vector<int>& permutation, int** matrix, size_t n) {
+	size_t length = 0;
+	//printf("New road\n");
+	for (size_t i = 0; i < n; i++) {
+		length += matrix[permutation[i]][permutation[(i + 1) % n]];
+		//printf("%ld - %d\n", length, matrix[smaller][bigger]);
+	}
+	return length;
+}
+
 std::vector<int> best_random_road(std::size_t k, std::size_t n, int** matrix) {
 
 	std::vector<int> permutation;

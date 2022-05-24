@@ -254,13 +254,13 @@ populationStruct doSelection(populationStruct parents, populationStruct children
 	size_t score;
 
 	for(int i = 0; i < parents.size(); i++) {
-		score = calculate_length(parents[i], matrix, n);
+		score = calculate_length_asm(parents[i], matrix, n);
 		resultPair = {score, parents[i]};
 		bigPop.emplace_back(resultPair);
 	}
 
 	for(int i = 0; i < children.size(); i++) {
-		score = calculate_length(children[i], matrix, n);
+		score = calculate_length_asm(children[i], matrix, n);
 		resultPair = {score, children[i]};
 		bigPop.emplace_back(resultPair);
 	}
@@ -298,7 +298,7 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	//choosing best at the end
 	size_t bestScore = SIZE_MAX, score;
 	for(int i = 0; i < population.size(); i++) {
-		score = calculate_length(population[i], matrix, n);
+		score = calculate_length_asm(population[i], matrix, n);
 		if(score < bestScore) {
 			bestScore = score;
 			road = population[i];
@@ -369,7 +369,7 @@ std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, doub
 
     for (size_t i = 0; i < islandsNumber; i++) {
         for (size_t j = 0; j < islands[i].size(); j++) {
-            score = calculate_length(islands[i][j], matrix, n);
+            score = calculate_length_asm(islands[i][j], matrix, n);
             if(score < bestScore) {
                 bestScore = score;
                 road = islands[i][j];
