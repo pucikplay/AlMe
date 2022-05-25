@@ -194,11 +194,15 @@ int main(int argc, char *argv[]) {
 			}
 
 		} else if(mode == 6) {
-			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 4, 100, 0, 5);
-            std::vector<int> road = geneticIslands(coords.size(), matrix, 20, 0.05, 3, 4, 10, 0, 5, 6, 10, 5);
+			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 5, 1000, 2, 7, 1, 21, 1);
+			std::pair<std::vector<int>, int> result = geneticMainTimed(coords.size(), matrix, 20, 0.05, 3, 5, 10.0, 2, 7, 1, 21, 1, 2);
+			std::vector<int> road = result.first;
+            //std::vector<int> road = geneticIslands(coords.size(), matrix, 20, 0.05, 3, 4, 10, 0, 5, 6, 10, 5);
 			size_t score = calculate_length(road, matrix, road.size());
 
-			printf("Best: %ld\n", score);
+			printf("Best: %ld, Iterations: %d\n", score, result.second);
+
+			//printf("Best: %ld\n", score);
 		}
 	}
 	printf("Bye!\n");

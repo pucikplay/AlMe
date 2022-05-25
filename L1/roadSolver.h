@@ -17,7 +17,7 @@ std::vector<int> doBranchingNeighbor(size_t n, int** matrix, int k, int maxDepth
 std::vector<int> doBranchingNeighborParallel(size_t n, int** matrix, int k, int maxDepth, int max_threads);
 
 std::vector<int> bestStartingNeighbor(std::size_t n, int** matrix);
-std::vector<int> doNearestNeighbor(std::size_t coords, int** matrix, int k);
+std::vector<int> doNearestNeighbor(std::size_t n, int** matrix, int k);
 std::vector<int> localEnhancer(std::vector<int> roadList, int** matrix, int start, int end);
 
 #endif //ALME_ROADSOLVER_H
