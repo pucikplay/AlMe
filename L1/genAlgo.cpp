@@ -367,6 +367,7 @@ populationStruct bestSelection(populationStruct parents, populationStruct childr
 
 	// Sorting all
 	sort(bigPop.begin(), bigPop.end());
+	bigPop[0].second.second = 0;
 
 	// Only best are going further
 	for(int i = 0; i < populationSize; i++)
@@ -406,6 +407,7 @@ populationStruct semiRandomSelection(populationStruct parents, populationStruct 
 	sort(bigPop.begin(), bigPop.end());
 
 	// Best always goes further
+	bigPop[0].second.second = 0;
 	smallPop.emplace_back(bigPop[0].second);
 
 	// Giving reverse weights to square (^2) (worst = 1, best = many(1000))
@@ -507,7 +509,7 @@ std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int po
 			guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
 			population.emplace_back(guy);
 		}
-	// Hybrid (With proportions 1:5)
+	// Hybrid (With proportions 1:4)
 	else if(startMode == 2)
 		for(int i = 0; i < populationSize * 2; i++) {
 			if(i % 5 == 0) guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
