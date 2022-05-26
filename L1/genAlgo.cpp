@@ -224,11 +224,75 @@ populationStruct doCrossover(populationStruct parents, int size, int crossMode, 
 
 	if(crossType == 0) children = orderizedCrossover(parents, size, crossMode, crossSize);
 	else if(crossType == 1) children = randomizedCrossover(parents, size, crossMode, crossSize, crossCount);
+	else if(crossType == 2) children = randomizedCrossover(parents, size, crossMode, crossSize, size / 2);
 
 	return children;
 }
 
-populationStruct doChildrenMutation(populationStruct children, double threshold, int size, int mutMode, int intensification) {
+std::vector<int> localEnhanceMutation(std::vector<int> roadList, int** matrix, int start) {
+
+	std::vector<int> newRoadList;
+	int range = 5;
+	int localPerm[range][range];
+	if(start > roadList.size() - 5) start = roadList.size() - 5;
+
+	// creating local mini-matrix
+	for(int i = start; i < start + range; i++)
+		for(int j = start; j < start + range; j++)
+			localPerm[i - start][j - start] = matrix[roadList[i]][roadList[j]];
+
+	// adding first part
+	for(int i = 0; i <= start; i++)
+		newRoadList.emplace_back(roadList[i]);
+
+	int road1 = localPerm[0][1] + localPerm[1][2] + localPerm[2][3] + localPerm[3][4];
+	int town1 = roadList[start + 1];
+	int town2 = roadList[start + 2];
+	int town3 = roadList[start + 3];
+	int minDist = road1;
+
+	int road2 = localPerm[0][1] + localPerm[1][3] + localPerm[3][2] + localPerm[2][4];
+	if(road2 < minDist) {
+		town1 = roadList[start + 1];
+		town2 = roadList[start + 3];
+		town3 = roadList[start + 2];
+	}
+	int road3 = localPerm[0][2] + localPerm[2][3] + localPerm[3][1] + localPerm[1][4];
+	if(road3 < minDist) {
+		town1 = roadList[start + 2];
+		town2 = roadList[start + 3];
+		town3 = roadList[start + 1];
+	}
+	int road4 = localPerm[0][2] + localPerm[2][1] + localPerm[1][3] + localPerm[3][4];
+	if(road4 < minDist) {
+		town1 = roadList[start + 2];
+		town2 = roadList[start + 1];
+		town3 = roadList[start + 3];
+	}
+	int road5 = localPerm[0][3] + localPerm[3][2] + localPerm[2][1] + localPerm[1][4];
+	if(road5 < minDist) {
+		town1 = roadList[start + 3];
+		town2 = roadList[start + 2];
+		town3 = roadList[start + 1];
+	}
+	int road6 = localPerm[0][3] + localPerm[3][1] + localPerm[1][2] + localPerm[2][4];
+	if(road6 < minDist) {
+		town1 = roadList[start + 3];
+		town2 = roadList[start + 1];
+		town3 = roadList[start + 2];
+	}
+
+	newRoadList.emplace_back(town1);
+	newRoadList.emplace_back(town2);
+	newRoadList.emplace_back(town3);
+
+	for(int i = start + 4; i < roadList.size(); i++)
+		newRoadList.emplace_back(roadList[i]);
+
+	return newRoadList;
+}
+
+populationStruct doChildrenMutation(populationStruct children, int** matrix, double threshold, int size, int mutMode, int intensification, double enhanceChance) {
 
 	std::uniform_real_distribution<double> unif(0.0, 1.0);
 	
@@ -257,6 +321,9 @@ populationStruct doChildrenMutation(populationStruct children, double threshold,
 					std::reverse(children[i].begin() + smaller, children[i].begin() + bigger + 1);
 					std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger);
 				}
+
+				if(unif(rngMut) < enhanceChance)
+					children[i] = localEnhanceMutation(children[i], matrix, rngMut() % (children[i].size() - 5));
 				if(printFlag) printf("%d", modeMut);
 			}
 			if(printFlag) printf(")");
@@ -370,7 +437,7 @@ populationStruct doSelection(populationStruct parents, populationStruct children
 	return smallPop;
 }
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode) {
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode) {
 
 	std::vector<int> road = best_random_road(10, n, matrix);
 	populationStruct population, children;
@@ -383,7 +450,7 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 		population = doSelection(population, children, populationSize, matrix, n, selectionMode);
 		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
 		if(printFlag) printf("Child Mutations: ");
-		children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
+		children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
 	}
 
 	if(printFlag) printf("\n Last Check; ");
@@ -402,7 +469,7 @@ std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double 
 	return road;
 }
 
-std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double time, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int startMode) {
+std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, double time, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int startMode) {
 
 	clock_t start, end;
 	double elapsed = 0.0;
@@ -432,7 +499,7 @@ std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int po
 		population = doSelection(population, children, populationSize, matrix, n, selectionMode);
 		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
 		if(printFlag) printf("Child Mutations: ");
-		children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
+		children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
 
 		elapsed = double(clock() - start) / CLOCKS_PER_SEC;
 		iterationCounter += 1;
@@ -454,7 +521,7 @@ std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int po
 	return {road, iterationCounter};
 }
 
-void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int threadID) {
+void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int threadID) {
     populationStruct children;
 
     for(int i = 0; i < iterations; i++) {
@@ -462,13 +529,13 @@ void geneticThread(populationStruct &population, size_t n, int** matrix, int pop
         population = doSelection(population, children, populationSize, matrix, n, selectionMode);
         children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
         if(printFlag) printf("Child Mutations: ");
-        children = doChildrenMutation(children, mutationThreshold, n, mutMode, muttionIntensification);
+        children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
     }
 
     population = doSelection(population, children, populationSize, matrix, n, selectionMode);
 }
 
-std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, int wholeIterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int islandsNumber, int swappingInterval, int swapSize) {
+std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int wholeIterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int islandsNumber, int swappingInterval, int swapSize) {
     //auto *islands = new populationStruct[islandsNumber];
     islandStruct islands(islandsNumber);
     populationStruct population;
@@ -486,7 +553,7 @@ std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, doub
 
     for (size_t i = 0; i < wholeIterations; i++) {
         for (size_t j = 0; j < islandsNumber; j++) {
-            threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, swappingInterval, crossMode, crossSize, crossType, crossCount, selectionMode, j);
+            threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, enhanceChance, swappingInterval, crossMode, crossSize, crossType, crossCount, selectionMode, j);
         }
 
         for (size_t j = 0; j < islandsNumber; j++) {

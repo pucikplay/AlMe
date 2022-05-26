@@ -12,6 +12,7 @@
 #include "tabu_tester.h"
 #include "tester.h"
 #include "genAlgo.h"
+#include "genAlgoTester.h"
 #include <time.h>
 
 int main(int argc, char *argv[]) {
@@ -22,10 +23,10 @@ int main(int argc, char *argv[]) {
 	std::vector<std::pair<double, double>> coords;
 
 	//Control flags
-	bool euclideanFlag = true;
+	bool euclideanFlag = false;
 	bool randomFlag = false;
 	bool drawFlag = false;
-	int mode = 6; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu, 6 - genetic
+	int mode = 4; //0 - k-Random, 1 - NearestNeighbor, 2 - 2-Opt, 3 - 3-Opt, 4 - tests, 5 - tabu, 6 - genetic
 
 	//Euclidean
 	if(euclideanFlag) {
@@ -49,8 +50,9 @@ int main(int argc, char *argv[]) {
 
 		//Upper Row
 		//result = parse_matrix("Data/UpperRow/brg180.tsp");
-		result = parse_matrix("Data/UpperRow/brazil58.tsp");
-		//result = parse_matrix("Data/UpperRow/bayg29.tsp");
+		//result = parse_matrix("Data/UpperRow/brazil58.tsp");
+		result = parse_matrix("Data/UpperRow/bayg29.tsp");
+		//result = parse_matrix("Data/Asimetric/ft70.atsp");
 
 		matrix = result.first;
 		int n = result.second;
@@ -136,7 +138,7 @@ int main(int argc, char *argv[]) {
 			//test_2_2_TSPLIB("Tests/test22.txt");
 			//test_Neigh_TSPLIB("Tests/testNeigh.txt");
 
-			parameter_tuner("Tests/TabuTests/parameterTuner.txt");
+			//parameter_tuner("Tests/TabuTests/parameterTuner.txt");
 
 			/*for(int i = 1; i < argc; i++) {
 				printf("%s\n", argv[i]);
@@ -149,6 +151,9 @@ int main(int argc, char *argv[]) {
 				//mass_test_Neigh_TSPLIB(fileName);
 				mass_test_breachDepth_TSPLIB(fileName);
 			}*/
+
+			//geneticModeTestSimetric(argv[1]);
+			geneticModeTestAsimetric(argv[1]);
 		} else if (mode == 5) {
 
 			for(int i = 0; i <= 2; i++) {
@@ -195,7 +200,7 @@ int main(int argc, char *argv[]) {
 
 		} else if(mode == 6) {
 			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 5, 1000, 2, 7, 1, 21, 1);
-			std::pair<std::vector<int>, int> result = geneticMainTimed(coords.size(), matrix, 20, 0.05, 3, 5, 10.0, 2, 7, 1, 21, 1, 2);
+			std::pair<std::vector<int>, int> result = geneticMainTimed(coords.size(), matrix, 20, 0.05, 3, 5, -1.0, 10.0, 2, 7, 1, 21, 1, 2);
 			std::vector<int> road = result.first;
             //std::vector<int> road = geneticIslands(coords.size(), matrix, 20, 0.05, 3, 4, 10, 0, 5, 6, 10, 5);
 			size_t score = calculate_length(road, matrix, road.size());
