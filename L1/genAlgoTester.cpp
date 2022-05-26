@@ -45,7 +45,7 @@ void geneticModeTest(std::string fileName, int n, int** matrix, int mode) {
 		iterations = result.second;
 		score = calculate_length(road, matrix, road.size());
 
-		File << counter / 3 << ";" << startMode << ";" << selectionMode << ";" << mutMode << ";" << crossMode << ";" << crossType << ";" << score << ";" << iterations << "\n";
+		File << counter / 4 << ";" << startMode << ";" << selectionMode << ";" << mutMode << ";" << crossMode << ";" << crossType << ";" << score << ";" << iterations << "\n";
 		counter += 1;
 	}}}}}}
 
