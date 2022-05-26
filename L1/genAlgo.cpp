@@ -355,7 +355,7 @@ populationStruct bestSelection(populationStruct parents, populationStruct childr
 			resultPair = {score, parents[i]};
 			bigPop.emplace_back(resultPair);
 		}
-		else printf("DIE OLD MAN!!!\n");
+		else if(printFlag) printf("DIE OLD MAN!!!\n");
 	}
 
 	// Adding childrens
@@ -392,7 +392,7 @@ populationStruct semiRandomSelection(populationStruct parents, populationStruct 
 			resultPair = {score, parents[i]};
 			bigPop.emplace_back(resultPair);
 		}
-		else printf("DIE OLD MAN!!!\n");
+		else if(printFlag) printf("DIE OLD MAN!!!\n");
 	}
 
 	// Adding childrens
@@ -510,7 +510,7 @@ std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int po
 	// Hybrid (With proportions 1:5)
 	else if(startMode == 2)
 		for(int i = 0; i < populationSize * 2; i++) {
-			if(i % 6 == 0) guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
+			if(i % 5 == 0) guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
 			else guy = {best_random_road(10, n, matrix), 0};
 			population.emplace_back(guy);
 		}

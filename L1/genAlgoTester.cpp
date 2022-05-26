@@ -10,6 +10,7 @@
 std::mt19937 rngPar(time(nullptr));
 
 // Testing modes
+// 7.2H / File
 void geneticModeTest(std::string fileName, int n, int** matrix, int mode) {
 
 	std::vector<int> road;
@@ -21,7 +22,7 @@ void geneticModeTest(std::string fileName, int n, int** matrix, int mode) {
 	double mutationThreshold = 0.05;
 	int mutationIntensification = 5;
 	double enhanceChance = -1.0;
-	double time = 0.25;
+	double time = 30.0;
 	int crossSize = 7;
 	int crossCount = populationSize;
 
@@ -37,7 +38,7 @@ void geneticModeTest(std::string fileName, int n, int** matrix, int mode) {
 	for(int mutMode = 0; mutMode < 4; mutMode += 1) {
 	for(int crossMode = 0; crossMode < 3; crossMode += 1) {
 	for(int crossType = 0; crossType < 3; crossType += 1) {
-	for(int i = 0; i < 3; i++) {
+	for(int i = 0; i < 4; i++) {
 
 		result = geneticMainTimed(n, matrix, populationSize, mutationThreshold, mutMode, mutationIntensification, enhanceChance, time, crossMode, crossSize, crossType, crossCount, selectionMode, startMode);
 		road = result.first;
@@ -74,6 +75,7 @@ void geneticModeTestAsimetric(std::string fileName) {
 }
 
 // Seeking for parameters
+// 6.6H / File
 void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 
 	std::vector<int> road;
@@ -186,6 +188,7 @@ void geneticParseekerAsimetric(std::string fileName) {
 // Testing age
 
 // Testing Local Enhancement
+// 4.4H / File
 void geneticLocEnhaTester(std::string fileName, int n, int** matrix, int mode) {
 
 	std::vector<int> road;
@@ -216,15 +219,15 @@ void geneticLocEnhaTester(std::string fileName, int n, int** matrix, int mode) {
 
 	int counter = 0;
 
-	for(double enhanceChance = 0.025; enhanceChance <= 1.0; enhanceChance += 0.025) {
-	for(int i = 0; i < 5; i++) {
+	for(double enhanceChance = 0.05; enhanceChance <= 1.0; enhanceChance += 0.05) {
+	for(int i = 0; i < 10; i++) {
 
 		result = geneticMainTimed(n, matrix, populationSize, mutationThreshold, mutMode, mutationIntensification, enhanceChance, time, crossMode, crossSize, crossType, crossCount, selectionMode, startMode);
 		road = result.first;
 		iterations = result.second;
 		score = calculate_length(road, matrix, road.size());
 
-		File << counter / 5 << ";" << enhanceChance << ";" << score << ";" << iterations << "\n";
+		File << counter / 10 << ";" << enhanceChance << ";" << score << ";" << iterations << "\n";
 		counter += 1;
 	}}
 
@@ -264,15 +267,15 @@ void geneticLocEnhaTester(std::string fileName, int n, int** matrix, int mode) {
 
 	counter = 0;
 
-	for(double enhanceChance = 0.025; enhanceChance <= 1.0; enhanceChance += 0.025) {
-	for(int i = 0; i < 5; i++) {
+	for(double enhanceChance = 0.05; enhanceChance <= 1.0; enhanceChance += 0.05) {
+	for(int i = 0; i < 10; i++) {
 
 		result = geneticMainTimed(n, matrix, populationSize, mutationThreshold, mutMode, mutationIntensification, enhanceChance, time, crossMode, crossSize, crossType, crossCount, selectionMode, startMode);
 		road = result.first;
 		iterations = result.second;
 		score = calculate_length(road, matrix, road.size());
 
-		File2 << counter / 5 << ";" << enhanceChance << ";" << score << ";" << iterations << "\n";
+		File2 << counter / 10 << ";" << enhanceChance << ";" << score << ";" << iterations << "\n";
 		counter += 1;
 	}}
 }
@@ -300,5 +303,6 @@ void geneticLocEnhaTesterAsimetric(std::string fileName) {
 }
 
 // Getting Tabu Data
+// 1 min / File
 
 // Testing Islands
