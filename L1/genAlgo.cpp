@@ -12,7 +12,7 @@
 #include "roadSolver.h"
 #include "k_random.h"
 
-typedef std::vector<std::vector<int>> populationStruct;
+typedef std::vector<std::pair<std::vector<int>, int>> populationStruct;
 typedef std::vector<populationStruct> islandStruct;
 typedef std::pair<std::vector<int>, std::vector<int>> vecPair;
 std::mt19937 rngMut(time(nullptr));
@@ -175,17 +175,20 @@ populationStruct orderizedCrossover(populationStruct parents, int size, int cros
 
 	populationStruct children;
 	vecPair childs;
+	std::pair<std::vector<int>, int> child1, child2;
 
 	std::mt19937 rngC(time(nullptr));
 	std::shuffle(std::begin(parents), std::end(parents), rngC);
 
 	for(int i = 0; i < size; i += 2) {
 
-		if(crossMode == 0) childs = orderBasedCross(parents[i], parents[i + 1], crossSize);
-		else if(crossMode == 1) childs = modifiedOrderCross(parents[i], parents[i + 1], crossSize);
-		else if(crossMode == 2) childs = partiallMappedyCross(parents[i], parents[i + 1], crossSize);
-		children.emplace_back(childs.first);
-		children.emplace_back(childs.second);
+		if(crossMode == 0) childs = orderBasedCross(parents[i].first, parents[i + 1].first, crossSize);
+		else if(crossMode == 1) childs = modifiedOrderCross(parents[i].first, parents[i + 1].first, crossSize);
+		else if(crossMode == 2) childs = partiallMappedyCross(parents[i].first, parents[i + 1].first, crossSize);
+		child1 = {childs.first, 0};
+		child2 = {childs.second, 0};
+		children.emplace_back(child1);
+		children.emplace_back(child2);
 	}
 
 	if(parents.size() % 2 == 1)
@@ -198,6 +201,7 @@ populationStruct randomizedCrossover(populationStruct parents, int size, int cro
 
 	populationStruct children;
 	vecPair childs;
+	std::pair<std::vector<int>, int> child1, child2;
 
 	int par1 = 0, par2 = 0;
 
@@ -208,11 +212,13 @@ populationStruct randomizedCrossover(populationStruct parents, int size, int cro
 			par2 = rngMut() % size;
 		} while(par1 == par2);
 
-		if(crossMode == 0) childs = orderBasedCross(parents[par1], parents[par2], crossSize);
-		else if(crossMode == 1) childs = modifiedOrderCross(parents[par1], parents[par2], crossSize);
-		else if(crossMode == 2) childs = partiallMappedyCross(parents[par1], parents[par2], crossSize);
-		children.emplace_back(childs.first);
-		children.emplace_back(childs.second);
+		if(crossMode == 0) childs = orderBasedCross(parents[par1].first, parents[par2].first, crossSize);
+		else if(crossMode == 1) childs = modifiedOrderCross(parents[par1].first, parents[par2].first, crossSize);
+		else if(crossMode == 2) childs = partiallMappedyCross(parents[par1].first, parents[par2].first, crossSize);
+		child1 = {childs.first, 0};
+		child2 = {childs.second, 0};
+		children.emplace_back(child1);
+		children.emplace_back(child2);
 	}
 
 	return children;
@@ -312,19 +318,19 @@ populationStruct doChildrenMutation(populationStruct children, int** matrix, dou
 				int modeMut = mutMode;
 				if(mutMode == 3) modeMut = rngMut() % 3;
 
-				if(modeMut == 0) std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger + 1);
+				if(modeMut == 0) std::reverse(children[i].first.begin() + smaller + 1, children[i].first.begin() + bigger + 1);
 				else if(modeMut == 1) {
-					std::reverse(children[i].begin() + smaller, children[i].begin() + bigger + 1);
-					std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger + 1);
+					std::reverse(children[i].first.begin() + smaller, children[i].first.begin() + bigger + 1);
+					std::reverse(children[i].first.begin() + smaller + 1, children[i].first.begin() + bigger + 1);
 				}
 				else if(modeMut == 2) {
-					std::reverse(children[i].begin() + smaller, children[i].begin() + bigger + 1);
-					std::reverse(children[i].begin() + smaller + 1, children[i].begin() + bigger);
+					std::reverse(children[i].first.begin() + smaller, children[i].first.begin() + bigger + 1);
+					std::reverse(children[i].first.begin() + smaller + 1, children[i].first.begin() + bigger);
 				}
 
 				if(unif(rngMut) < enhanceChance)
-					for(int k = 0; k < children[i].size() - 5; k++)
-						children[i] = localEnhanceMutation(children[i], matrix, k);
+					for(int k = 0; k < children[i].first.size() - 5; k++)
+						children[i].first = localEnhanceMutation(children[i].first, matrix, k);
 				if(printFlag) printf("%d", modeMut);
 			}
 			if(printFlag) printf(")");
@@ -334,23 +340,27 @@ populationStruct doChildrenMutation(populationStruct children, int** matrix, dou
 	return children;
 }
 
-populationStruct bestSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n) {
+populationStruct bestSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n, int ageMax) {
 
-	std::vector<std::pair<size_t, std::vector<int>>> bigPop;
-	std::pair<size_t, std::vector<int>> resultPair;
+	std::vector<std::pair<size_t, std::pair<std::vector<int>, int>>> bigPop;
+	std::pair<size_t, std::pair<std::vector<int>, int>> resultPair;
 	populationStruct smallPop;
 	size_t score;
 
 	// Adding parents
 	for(int i = 0; i < parents.size(); i++) {
-		score = calculate_length_asm(parents[i], matrix, n);
-		resultPair = {score, parents[i]};
-		bigPop.emplace_back(resultPair);
+		if(ageMax == -1 || parents[i].second < ageMax) {
+			parents[i].second += 1;
+			score = calculate_length_asm(parents[i].first, matrix, n);
+			resultPair = {score, parents[i]};
+			bigPop.emplace_back(resultPair);
+		}
+		else printf("DIE OLD MAN!!!\n");
 	}
 
 	// Adding childrens
 	for(int i = 0; i < children.size(); i++) {
-		score = calculate_length_asm(children[i], matrix, n);
+		score = calculate_length_asm(children[i].first, matrix, n);
 		resultPair = {score, children[i]};
 		bigPop.emplace_back(resultPair);
 	}
@@ -367,23 +377,27 @@ populationStruct bestSelection(populationStruct parents, populationStruct childr
 	return smallPop;
 }
 
-populationStruct semiRandomSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n) {
+populationStruct semiRandomSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n, int ageMax) {
 
-	std::vector<std::pair<size_t, std::vector<int>>> bigPop;
-	std::pair<size_t, std::vector<int>> resultPair;
+	std::vector<std::pair<size_t, std::pair<std::vector<int>, int>>> bigPop;
+	std::pair<size_t, std::pair<std::vector<int>, int>> resultPair;
 	populationStruct smallPop;
 	size_t score;
 
 	// Adding parents
 	for(int i = 0; i < parents.size(); i++) {
-		score = calculate_length_asm(parents[i], matrix, n);
-		resultPair = {score, parents[i]};
-		bigPop.emplace_back(resultPair);
+		if(ageMax == -1 || parents[i].second < ageMax) {
+			parents[i].second += 1;
+			score = calculate_length_asm(parents[i].first, matrix, n);
+			resultPair = {score, parents[i]};
+			bigPop.emplace_back(resultPair);
+		}
+		else printf("DIE OLD MAN!!!\n");
 	}
 
 	// Adding childrens
 	for(int i = 0; i < children.size(); i++) {
-		score = calculate_length_asm(children[i], matrix, n);
+		score = calculate_length_asm(children[i].first, matrix, n);
 		resultPair = {score, children[i]};
 		bigPop.emplace_back(resultPair);
 	}
@@ -423,81 +437,89 @@ populationStruct semiRandomSelection(populationStruct parents, populationStruct 
 		smallPop.emplace_back(bigPop[counter].second);
 	}
 
-	if(printFlag) printf("Best: %ld; ", calculate_length_asm(smallPop[0], matrix, n));
+	if(printFlag) printf("Best: %ld; ", calculate_length_asm(smallPop[0].first, matrix, n));
 
 	return smallPop;
 }
 
-populationStruct doSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n, int selectionMode) {
+populationStruct doSelection(populationStruct parents, populationStruct children, int populationSize, int** matrix, size_t n, int selectionMode, int ageMax) {
 
 	populationStruct smallPop;
 
-	if(selectionMode == 0) smallPop = bestSelection(parents, children, populationSize, matrix, n);
-	else if(selectionMode == 1) smallPop = semiRandomSelection(parents, children, populationSize, matrix, n);
+	if(selectionMode == 0) smallPop = bestSelection(parents, children, populationSize, matrix, n, ageMax);
+	else if(selectionMode == 1) smallPop = semiRandomSelection(parents, children, populationSize, matrix, n, ageMax);
 
 	return smallPop;
 }
 
-std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode) {
+std::vector<int> geneticMain(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int ageMax) {
 
 	std::vector<int> road = best_random_road(10, n, matrix);
 	populationStruct population, children;
 
-	for(int i = 0; i < populationSize * 2; i++)
-		population.emplace_back(best_random_road(10, n, matrix));
+	for(int i = 0; i < populationSize * 2; i++) {
+		std::pair<std::vector<int>, int> guy = {best_random_road(10, n, matrix), 0};
+		population.emplace_back(guy);
+	}
 
 	for(int i = 0; i < iterations; i++) {
 		if(printFlag) printf("\nIteration %d; ", i);
-		population = doSelection(population, children, populationSize, matrix, n, selectionMode);
+		population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
 		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
 		if(printFlag) printf("Child Mutations: ");
 		children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
 	}
 
 	if(printFlag) printf("\n Last Check; ");
-	population = doSelection(population, children, populationSize, matrix, n, selectionMode);
+	population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
 
 	//choosing best at the end
 	size_t bestScore = SIZE_MAX, score;
 	for(int i = 0; i < population.size(); i++) {
-		score = calculate_length_asm(population[i], matrix, n);
+		score = calculate_length_asm(population[i].first, matrix, n);
 		if(score < bestScore) {
 			bestScore = score;
-			road = population[i];
+			road = population[i].first;
 		}
 	}
 
 	return road;
 }
 
-std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, double time, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int startMode) {
+std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, double time, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int startMode, int ageMax) {
 
 	clock_t start, end;
 	double elapsed = 0.0;
 	int iterationCounter = 0;
 	populationStruct population, children;
+	std::pair<std::vector<int>, int> guy;
 
 	start = clock();
 	// Only random
 	if(startMode == 0)
-		for(int i = 0; i < populationSize * 2; i++)
-			population.emplace_back(best_random_road(10, n, matrix));
+		for(int i = 0; i < populationSize * 2; i++) {
+			guy = {best_random_road(10, n, matrix), 0};
+			population.emplace_back(guy);
+		}
 	// Only 'good' (Nearest Neighbor)
 	else if(startMode == 1)
-		for(int i = 0; i < populationSize * 2; i++)
-			population.emplace_back(doNearestNeighbor(n, matrix, rngMut() % n));
+		for(int i = 0; i < populationSize * 2; i++) {
+			guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
+			population.emplace_back(guy);
+		}
 	// Hybrid (With proportions 1:5)
 	else if(startMode == 2)
 		for(int i = 0; i < populationSize * 2; i++) {
-			if(i % 6 == 0) population.emplace_back(doNearestNeighbor(n, matrix, rngMut() % n));
-			else population.emplace_back(best_random_road(10, n, matrix));
+			if(i % 6 == 0) guy = {doNearestNeighbor(n, matrix, rngMut() % n), 0};
+			else guy = {best_random_road(10, n, matrix), 0};
+			population.emplace_back(guy);
 		}
 
-	std::vector<int> road = population[0];
+	std::vector<int> road = population[0].first;
 
 	while(elapsed < time) {
 		if(printFlag) printf("\nIteration %d; ", iterationCounter);
-		population = doSelection(population, children, populationSize, matrix, n, selectionMode);
+		population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
 		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
 		if(printFlag) printf("Child Mutations: ");
 		children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
@@ -507,90 +529,94 @@ std::pair<std::vector<int>, int> geneticMainTimed(size_t n, int** matrix, int po
 	}
 
 	if(printFlag) printf("\n Last Check; ");
-	population = doSelection(population, children, populationSize, matrix, n, selectionMode);
+	population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
 
 	//choosing best at the end
 	size_t bestScore = SIZE_MAX, score;
 	for(int i = 0; i < population.size(); i++) {
-		score = calculate_length_asm(population[i], matrix, n);
+		score = calculate_length_asm(population[i].first, matrix, n);
 		if(score < bestScore) {
 			bestScore = score;
-			road = population[i];
+			road = population[i].first;
 		}
 	}
 
 	return {road, iterationCounter};
 }
 
-void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int threadID) {
-    populationStruct children;
+void geneticThread(populationStruct &population, size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int iterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int ageMax, int threadID) {
+	populationStruct children;
 
-    for(int i = 0; i < iterations; i++) {
-        if(printFlag) printf("\nThread: %d, Iteration %d;", threadID, i);
-        population = doSelection(population, children, populationSize, matrix, n, selectionMode);
-        children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
-        if(printFlag) printf("Child Mutations: ");
-        children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
-    }
+	for(int i = 0; i < iterations; i++) {
+		if(printFlag) printf("\nThread: %d, Iteration %d;", threadID, i);
+		population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
+		children = doCrossover(population, populationSize, crossMode, crossSize, crossType, crossCount);
+		if(printFlag) printf("Child Mutations: ");
+		children = doChildrenMutation(children, matrix, mutationThreshold, n, mutMode, muttionIntensification, enhanceChance);
+	}
 
-    population = doSelection(population, children, populationSize, matrix, n, selectionMode);
+	population = doSelection(population, children, populationSize, matrix, n, selectionMode, ageMax);
 }
 
-std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int wholeIterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int islandsNumber, int swappingInterval, int swapSize) {
-    //auto *islands = new populationStruct[islandsNumber];
-    islandStruct islands(islandsNumber);
-    populationStruct population;
-    std::thread threads[islandsNumber];
-    std::vector<int> road;
-    size_t bestScore = SIZE_MAX, score;
-    populationStruct swapPool;
-    int idx;
+std::vector<int> geneticIslands(size_t n, int** matrix, int populationSize, double mutationThreshold, int mutMode, int muttionIntensification, double enhanceChance, int wholeIterations, int crossMode, int crossSize, int crossType, int crossCount, int selectionMode, int ageMax, int islandsNumber, int swappingInterval, int swapSize) {
+	//auto *islands = new populationStruct[islandsNumber];
+	islandStruct islands(islandsNumber);
+	populationStruct population;
+	std::thread threads[islandsNumber];
+	std::vector<int> road;
+	size_t bestScore = SIZE_MAX, score;
+	populationStruct swapPool;
 
-    for (size_t i = 0; i < islandsNumber; i++) {
-        for (size_t j = 0; j < populationSize * 2; j++) {
-            islands[i].emplace_back(best_random_road(10, n, matrix));
-        }
-    }
+	std::pair<std::vector<int>, int> guy;
 
-    for (size_t i = 0; i < wholeIterations; i++) {
-        for (size_t j = 0; j < islandsNumber; j++) {
-            threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, enhanceChance, swappingInterval, crossMode, crossSize, crossType, crossCount, selectionMode, j);
-        }
+	int idx;
 
-        for (size_t j = 0; j < islandsNumber; j++) {
-            threads[j].join();
-        }
+	for (size_t i = 0; i < islandsNumber; i++) {
+		for (size_t j = 0; j < populationSize * 2; j++) {
+			guy = {best_random_road(10, n, matrix), 0};
+			islands[i].emplace_back(guy);
+		}
+	}
 
-        for (size_t j = 0; j < islandsNumber; j++) {
-            for (size_t k = 0; k < swapSize; k++) {
-                idx = rngMut() % islands[j].size();
-                swapPool.emplace_back(islands[j][idx]);
-                islands[j].erase(islands[j].begin() + idx);
-            }
-        }
+	for (size_t i = 0; i < wholeIterations; i++) {
+		for (size_t j = 0; j < islandsNumber; j++) {
+			threads[j] = std::thread(geneticThread, std::ref(islands[j]), n, matrix, populationSize, mutationThreshold, mutMode, muttionIntensification, enhanceChance, swappingInterval, crossMode, crossSize, crossType, crossCount, selectionMode, ageMax, j);
+		}
 
-        std::shuffle(std::begin(swapPool), std::end(swapPool), rngMut);
+		for (size_t j = 0; j < islandsNumber; j++) {
+			threads[j].join();
+		}
 
-        idx = 0;
-        for (size_t j = 0; j < islandsNumber; j++) {
-            for (size_t k = 0; k < swapSize; k++) {
-                islands[j].emplace_back(swapPool[idx]);
-                idx++;
-            }
-        }
-        swapPool.clear();
-    }
+		for (size_t j = 0; j < islandsNumber; j++) {
+			for (size_t k = 0; k < swapSize; k++) {
+				idx = rngMut() % islands[j].size();
+				swapPool.emplace_back(islands[j][idx]);
+				islands[j].erase(islands[j].begin() + idx);
+			}
+		}
 
-    for (size_t i = 0; i < islandsNumber; i++) {
-        for (size_t j = 0; j < islands[i].size(); j++) {
-            score = calculate_length_asm(islands[i][j], matrix, n);
-            if(score < bestScore) {
-                bestScore = score;
-                road = islands[i][j];
-            }
-        }
-        if(printFlag) printf("\n");
-    }
+		std::shuffle(std::begin(swapPool), std::end(swapPool), rngMut);
 
-    return road;
+		idx = 0;
+		for (size_t j = 0; j < islandsNumber; j++) {
+			for (size_t k = 0; k < swapSize; k++) {
+				islands[j].emplace_back(swapPool[idx]);
+				idx++;
+			}
+		}
+		swapPool.clear();
+	}
+
+	for (size_t i = 0; i < islandsNumber; i++) {
+		for (size_t j = 0; j < islands[i].size(); j++) {
+			score = calculate_length_asm(islands[i][j].first, matrix, n);
+			if(score < bestScore) {
+				bestScore = score;
+				road = islands[i][j].first;
+			}
+		}
+		if(printFlag) printf("\n");
+	}
+
+	return road;
 }
