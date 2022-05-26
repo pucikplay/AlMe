@@ -262,7 +262,7 @@ void geneticLocEnhaTester(std::string fileName, int n, int** matrix, int mode) {
 
 	std::ofstream File2(testFileName, std::ios_base::app);
 
-	int counter = 0;
+	counter = 0;
 
 	for(double enhanceChance = 0.025; enhanceChance <= 1.0; enhanceChance += 0.025) {
 	for(int i = 0; i < 5; i++) {

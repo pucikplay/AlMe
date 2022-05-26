@@ -323,7 +323,8 @@ populationStruct doChildrenMutation(populationStruct children, int** matrix, dou
 				}
 
 				if(unif(rngMut) < enhanceChance)
-					children[i] = localEnhanceMutation(children[i], matrix, rngMut() % (children[i].size() - 5));
+					for(int k = 0; k < children[i].size() - 5; k++)
+						children[i] = localEnhanceMutation(children[i], matrix, k);
 				if(printFlag) printf("%d", modeMut);
 			}
 			if(printFlag) printf(")");
