@@ -91,7 +91,7 @@ void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 	int crossType = 0;
 
 	double enhanceChance = -1.0;
-	double time = 0.25;
+	double time = 30.0;
 
 	// will be random at each iteration
 	int populationSize = 20;
@@ -109,19 +109,19 @@ void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 	int counter = 0;
 
 	for(int j = 0; j < 100; j++) {
-		populationSize = 10 + rngPar() % 90;
+		populationSize = 10 + rngPar() % 91;
 		mutationThreshold = unif(rngPar);
-		mutationIntensification = 1 + rngPar() % 10;
-		crossSize = 2 + rngPar() % 15;
+		mutationIntensification = 1 + rngPar() % 20;
+		crossSize = 2 + rngPar() % 18;
 		crossCount = 10 + rngPar() % 190;
-	for(int i = 0; i < 3; i++) {
+	for(int i = 0; i < 4; i++) {
 
 		result = geneticMainTimed(n, matrix, populationSize, mutationThreshold, mutMode, mutationIntensification, enhanceChance, time, crossMode, crossSize, crossType, crossCount, selectionMode, startMode);
 		road = result.first;
 		iterations = result.second;
 		score = calculate_length(road, matrix, road.size());
 
-		File << counter / 3 << ";" << populationSize << ";" << mutationThreshold << ";" << mutationIntensification << ";" << crossSize << ";" << crossCount << ";" << score << ";" << iterations << "\n";
+		File << counter / 4 << ";" << populationSize << ";" << mutationThreshold << ";" << mutationIntensification << ";" << crossSize << ";" << crossCount << ";" << score << ";" << iterations << "\n";
 		counter += 1;
 	}}
 
@@ -146,19 +146,19 @@ void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 	counter = 0;
 
 	for(int j = 0; j < 100; j++) {
-		populationSize = 10 + rngPar() % 90;
+		populationSize = 10 + rngPar() % 91;
 		mutationThreshold = unif(rngPar);
-		mutationIntensification = 1 + rngPar() % 10;
-		crossSize = 2 + rngPar() % 15;
+		mutationIntensification = 1 + rngPar() % 20;
+		crossSize = 2 + rngPar() % 18;
 		crossCount = 10 + rngPar() % 190;
-	for(int i = 0; i < 3; i++) {
+	for(int i = 0; i < 4; i++) {
 
 		result = geneticMainTimed(n, matrix, populationSize, mutationThreshold, mutMode, mutationIntensification, enhanceChance, time, crossMode, crossSize, crossType, crossCount, selectionMode, startMode);
 		road = result.first;
 		iterations = result.second;
 		score = calculate_length(road, matrix, road.size());
 
-		File2 << counter / 3 << ";" << populationSize << ";" << mutationThreshold << ";" << mutationIntensification << ";" << crossSize << ";" << crossCount << ";" << score << ";" << iterations << "\n";
+		File2 << counter / 4 << ";" << populationSize << ";" << mutationThreshold << ";" << mutationIntensification << ";" << crossSize << ";" << crossCount << ";" << score << ";" << iterations << "\n";
 		counter += 1;
 	}}
 }
@@ -196,7 +196,7 @@ void geneticLocEnhaTester(std::string fileName, int n, int** matrix, int mode) {
 	int iterations;
 	size_t score;
 
-	double time = 0.25;
+	double time = 30.0;
 
 	//filled with data from mode tester and parseeker
 	int startMode = 0;
