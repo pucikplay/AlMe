@@ -327,12 +327,13 @@ populationStruct doChildrenMutation(populationStruct children, int** matrix, dou
 					std::reverse(children[i].first.begin() + smaller, children[i].first.begin() + bigger + 1);
 					std::reverse(children[i].first.begin() + smaller + 1, children[i].first.begin() + bigger);
 				}
-
-				if(unif(rngMut) < enhanceChance)
-					for(int k = 0; k < children[i].first.size() - 5; k++)
-						children[i].first = localEnhanceMutation(children[i].first, matrix, k);
 				if(printFlag) printf("%d", modeMut);
 			}
+
+			if(unif(rngMut) < enhanceChance)
+				for(int k = 0; k < children[i].first.size() - 5; k++)
+					children[i].first = localEnhanceMutation(children[i].first, matrix, k);
+
 			if(printFlag) printf(")");
 		}
 	}
