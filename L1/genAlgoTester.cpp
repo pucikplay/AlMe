@@ -75,7 +75,7 @@ void geneticModeTestAsimetric(std::string fileName) {
 }
 
 // Seeking for parameters
-// 6.6H / File
+// 6.66H / File
 void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 
 	std::vector<int> road;
@@ -84,11 +84,11 @@ void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 	size_t score;
 
 	// Filled with data from Mode test
-	int startMode = 0;
+	int startMode = 1;
 	int selectionMode = 0;
 	int mutMode = 0;
-	int crossMode = 0;
-	int crossType = 0;
+	int crossMode = 1;
+	int crossType = 1;
 
 	double enhanceChance = -1.0;
 	double time = 30.0;
@@ -127,18 +127,18 @@ void geneticParseeker(std::string fileName, int n, int** matrix, int mode) {
 
 	// second dataset - specific for simetry
 	if(mode == 0) {
-		startMode = 0;
+		startMode = 1;
 		selectionMode = 0;
-		mutMode = 0;
-		crossMode = 0;
-		crossType = 0;
+		mutMode = 3;
+		crossMode = 2;
+		crossType = 2;
 		testFileName = "Tests/GenTests/par2_sim_" + std::to_string(n) + ".txt";
 	} else if(mode == 1) {
-		startMode = 0;
+		startMode = 1;
 		selectionMode = 0;
 		mutMode = 0;
-		crossMode = 0;
-		crossType = 0;
+		crossMode = 1;
+		crossType = 2;
 		testFileName = "Tests/GenTests/par2_asim_" + std::to_string(n) + ".txt";
 	}
 	std::ofstream File2(testFileName, std::ios_base::app);
