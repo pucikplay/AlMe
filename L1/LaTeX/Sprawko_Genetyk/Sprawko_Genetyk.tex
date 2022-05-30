@@ -188,6 +188,7 @@ Pokażemy teraz dystrybucję wyniku względem liczby iteracji osobno dla każdej
 \includegraphics[scale=0.36]{simDist318}
 \includegraphics[scale=0.36]{simDist319}
 \includegraphics[scale=0.36]{simDist439}
+
 \includegraphics[scale=0.36]{asimDist56}
 \includegraphics[scale=0.36]{asimDist65}
 \includegraphics[scale=0.36]{asimDist71}
@@ -341,7 +342,7 @@ Udało się nam teraz wyłonić potencjalnie najlepsze kombinacje trybów (któr
 
 \newpage
 \subsection{Poszukiwanie II - hiperparametry}
-Po wyznaczeniu rokujących zestawów trybów, przeszliśmy do wyznaczenia jak najlepszych hiperparametrów. W tym celu wyznaczyliśmy 1 zestaw (najlepszy pod względem średniej) dla wariantu symetrycznego, 1 analogicznie dla asymetrycznego, oraz 1 wspólny, który dla obu był w pierwszej 3 (był tylko 1 taki zestaw).\\
+Po wyznaczeniu rokujących zestawów trybów, przeszliśmy do wyznaczenia jak najlepszych hiperparametrów. W tym celu wyznaczyliśmy 1 zestaw dla wariantu symetrycznego (Spec), 1 dla asymetrycznego (Spec), oraz 1 wspólny (Gen).\\
 Poprzez metodę losowego próbkowania dla każdego hiperparametru (losowy z zakresu podanego zaraz), wykonaliśmy 100 kombinacji, gdzie każdą testowaliśmy 4 razy.\\
 Badane instancje:
 \begin{itemize}
@@ -359,6 +360,111 @@ Badany zakres hiperparametrów:
 	\item crossCount : $[10 ; 200]$
 \end{itemize}
 Z przeprowadzonych eksperymentów otrzymaliśmy następujące wyniki:
+
+\subsubsection{Rozrzut wyników dla poszczególnych instancji}
+Na samym początku zaprezentujemy na wykresach, jak wygląda rozkład otrzymanych wyników dla każdej z badanych instancji.
+
+\includegraphics[scale=0.36]{parDistSim70}
+\includegraphics[scale=0.36]{parDistSim443}
+\includegraphics[scale=0.36]{parDistSim70}
+\includegraphics[scale=0.36]{parDistSim443}
+
+Z powyższych wykresów spróbujmy teraz wyciągnąć kilka wniosków:
+\begin{itemize}
+	\item Jak widać dla wariantu symetrycznego, dla rozmiaru wielkości 70 o wiele lepiej zadziałał zestaw trybów deykowany do tych instancji, jednakże dla rozmiaru 439, o wiele lepiej zachował się zestaw ogólny. Przez sformułowanie 'lepiej' rozumiemy tutaj wartości częściej osiągane bliższej wartości rozwiązania najlepszego.
+	\item Dla wariantu symetrycznego widać również, że dla każdej instancji zestaw danych ogólny wykonywał mniej iteracji (koncentracja w 'dolnej' części wykresu). Może być to powodowane tym, że jest on uwarunkowany po części parametrem \textit{crossCount}, który to mówi o liczbie wykonywanych krzyżowań - widzimy tutaj zatem 'średnią' zależność tego parametru od wykonanej liczby iteracji.
+	\item Wniosek 3
+	\item Ogólny wniosek mamy zatem taki (i powtórzymy go zapewne przy okazji dalszej analizy): dla naszej implementacji różne zestawy trybów będą się inaczej zachowywały dla każdej instancji, zatem najlepszą metodą byłby dobór wszystkich trybów i parametrów do każdej instancji z osobna.
+\end{itemize}
+
+\subsubsection{Wykresy wobec parametrów dla każdej instancji}
+W tej części pokażemy wykresy w rozbiciu o każdy parametr z osobna (traktujemy teraz wszystkie 100 przeszukiwań jako 1 zbiór i dzielimy go względem danego parametru). Pominiemy jednak wykresy dla parametru crossCount, ponieważ dla zestawów specyficznych dla danego typu (a/symetryczne) nie bierze on udziału):
+
+\subsubsection*{Symetyczne}
+\includegraphics[scale=0.36]{pSSim70}
+\includegraphics[scale=0.36]{pSSim443}
+\includegraphics[scale=0.36]{mTSim70}
+\includegraphics[scale=0.36]{mTSim443}
+\includegraphics[scale=0.36]{mISim70}
+\includegraphics[scale=0.36]{mISim443}
+\includegraphics[scale=0.36]{cSSim70}
+\includegraphics[scale=0.36]{cSSim443}
+
+\subsubsection*{Asymetyczne}
+\includegraphics[scale=0.36]{pSSim70}
+\includegraphics[scale=0.36]{pSSim443}
+\includegraphics[scale=0.36]{mTSim70}
+\includegraphics[scale=0.36]{mTSim443}
+\includegraphics[scale=0.36]{mISim70}
+\includegraphics[scale=0.36]{mISim443}
+\includegraphics[scale=0.36]{cSSim70}
+\includegraphics[scale=0.36]{cSSim443}
+
+Z powyższych wykresów spróbujmy wyciągnąć kilka wniosków:
+\begin{itemize}
+	\item Powtórzmy tutaj na początek wniosek z poprzedniej części, a konkretnie, że mimo wszystko zestawy trybów znacznie różnią się od siebie wydajnością (i wpływem na ogólny wynik hiperparametrów) w zależności od wybranej instancji.
+	\item Wydawać by się mogło, że najmniejszy wpływ na wyniki ma wielkość populacji początkowej (na wszystkich wykresach wyniki są dosyć 'zbalansowane' niezależnie od tej wartości)
+	\item Dla instancji mniejszego rozmiaru widzimy ogólnie mniejszą zależność od hiperparametrów, chociaż dla obu wariantów możemy zauważyć, że optimum dla intensyfikacji jest w okolicach \textit{magicznej 7}, natomiast dla cross Size w okolicach 9.
+	\item Dla instanji większego rozmmiaru możemy zauważyć, że zwiększanie prawdopodobieństwa mutacji znacznie poprawia jakość rozwiązania, jednakże zwiększanie intensyfikacji ją pogarsza. Można zatem powiedzieć, że najlepiej jest 'często mutować, ale delikatnie'. Natomiast wielkość parametru crossSize wacha się w okolicy 12.
+\end{itemize}
+
+\subsubsection{5 najlepszych}
+Teraz spójrzmy na ranking 5 najlepszych zestawów parametrów dla każdej z badanych instancji:
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c||c|c|c|c}
+Tabela 5.\\
+Symetryczne & \multicolumn{4}{c}{n = 443} &\multicolumn{4}{c}{n = 70}\\
+Miejsce & popSize & mutThresh & mutInt & crosSize & popSize & mutThresh & mutInt & crosSize \\
+\hline
+1 & 51 & 0.912935 & 1 & 11 & 39 & 0.370261 & 13 & 19 \\
+2 & 57 & 0.979261 & 2 & 2 & 69 & 0.576427 & 12 & 7 \\
+3 & 43 & 0.673103 & 1 & 12 & 84 & 0.658883 & 19 & 8 \\
+4 & 78 & 0.911664 & 1 & 12 & 24 & 0.899584 & 12 & 13 \\
+5 & 55 & 0.825131 & 1 & 14 & 50 & 0.935501 & 7 & 5 \\
+
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c||c|c|c|c}
+Tabela 6.\\
+Asymetryczne & \multicolumn{4}{c}{n = 443} &\multicolumn{4}{c}{n = 70}\\
+Miejsce & popSize & mutThresh & mutInt & crosSize & popSize & mutThresh & mutInt & crosSize \\
+\hline
+1 & 51 & 0.912935 & 1 & 11 & 39 & 0.370261 & 13 & 19 \\
+2 & 57 & 0.979261 & 2 & 2 & 69 & 0.576427 & 12 & 7 \\
+3 & 43 & 0.673103 & 1 & 12 & 84 & 0.658883 & 19 & 8 \\
+4 & 78 & 0.911664 & 1 & 12 & 24 & 0.899584 & 12 & 13 \\
+5 & 55 & 0.825131 & 1 & 14 & 50 & 0.935501 & 7 & 5 \\
+
+	\end{tabular}
+\end{table}
+
+I wyciągnijmy z nich parę wniosków:
+\begin{itemize}
+	\item Jak widzimy, dane otrzymane w tabeli nawet pokrywają się po części z tym, co zaobserwowaliśmy na wykresach, a konkretnie, a zwłasza to widać dla instancji 'dużych' i parametów związanych z mutacją (często, acz lekko).
+	\item Dla instancji 'mniejszych' (przypomnijmy że zauważyliśmy na wykresach, że wyniki wydają się bardziej zbalansowane) dane w tabeli bardziej się różnią od siebie (większy rozrzut pomimo wzięcia tylko pierwszej 5), i powiedzmy, że ranking wydaje się nieco bardziej 'losowy' - ale dalej nam determiniuje 'zwycięzce'
+\end{itemize}
+
+\subsubsection{Ostatecznie wybrane najlepsze}
+Tak jak wcześniej powiedzieliśmy, nie można jednoznacznie wyznaczyć najlepszyych hiperparametrów dla całej metody, jednakże możemy wyznaczyć najlepszy zestaw danych dla poszczególnych instancji. Dlatego tak właśnie teraz postąpimy, i w dalszych eksperymentach będziemy używać następujących zestawów:
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c|c||c|c|c|c}
+Tabela 7. & \multicolumn{5}{c}{Tryby} &\multicolumn{4}{c}{Hiperparametry}\\
+Instancja & Start & Sel. & Mut. & CrossM & CrossT & popSize & mutThresh & mutInt & crosSize \\
+\hline
+Sym70 & 1 & 0 & 3 & 2 & 2 & 39 & 0.37 & 13 & 19\\
+Sym439 & 1 & 0 & 0 & 1 & 1 & 51 & 0.91 & 1 & 11\\
+Asym70 & \\
+Asym443 & \\
+
+	\end{tabular}
+\end{table}
 
 \subsection{Badanie wpływu zastosowania 'lokalnej poprawy'}
 Przy zastosowaniu wyników z 2 poprzednich eksperymentów postanowiliśmy zbadać wpływ działania mechanizmu 'lokalnej poprawy' na wyniki.\\
