@@ -206,12 +206,12 @@ int main(int argc, char *argv[]) {
 			// geneticMainTimed(coords.size(), matrix, 39, 0.370, 3, 13, -1.0, 30.0, 2, 19, 2, 177, 0, 1, -1);
 
 			// Simetric/pr439.tsp
-			// geneticMainTimed(coords.size(), matrix, 51, 0.067, 0, 1, -1.0, 30.0, 1, 11, 1, 181, 0, 1, -1);
+			// geneticMainTimed(coords.size(), matrix, 51, 0.913, 0, 1, -1.0, 30.0, 1, 11, 1, 181, 0, 1, -1);
 
-			// Simetric/ftv70.tsp
+			// Asimetric/ftv70.tsp
 			// geneticMainTimed(coords.size(), matrix, 91, 0.067, 0, 18, -1.0, 30.0, 1, 17, 1, 177, 0, 1, -1);
 			
-			// Simetric/rbg443.tsp
+			// Asimetric/rbg443.tsp
 			// geneticMainTimed(coords.size(), matrix, 91, 0.993, 0, 19, -1.0, 30.0, 1, 12, 1, 176, 0, 1, -1);
 
 			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 5, 1000, 2, 7, 1, 21, 1);
