@@ -151,10 +151,14 @@ int main(int argc, char *argv[]) {
 				//mass_test_Neigh_TSPLIB(fileName);
 				mass_test_breachDepth_TSPLIB(fileName);
 			}*/
-			for(int i = 1; i < argc; i++) {
-				geneticParseekerSimetric(argv[i]);
-			}
+			/*for(int i = 1; i < argc; i++) {
+				geneticLocEnhaTesterAsimetric(argv[i]);
+			}*/
 			//geneticParseekerAsimetric(argv[1]);
+			geneticAgeTesterSimetric(argv[1]);
+			geneticAgeTesterSimetric(argv[2]);
+			geneticAgeTesterAsimetric(argv[3]);
+			geneticAgeTesterAsimetric(argv[4]);
 		} else if (mode == 5) {
 
 			for(int i = 0; i <= 2; i++) {
@@ -203,16 +207,16 @@ int main(int argc, char *argv[]) {
 
 			// Najlepsze parametry dla instancji:
 			// Simetric/st70.tsp
-			// geneticMainTimed(coords.size(), matrix, 39, 0.370, 3, 13, -1.0, 30.0, 2, 19, 2, 177, 0, 1, -1);
+			// geneticMainTimed(coords.size(), matrix, 39, 0.370, 3, 13, 0.01, 30.0, 2, 19, 2, 177, 0, 1, -1);
 
 			// Simetric/pr439.tsp
-			// geneticMainTimed(coords.size(), matrix, 51, 0.913, 0, 1, -1.0, 30.0, 1, 11, 1, 181, 0, 1, -1);
+			// geneticMainTimed(coords.size(), matrix, 51, 0.913, 0, 1, 0.01, 30.0, 1, 11, 1, 181, 0, 1, -1);
 
 			// Asimetric/ftv70.tsp
-			// geneticMainTimed(coords.size(), matrix, 91, 0.067, 0, 18, -1.0, 30.0, 1, 17, 1, 177, 0, 1, -1);
+			// geneticMainTimed(coords.size(), matrix, 91, 0.067, 0, 18, 0.01, 30.0, 1, 17, 2, 177, 0, 1, -1);
 			
 			// Asimetric/rbg443.tsp
-			// geneticMainTimed(coords.size(), matrix, 91, 0.993, 0, 19, -1.0, 30.0, 1, 12, 1, 176, 0, 1, -1);
+			// geneticMainTimed(coords.size(), matrix, 91, 0.993, 0, 19, 0.01, 30.0, 1, 12, 2, 176, 0, 1, -1);
 
 			//std::vector<int> road = geneticMain(coords.size(), matrix, 20, 0.05, 3, 5, 1000, 2, 7, 1, 21, 1);
 			std::pair<std::vector<int>, int> result = geneticMainTimed(coords.size(), matrix, 20, 0.05, 3, 5, -1.0, 60.0, 2, 7, 1, 21, 1, 2, 5);

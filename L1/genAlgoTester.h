@@ -21,6 +21,8 @@ void geneticParseekerSimetric(std::string fileName);
 void geneticParseekerAsimetric(std::string fileName);
 
 //Age testing
+void geneticAgeTesterSimetric(std::string fileName);
+void geneticAgeTesterAsimetric(std::string fileName);
 
 //Local Enhancer as mutation testing
 void geneticLocEnhaTesterSimetric(std::string fileName);
