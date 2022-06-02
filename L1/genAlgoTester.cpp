@@ -4,6 +4,7 @@
 
 #include "genAlgoTester.h"
 #include "k_random.h"
+#include "tabu_search.h"
 #include <string.h>
 #include <string>
 
@@ -300,6 +301,71 @@ void geneticLocEnhaTesterAsimetric(std::string fileName) {
 }
 
 // Getting Tabu Data
-// 1 min / File
+// 3 min / File
+void geneticTabuTester(std::string fileName, int n, int** matrix, int mode) {
+
+	std::vector<int> road, road1, road2, road3;
+	std::pair<std::vector<int>, int> result, result1, result2, result3;
+	size_t score, score1, score2, score3;
+
+	double time = 30.0;
+
+	std::string testFileName;
+	testFileName = "Tests/GenTests/tabu_test.txt";
+	std::ofstream File(testFileName, std::ios_base::app);
+
+	int counter = 0;
+
+	road = best_random_road(10000, n, matrix);
+
+	int tsSize = (int)sqrt((double)n) + 2;
+	result = deterministicTabuWithKikCount(road, matrix, n, tsSize, 89.0 * 1000000000, (tsSize * 2 + 1) * 3 / 2, 0, 0, 7);
+
+	if(mode == 0) {
+		result1 = geneticMainTimed(n, matrix, 45, 0.64, 3, 13, 0.01, time, 2, 19, 2, 177, 0, 1, 15);
+		result2 = geneticMainTimed(n, matrix, 45, 0.64, 3, 13, 0.01, time, 2, 19, 2, 177, 0, 1, 15);
+		result3 = geneticMainTimed(n, matrix, 45, 0.64, 3, 13, 0.01, time, 2, 19, 2, 177, 0, 1, 15);
+	} else if(mode == 1) {
+		result1 = geneticMainTimed(n, matrix, 91, 0.99, 0, 18, 0.01, time, 1, 12, 2, 176, 0, 1, 11);
+		result2 = geneticMainTimed(n, matrix, 91, 0.99, 0, 18, 0.01, time, 1, 12, 2, 176, 0, 1, 11);
+		result3 = geneticMainTimed(n, matrix, 91, 0.99, 0, 18, 0.01, time, 1, 12, 2, 176, 0, 1, 11);
+	}
+
+	road = result.first;
+	road1 = result1.first;
+	road2 = result2.first;
+	road3 = result3.first;
+
+	score = calculate_length(road, matrix, road.size());
+	printf("Done %ld\n", score);
+	score1 = calculate_length(road1, matrix, road.size());
+	score2 = calculate_length(road2, matrix, road.size());
+	score3 = calculate_length(road3, matrix, road.size());
+
+	File << mode << ";" << n << ";" << score << ";" << score1 << ";" << score2 << ";" << score3 << "\n";
+	counter += 1;
+}
+
+void geneticTabuTesterSimetric(std::string fileName) {
+
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+	coords = parse_coords(fileName);
+	matrix = coords_to_matrix(coords);
+	int n = coords.size();
+
+	geneticTabuTester(fileName, n, matrix, 0);
+}
+
+void geneticTabuTesterAsimetric(std::string fileName) {
+	int** matrix;
+	std::vector<std::pair<double, double>> coords;
+	std::pair<int**, int> res;
+	res = parse_matrix(fileName);
+	matrix = res.first;
+	int n = res.second;
+
+	geneticTabuTester(fileName, n, matrix, 1);
+}
 
 // Testing Islands

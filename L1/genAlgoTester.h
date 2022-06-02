@@ -29,6 +29,8 @@ void geneticLocEnhaTesterSimetric(std::string fileName);
 void geneticLocEnhaTesterAsimetric(std::string fileName);
 
 //Tabu data
+void geneticTabuTesterSimetric(std::string fileName);
+void geneticTabuTesterAsimetric(std::string fileName);
 
 //Island test
 

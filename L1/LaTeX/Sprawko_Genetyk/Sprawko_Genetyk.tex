@@ -466,30 +466,125 @@ Asym443 & 1 & 0 & 0 & 1 & 2 & 91 & 0.993 & 19 & 12\\
 \end{table}
 
 \subsection{Badanie wpływu zastosowania 'lokalnej poprawy'}
-Przy zastosowaniu wyników z 2 poprzednich eksperymentów postanowiliśmy zbadać wpływ działania mechanizmu 'lokalnej poprawy' na wyniki.\\
-\textit{Lokalna poprawa} - z pewnym prawdopodobieństwem (określanym parametrem \textit{enhanceChance}) po skończonej mutacji (czyli po szystkich iteracjach) na osobniku wykonujemy algorytm lokalnej poprawy, czyli iteracyjnie przechodzimy przez piątki kolejnych miast i tak modyfikujemy trasę, aby w każdej z tych iteracji przejście było minimalne - zatem najpierw 'poprawiamy' miasta 1-5, potem 2-6 itd. Takich możliwych przejść jest 6 (ponieważ zaczynamy zawsze z 1 i kończymy na 5), zatem jest to w miarę szybkie (dzieje się w czasie liniowym względem liczby miast) i nie powinno znacząco wpływać na liczbę wykonywanych iteracji.\\
-W testach wykonaliśmy 10 powtórzeń dla każdej wartości parametru z zakresu $[0.05 ; 1.0]$ ze skokiem o $0.05$. Wyniki przedstawmy na wykresie:
+Przy zastosowaniu wyników z 2 poprzednich eksperymentów postanowiliśmy zbadać wpływ działania mechanizmu 'lokalnej poprawy' na wyniki.\\\\
+Badaliśmy te same 4 instancje, co w przypadku poszukiwania hiperparametrów, dlatego że jak się nam udało ustalić, najlepiej jest dobierać je do każdej instancji z osobna.\\\\
+\textit{Lokalna poprawa} - z pewnym prawdopodobieństwem (określanym parametrem \textit{enhanceChance}) po skończonej mutacji (czyli po szystkich iteracjach) na osobniku wykonujemy algorytm lokalnej poprawy, czyli iteracyjnie przechodzimy przez piątki kolejnych miast i tak modyfikujemy trasę, aby w każdej z tych iteracji przejście było minimalne - zatem najpierw 'poprawiamy' miasta 1-5, potem 2-6 itd. Takich możliwych przejść jest 6 (ponieważ zaczynamy zawsze z 1 i kończymy na 5), zatem jest to w miarę szybkie (dzieje się w czasie liniowym względem liczby miast) i nie powinno znacząco wpływać na liczbę wykonywanych iteracji.\\\\
+W testach wykonaliśmy 10 powtórzeń dla każdej wartości parametru z zakresu $[0.05 ; 1.0]$ ze skokiem o $0.05$. Wyniki przedstawmy na wykresach (będziemy pokazywali średnią, oraz najlepszy usyzkany wynik):
+
+\includegraphics[scale=0.36]{locEnhSim70}
+\includegraphics[scale=0.36]{locEnhSim439}
+\includegraphics[scale=0.36]{locEnhAsim71}
+\includegraphics[scale=0.36]{locEnhAsim443}
+
+Zamieśćmy jeszcze, jak wygląda wykres średniej liczby wykonanych iteracji względem badanego parametru:
+
+\includegraphics[scale=0.72]{locEnhIter}
+
+A teraz przeanalizujmy otrzymane wyniki:
+\begin{itemize}
+	\item Wniosek 1
+	\item Wniosek 2
+	\item Wniosek 3
+	\item Wniosek 4
+\end{itemize}
 
 \subsection{Badanie wpływu 'wieku' osobników}
-Eksperyment analogiczny do poprzedniego (w sensie metodologii), jednak tym razem badaliśmy wpływ zastosowania wieku na rozwiązanie. Oznaczyliśmy go jako \textit{AgeMax}, przy czym oznacza to, że osobnik będący w populacji dłużej niż \textit{AgeMax} w procesie selekcji jest 'usuwany' z populacji. Zastosowaliśmy tutaj jednak pewną formę elitaryzmu, ponieważ podczas każdej selekcji 'zerujemy' wiek najlepszego osobnika (Najlepszy ma prawo \textit{Picia ze źródła wiecznej młodości}), dzięki czemu go nie tracimy.\\
-W testach wykonaliśmy 10 powtórzeń dla każdej wartości z zakresu $[1 ; 20]$, a wyniki przedstawiamy na wykresie:
+Eksperyment analogiczny do poprzedniego (w sensie metodologii, wyboru instancji i parametrów), jednak tym razem badaliśmy wpływ zastosowania wieku na rozwiązanie. Oznaczyliśmy go jako \textit{AgeMax}, przy czym oznacza on, że osobnik będący w populacji dłużej niż \textit{AgeMax} w procesie selekcji jest 'usuwany' z populacji. Zastosowaliśmy tutaj jednak pewną formę elitaryzmu, ponieważ podczas każdej selekcji 'zerujemy' wiek najlepszego osobnika (Najlepszy ma prawo \textit{Picia ze źródła wiecznej młodości}), dzięki czemu go nie tracimy.\\
+W testach wykonaliśmy 10 powtórzeń dla każdej wartości z zakresu $[1 ; 20]$, a wyniki przedstawiamy na wykresach:
 
+\includegraphics[scale=0.36]{ageSim70}
+\includegraphics[scale=0.36]{ageSim439}
+\includegraphics[scale=0.36]{ageAsim71}
+\includegraphics[scale=0.36]{ageAsim443}
+
+Zamieśćmy jeszcze, jak wygląda wykres średniej liczby wykonanych iteracji względem badanego parametru:
+
+\includegraphics[scale=0.72]{ageIter}
+
+A teraz przeanalizujmy otrzymane wyniki:
+\begin{itemize}
+	\item Wniosek 1
+	\item Wniosek 2
+	\item Wniosek 3
+	\item Wniosek 4
+\end{itemize}
 
 \subsection{Porównanie najlepszych wyników z algorytmem TabuSearch}
 Aby jakoś porównać działanie naszego algorytmu, zestawimy go tutaj z zaimplementoanym algorytmem \textit{TabuSearch}, gdzie Tabu będzie miało następujące parametry:
 \begin{itemize}
-	\item par1
-	\item par2
+	\item rozwiązanie startowe - najlepsze z losowych znalezionych w czasie 1 sekundy
+	\item Wielkość listy Tabu - $\sqrt{n} + 2$
+	\item Liczba iteracji bez poprawy: $\frac{(|LT| * 2 + 1) * 3}{2}$
+	\item Otoczenie rotacyjne (Cykliczne zmiany między otoczeniami \textit{Invert}, \textit{Insert}, \textit{Swap})
+	\item Kik rotacyjny (jak wyżej)
+	\item Wielkość Kik'a = 7
+	\item Korzystanie z mechanizmu Listy Długoterminowej
 \end{itemize}
-Natomiast \textit{Genetic} otrzymane z eksperymentów z poszukiwaniami. Dla przypomnienia:
+Natomiast \textit{Genetic} otrzymane z eksperymentów z poszukiwaniami. Jendakże, aby nie przeprowadzać pponownie poszukiwania najlepszych hiperparametrów dla każdej instancji, przyjęliśmy założenia, że wprowadzimy 1 'uśrednione' dla wszystkich (ale w dalszym ciąg rozróżniamy symetryczne i asymetryczne):
 \begin{itemize}
-	\item par1
-	\item par2
+	\item Symetryczne:
+		\begin{itemize}
+			\item startMode = 1
+			\item selectionMode = 0
+			\item mutMode = 3
+			\item crossMode = 2
+			\item crossType = 2
+			\item populationSize = 45
+			\item mutationThreshold = 0.64
+			\item mutationIntensification = 13
+			\item crossSize = 19
+			\item crossCount = 177
+    		\item enhanceChance = 0.01
+    		\item ageMax = 15
+		\end{itemize}
+	\item Asymetryczne:
+		\begin{itemize}
+			\item startMode = 1
+			\item selectionMode = 0
+			\item mutMode = 0
+			\item crossMode = 1
+			\item crossType = 2
+    		\item populationSize = 91
+    		\item mutationThreshold = 0.99
+			\item mutationIntensification = 18
+			\item crossSize = 12
+			\item crossCount = 176
+    		\item enhanceChance = 0.01
+    		\item ageMax = 11
+		\end{itemize}
 \end{itemize}
-Testowaliśmy każdą z 16 badanych instancji, oraz każdemu z algorytmów daliśmy budżet czasu równy 90 sekund. Aby jednak dać jakąś szansę (i odrobinę zredukować losowość) algorytmowi genetycznemu, wykonaliśmy dla niego 3 iteracje po 30 sekund. W ten sposób jego wyniki mają szansę być nieco bardziej miarodajne. Wyniki przedstawmy w tabeli:
+Testowaliśmy każdą z 16 badanych instancji, oraz każdemu z algorytmów daliśmy budżet czasu równy 90 sekund (Zatem Tabu działał przez 89). Aby jednak dać jakąś szansę (i odrobinę zredukować losowość) algorytmowi genetycznemu, wykonaliśmy dla niego 3 iteracje po 30 sekund, a następnie wybraliśmy najlepszy. W ten sposób jego wyniki mają szansę być nieco bardziej miarodajne. Wyniki przedstawmy w tabeli:
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c}
+Tabela 8.\\
+Instancje & Wynik Tabu & Najlepszy Gen & Stosunek G:T\\
+\hline
+Sim, 52 & 7542 & 7772 & 1.03049588968443 \\
+Sim, 70 & 676 & 696 & 1.02958579881657 \\
+Sim, 76 & 550 & 564 & 1.02545454545455 \\
+Sim, 127 & 118921 & 125369 & 1.05422086931661 \\
+Sim, 150 & 26899 & 28935 & 1.07569054611696 \\
+Sim, 318 & 172089 & 47532 & 0.276205916705891 \\
+Sim, 318 & 202317 & 47565 & 0.235101350850398 \\
+Sim, 439 & 1144057 & 124299 & 0.108647558644368 \\
+Asim, 56 & 1660 & 2058 & 1.23975903614458 \\
+Asim, 65 & 2032 & 2438 & 1.1998031496063 \\
+Asim, 71 & 2162 & 2531 & 1.17067530064755 \\
+Asim, 100 & 37931 & 42574 & 1.12240647491498 \\
+Asim, 171 & 3617 & 5123 & 1.41636715510091 \\
+Asim, 323 & 2243 & 2742 & 1.22246990637539 \\
+Asim, 358 & 2823 & 3407 & 1.20687212185618 \\
+Asim, 443 & 5461 & 5730 & 1.04925837758652 \\
+
+
+	\end{tabular}
+\end{table}
 
 Oraz jeszcze zobaczmy, co Wilcoxon nam o tym mówi:
 
+\newpage
 \subsection{Badania nad Modelem Wyspowym}
 Model wyspowy zaimplementowano w następujący sposób:
 \begin{itemize}
@@ -503,8 +598,8 @@ Model wyspowy zaimplementowano w następujący sposób:
 		\item mutMode = 0
 		\item crossType = 1
 		\item selectionMode = 0
-    		\item double mutationThreshold = 0.6
-    		\item time = 30.0
+    	\item double mutationThreshold = 0.6
+    	\item time = 30.0
 	\end{itemize}
 	\item po ustalonej liczbie iteracji, z każdej z wysp zabierano $k$ osobników, po czym z powstałej puli w losowy sposób wysyłano ich z powrotem na wyspy
 \end{itemize}

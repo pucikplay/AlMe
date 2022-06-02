@@ -14,7 +14,7 @@ size_t invertLength(size_t length, const std::vector<int>& road, int** matrix, s
 
 	size_t newLength = length;
 
-	int smaller = (road[i] < road[(i + 1) % n]) ? road[i] : road[(i + 1) % n];
+	/*int smaller = (road[i] < road[(i + 1) % n]) ? road[i] : road[(i + 1) % n];
 	int bigger = (road[i] >= road[(i + 1) % n]) ? road[i] : road[(i + 1) % n];
 	newLength -= matrix[smaller][bigger];
 
@@ -28,7 +28,11 @@ size_t invertLength(size_t length, const std::vector<int>& road, int** matrix, s
 
 	smaller = (road[(i + 1) % n] < road[(j + 1) % n]) ? road[(i + 1) % n] : road[(j + 1) % n];
 	bigger = (road[(i + 1) % n] >= road[(j + 1) % n]) ? road[(i + 1) % n] : road[(j + 1) % n];
-	newLength += matrix[smaller][bigger];
+	newLength += matrix[smaller][bigger];*/
+
+	std::vector<int> newRoad = road;
+	newRoad = doStep(newRoad, i, j, 0);
+	newLength = calculate_length(newRoad, matrix, n);
 
 	return newLength;
 }
@@ -36,7 +40,7 @@ size_t invertLength(size_t length, const std::vector<int>& road, int** matrix, s
 size_t insertLength(size_t length, const std::vector<int>& road, int** matrix, size_t i, size_t j, size_t n) {
 
 	size_t newLength = length;
-	int smaller, bigger;
+	/*int smaller, bigger;
 
 	if(i < j) {
 		smaller = (road[(i - 1 + n) % n] < road[i]) ? road[(i - 1 + n) % n] : road[i];
@@ -70,7 +74,11 @@ size_t insertLength(size_t length, const std::vector<int>& road, int** matrix, s
 
 	smaller = (road[(j - 1 + n) % n] < road[(j + 1) % n]) ? road[(j - 1 + n) % n] : road[(j + 1) % n];
 	bigger = (road[(j - 1 + n) % n] >= road[(j + 1) % n]) ? road[(j - 1 + n) % n] : road[(j + 1) % n];
-	newLength += matrix[smaller][bigger];
+	newLength += matrix[smaller][bigger];*/
+
+	std::vector<int> newRoad = road;
+	newRoad = doStep(newRoad, i, j, 1);
+	newLength = calculate_length(newRoad, matrix, n);
 
 	return newLength;
 }
@@ -79,7 +87,7 @@ size_t swapLength(size_t length, const std::vector<int>& road, int** matrix, siz
 
 	size_t newLength = length;
 
-	if(i + 1 == j) {
+	/*if(i + 1 == j) {
 		newLength = invertLength(length, road, matrix, (i - 1 + n) % n, j, n);
 		return newLength;
 	}
@@ -114,7 +122,11 @@ size_t swapLength(size_t length, const std::vector<int>& road, int** matrix, siz
 
 	smaller = (road[i] < road[(j + 1) % n]) ? road[i] : road[(j + 1) % n];
 	bigger = (road[i] >= road[(j + 1) % n]) ? road[i] : road[(j + 1) % n];
-	newLength += matrix[smaller][bigger];
+	newLength += matrix[smaller][bigger];*/
+
+	std::vector<int> newRoad = road;
+	newRoad = doStep(newRoad, i, j, 2);
+	newLength = calculate_length(newRoad, matrix, n);
 
 	return newLength;
 }
@@ -524,8 +536,8 @@ std::pair<std::vector<int>, int> deterministicTabuWithKikCount(std::vector<int> 
 
 	auto start = std::chrono::high_resolution_clock::now();
 	do {
-		//mode += 1;
-		//mode %= 3;
+		mode += 1;
+		mode %= 3;
 
 		//{bestLen, bestPair}
 		std::pair<size_t, std::pair<size_t, size_t>> res = checkNeighbourhood(road, matrix, n, length, tabuList, elementsOnTabu, mode, globalBestLen);
@@ -578,6 +590,8 @@ std::pair<std::vector<int>, int> deterministicTabuWithKikCount(std::vector<int> 
 			else if(counterLTM == 0) {
 				if (devHelpKikFlag) printf(" (Kik) ");
 				road = deterministicKik(road, rseed, kikMode, kikSize);
+				kikMode += 1;
+				kikMode %= 3;
 				rseed += 13;
 
 				length = calculate_length(road, matrix, n);
