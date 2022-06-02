@@ -21,7 +21,6 @@
 	\usepackage{amsfonts}
 	\usepackage{tikz}
 	\usepackage{multirow}
-
 	\usepackage{float}	
 	
 % pakiety do automatów
@@ -492,6 +491,41 @@ Testowaliśmy każdą z 16 badanych instancji, oraz każdemu z algorytmów dali�
 Oraz jeszcze zobaczmy, co Wilcoxon nam o tym mówi:
 
 \subsection{Badania nad Modelem Wyspowym}
+Model wyspowy zaimplementowano w następujący sposób:
+\begin{itemize}
+	\item Każda z wysp prowadzi własną instancję algorytmu genetyczne na pojedyńczym rdzeniu procesora, wyjściowa populacja losowa, parametry (wybrane najlepsze z uprzednich testów):
+	\begin{itemize}
+		\item populationSize = 50
+		\item mutationIntensification = 13
+		\item crossSize = 1
+		\item crossCount = 177
+		\item crossMode = 1
+		\item mutMode = 0
+		\item crossType = 1
+		\item selectionMode = 0
+    		\item double mutationThreshold = 0.6
+    		\item time = 30.0
+	\end{itemize}
+	\item po ustalonej liczbie iteracji, z każdej z wysp zabierano $k$ osobników, po czym z powstałej puli w losowy sposób wysyłano ich z powrotem na wyspy
+\end{itemize}
+Badania przeprowadzono na instancji st70.tsp, każda kombinacja parametrów została uruchomiona trzykrotnie, a wynik został uśredniony.
+\subsubsection*{Wpływ długości interwału pomiędzy mieszaniem}
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{Interval=10.png}
+\end{figure}
+\includegraphics[width=\textwidth]{Interval=100.png}
+\includegraphics[width=\textwidth]{Interval=1000.png}
+
+\subsubsection*{Wpływ liczby osobników podlegających mieszaniu}
+\includegraphics[width={\textwidth}/2]{swpSize=1.png}
+\includegraphics[width={\textwidth}/2]{swpSize=2.png}
+\includegraphics[width={\textwidth}/2]{swpSize=4.png}
+\includegraphics[width={\textwidth}/2]{swpSize=8.png}
+\includegraphics[width={\textwidth}/2]{swpSize=16.png}
+\includegraphics[width={\textwidth}/2]{swpSize=32.png}
+
+Na każdym z wykresów mniej lub bardziej, ale zawsze widać tendencję spadkową, co pozwala zakładać, że model wyspowy został zaimplementowany prawidłowo. Ulepszenie nie jest liniowe, ale skuteczne. Najszybszy zysk widać przy długich interwałach pomiędzy mieszaniem, w przypadku \texttt{Interval=1000} wartość funkcji celu już przy dwóch wyspach była znacznie lepsza od pojedyńczej, potem jednak zyski kolejnych wysp były mniejsze. Dla parametru liczby osobników branych do mieszania nie widać szczególnie jakiś własności, poza nieprzewidywalnością wyniku, kiedy bierzemy tylko po jednym z osobników.
+
 
 \section{Drobne podsumowanie; Tabele dodatkowe}
 Zawrzemy tutaj niepokazane wcześniej tabele z wynikami, oraz pokusimy się o podsumowanie naszych eksperymentów.
