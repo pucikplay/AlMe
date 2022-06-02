@@ -47,6 +47,7 @@ Na samym początku omówimy po krótce naszą implementacje, oraz podamy kilka i
 \subsection{Implementacja}
 Algorytmy implementujemy w języku \texttt{C/C++}, odległości między wierzchołkami są przechowywane jako pełne tablice dwuwymiarowe typu \texttt{int}, a trasy (pojedyncze osobniki) są w kontenerach \texttt{vector}, co ułatwia operacje odwracania i mieszania.\\
 Korzystaliśmy z kompilatora g++ wraz z użyciem flag -lSDL2 (używanej przy wizualizacji, wraz z odpowiednim dla danego systemu operacyjnego podlinkowania do folderu zawierającego) oraz -lpthread (przy korzystaniu z wielowątkowości).\\\\
+
 Dodajmy jeszcze tylko, że jako generatora pseudolosowego użyliśmy typu \texttt{std::mt19937} zdefiniowanego przez \texttt{C++}.
 
 \subsection{Sprzęt}
@@ -87,17 +88,18 @@ W dalszych częściach, instancje będziemy oznaczać przez liczbę mówiącą o
 
 \subsection{Metodologia/cel}
 
-Testy przeprowadzono za pomocą zaimplementowanych w tym celu funkcji ku jak największej automatyzacji. Dane o przeprowadzonych testach zapisywano do plików tekstowych w formacie CSV, a następnie poddane analizie. Testy i eksperymenty miały na celu zbadanie wydajności naszej implementacji, oraz znalezienie jak najbardziej optymalnych trybów/hiperparametrów dla przypadku ogólnego.
+Testy przeprowadzono za pomocą zaimplementowanych w tym celu funkcji ku jak największej automatyzacji. Dane o przeprowadzonych testach zapisywano do plików tekstowych w formacie CSV, a następnie poddane analizie. Testy i eksperymenty miały na celu zbadanie wydajności naszej implementacji, oraz znalezienie jak najlepszych trybów/hiperparametrów dla przypadku ogólnego.
 
-\newpage
 \section{Opis parametrów}
-W opisie przejdziemy najpierw przez kolejne 'tryby' działania, a następnie omówimy także każdy hiperparametr występujący w naszej implementacji, ale zanim, to wspomnijmy jeszcze tylko, że każda operacja krzyżowania daje nam 2 nowe osobniki.
+W opisie przejdziemy najpierw przez kolejne 'tryby' działania, a następnie omówimy także każdy hiperparametr występujący w naszej implementacji. \\\\
+
+Ale zanim, to wspomnijmy jeszcze tylko, że każda operacja krzyżowania daje nam 2 nowe osobniki, a przez 'Sim.' na wykresach mamy na myśli wariant symetryczny, a przez 'Asim.' - asymetryczny.
 
 \subsection{Tryby działania}
 \begin{itemize}
 	\item StartMode - sposób generowania populacji początkowej:
 		\begin{itemize}
-			\item 0 - Każdy osobnik jest wybierany z 10 całkowicie losowych (Chodzi o losowe ermutacje dróg)
+			\item 0 - Każdy osobnik jest wybierany z 10 całkowicie losowych (Chodzi o losowe permutacje dróg)
 			\item 1 - Każdy osobnik jest tworzny jako puszczenie algorytmu NearestNeighbor (czyli zachłanne szukanie najbliższego sąsiada z tych co pozostali w każdej iteracji) z losowego punktu startowego
 			\item 2 - Hybrydowe połączenie 2 poprzednich, gdzie stosunek losowych do NN wynosi 4:1 (Czyli około 20\% populacji to osobniki 'względnie dobre').
 		\end{itemize}
@@ -128,6 +130,7 @@ W opisie przejdziemy najpierw przez kolejne 'tryby' działania, a następnie om�
 			\item 0 - Wszystkie osobniki są ustawione losowo, a następnie krzyżujemy ze sobą 1 z 2, 3 z 4.. itd. Jeżeli osobników było nieparzyście, to ostatni osobnik jest dublowany.
 			\item 1 - W każdej iteracji losowana jest para osobników z całej populacji (Ustalona liczba na sztywno, w testach = 20)
 			\item 2 - Tak jak poprzednio, ale tym razem liczba losowań jest określona jako rozmiar problemu / 2 (czyli dla $n = 150$ mamy 75 losowań.
+	\item 
 		\end{itemize}
 \end{itemize}
 
@@ -139,6 +142,8 @@ W opisie przejdziemy najpierw przez kolejne 'tryby' działania, a następnie om�
 	\item mutationIntensification - górne ograniczenie na liczbę pojedynczych mutacji na jednym osobniku (jeżeli zajdzie mutacja, to następnie jest losowana jej intensyfikacja, co najmniej 1, definiuje liczbę iteracji przy mutacji - dlatego przy zastosowaniu MutMode3 może się okazać, że np. wykonają się 3 typu \textit{Invert} oraz 1 typu \textit{Swap})
 	\item crossSize - wielkość fragmentu podlegająca krzyżowaniu - przy naszych operatorach jest to wielkość 'wycinka', który definiuje operację krzyżowania
 	\item crossCount - wykorzystywane tylko, gdy crossType 1, definiuje liczbę zachodzących krzyżowań
+	\item swapSize - liczba osobników zabierana z każdej z wysp w warianccie wyspowym
+	\item swapInterval - liczba iteracji pomiędzy mieszaniem osbników pobranych z wysp
 \end{itemize}
 
 \newpage
@@ -171,12 +176,11 @@ Dodatkowo na wykresie zawarta jest też informacja o trybie startującym, dlateg
 
 Z podanych wykresów można wyciągnąć dwa zasadnicze wnioski (które aplikują się zarówno do instancji symetrycznych, jak i asymetrycznych):
 \begin{itemize}
-	\item Jak widać, dla większych instancji algorytm startujący z rozwiązań losowych nie miał wystarczającej ilości czasu, aby dotrzeć do rozwiązań (w sensie wydajności) zbliżonych do pozostałych trybów startowania. Jednak dla instancji mniejszego rozmiaru, z samego tylko wykresu trudno byłoby powiedzieć, czy jego rozwiązania są rzeczywiście gorsze, chociaż  jasno widać, że mają one (losowy start) znacznie większy rozrzut.
+	\item Jak widać, dla większych instancji algorytm startujący z rozwiązań losowych nie miał wystarczającej ilości czasu, aby dotrzeć do rozwiązań (w sensie wydajności) zbliżonych do pozostałych trybów startowania. Jednak dla instancji mniejszego rozmiaru, z samego tylko wykresu trudno byłoby powiedzieć, czy jego rozwiązania są rzeczywiście gorsze, chociaż  jasno widać, że mają one (o losowym starcie) znacznie większy rozrzut.
 	\item Dla większych instancji, pomimo dużego rozrzutu danych, dla samych rozwiązań startujących z całkowicie losowej populacji można wyznaczyć dwie 'grupy', daltego też zaryzykujemy tu swierdzenie, że dla pozostałych trybów startu także to zachodzi (chociaż na razie tego nie widać)
 \end{itemize}
 
 \subsubsection{Rozrzut wyników dla poszczególnych instancji}
-Jeszcze więcej wykresików!!!\\
 Pokażemy teraz dystrybucję wyniku względem liczby iteracji osobno dla każdej instancji. Jednak, nie zawrzemy tutaj wyników, które zostały otrzymane przez użycie całkowicie losowej populacji początkowej, ponieważ tak jak zauważyliśmy na poprzednich wykresach, odbiegają znacznie od pozostałych 2 trybów startujących.
 
 \includegraphics[scale=0.36]{simDist52}
@@ -197,14 +201,13 @@ Pokażemy teraz dystrybucję wyniku względem liczby iteracji osobno dla każdej
 \includegraphics[scale=0.36]{asimDist358}
 \includegraphics[scale=0.36]{asimDist443}
 
+\newpage
 Z tych wykresów wyciągnijmy jeszcze kilka wniosków:
 \begin{itemize}
-	\item Wniosek 1
-	\item Wniosek 2
-	\item Wniosek 3
-	\item Wniosek 4
-	\item Wniosek 5
-	\item Wniosek 6
+	\item Najbardziej rzuca się w oczyw dosyć wyraźna 'klasteryzacja' rozwiązań ( najbardziej w przypadku większych instancji) - co idealnie pokazuje, że konkretne kombinacje trybów bardzo różnie ze sobą działają ( i można dzięki temu wyznaczyć prosperujące)
+	\item Pomimo znacznej różnicy w liczbie wykonanych iteracji, nie ma bezpośredniego związku między wynikiem - ozncza to, że są tryby, które bardzo 'szybko' znajdują rozwiązanie 'dobre', pomimo tego, że wykonanie pojedynczego kroku trwa o wiele dłużej.
+	\item W miarę zwiększania się problemu instancji widać coraz wyraźniejsze różnice między poszczególymi kombinacjami (nie są nazwane, ale bardziej chodzi tutaj o zaakcentowanie wystepowania zjawiska)
+	\item Widać również różnice dla wariantu symetrycznego, oraz asymetrycznego - drugie są o wiele bardziej 'skondensowane' mi układają się bardziej 'pasmowo' - może to wynikać z natury problemu - albo dane ruchy są wymagające, albo nie (W przypadku symetrycznych różnice są bardziej - niespodziewane - symetryczne)
 \end{itemize}
 
 \subsubsection{Tryby pod względem jednostkowym}
@@ -240,9 +243,8 @@ crossType & 0 & 1 & 1.697 & 1.178 & 2.326\\
 
 Z obu powyższych tabel możemy wyciągnąć następujące wnioski:
 \begin{itemize}
-	\item Wniosek 1
-	\item Wniosek 2
-	\item Wniosek 3
+	\item Możemy zaobserwować, że zaskakująco wiele kombinacji (ponieważ każdy tryb jednostkowo wchodzi w kilkadziesiąt innych) znalazło chociaż raz rozwiązanie optymalne! Jednak jak się przyjrzymy wcześniejszym wykresom, to zauważymy, że taka sytuacja wydarzyła się jedynie dla najmniejszej z rozpatrywanych instancji.
+	\item Dalej widać, że pod względem średniej globalnej, dane tryby z osobna nie różnią się znacznie od siebie, dlatego też o wiele więcej informacji będziemy w stanie wyciągnąć z dalszej analizy.
 \end{itemize}
 
 \subsubsection{10 najlepszych kombinacji}
@@ -263,7 +265,7 @@ Ranking stworzony został w następujący sposób:
 	\end{itemize}
 \end{itemize}
 
-Oto 'główki' dla otrzymanych wyników:
+Oto 'główki' dla otrzymanych wyników (Ostatecznie wybraliśmy pierwszy rekord z każdej):
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{c||c|c|c|c|c||c|c}
@@ -324,20 +326,7 @@ Id & StartMode & SelectionMode & MutMode & CrossMode & CrossType & Sum & Avg \\
 	\end{tabular}
 \end{table}
 
-Z powyższych 3 tabel możemy wyciągnąć następujące wnioski:
-\begin{itemize}
-	\item Wniosek 1
-	\item Wniosek 2
-	\item Wniosek 3
-\end{itemize}
-
-\subsubsection{Ostatecznie wybrane najlepsze}
-Udało się nam teraz wyłonić potencjalnie najlepsze kombinacje trybów (które będziemy stosować później):
-\begin{itemize}
-	\item Dla wariantu symetrycznego:
-	\item Dla wariantu asymetrycznego:
-	\item Globalnie:
-\end{itemize}
+Na koniec jeszce taka uwaga: zaniechaliśmy zamieszczanie testów statystycznych, ponieważ każdy z badanych trybów był jednoznacznie 'dobry', albo bez znaczenia (jak na przykład StartMode = 1). Na koniec dodamy jeszcze tabelkę z pierwszymi 50 wynikami naszego rankingu, aby to podkreślić.
 
 \newpage
 \subsection{Poszukiwanie II - hiperparametry}
@@ -368,18 +357,19 @@ Na samym początku zaprezentujemy na wykresach, jak wygląda rozkład otrzymanyc
 \includegraphics[scale=0.36]{parDistAsim71}
 \includegraphics[scale=0.36]{parDistAsim443}
 
+\newpage
 Z powyższych wykresów spróbujmy teraz wyciągnąć kilka wniosków:
 \begin{itemize}
 	\item Jak widać dla wariantu symetrycznego, dla rozmiaru wielkości 70 o wiele lepiej zadziałał zestaw trybów deykowany do tych instancji, jednakże dla rozmiaru 439, o wiele lepiej zachował się zestaw ogólny. Przez sformułowanie 'lepiej' rozumiemy tutaj wartości częściej osiągane bliższej wartości rozwiązania najlepszego.
 	\item Dla wariantu symetrycznego widać również, że dla każdej instancji zestaw danych ogólny wykonywał mniej iteracji (koncentracja w 'dolnej' części wykresu). Może być to powodowane tym, że jest on uwarunkowany po części parametrem \textit{crossCount}, który to mówi o liczbie wykonywanych krzyżowań - widzimy tutaj zatem 'średnią' zależność tego parametru od wykonanej liczby iteracji.
-	\item Wniosek 3
 	\item Ogólny wniosek mamy zatem taki (i powtórzymy go zapewne przy okazji dalszej analizy): dla naszej implementacji różne zestawy trybów będą się inaczej zachowywały dla każdej instancji, zatem najlepszą metodą byłby dobór wszystkich trybów i parametrów do każdej instancji z osobna.
+	\item Dopowiedzmy jesze tylko, że dla wariantu asymetrycznego o dziwo oba warianty były dosyć zbalansowane pod względem wydajności, co zresztą widać na rozrzucie danych
 \end{itemize}
 
 \subsubsection{Wykresy wobec parametrów dla każdej instancji}
 W tej części pokażemy wykresy w rozbiciu o każdy parametr z osobna (traktujemy teraz wszystkie 100 przeszukiwań jako 1 zbiór i dzielimy go względem danego parametru). Pominiemy jednak wykresy dla parametru crossCount, ponieważ dla zestawów specyficznych dla danego typu (a/symetryczne) nie bierze on udziału):
 
-\subsubsection*{Symetyczne}
+\subsubsection*{Symetryczne}
 \includegraphics[scale=0.36]{pSSim70}
 \includegraphics[scale=0.36]{pSSim439}
 \includegraphics[scale=0.36]{mTSim70}
@@ -389,7 +379,7 @@ W tej części pokażemy wykresy w rozbiciu o każdy parametr z osobna (traktuje
 \includegraphics[scale=0.36]{cSSim70}
 \includegraphics[scale=0.36]{cSSim439}
 
-\subsubsection*{Asymetyczne}
+\subsubsection*{Asymetryczne}
 \includegraphics[scale=0.36]{pSAsim71}
 \includegraphics[scale=0.36]{pSAsim443}
 \includegraphics[scale=0.36]{mTAsim71}
@@ -403,8 +393,8 @@ Z powyższych wykresów spróbujmy wyciągnąć kilka wniosków:
 \begin{itemize}
 	\item Powtórzmy tutaj na początek wniosek z poprzedniej części, a konkretnie, że mimo wszystko zestawy trybów znacznie różnią się od siebie wydajnością (i wpływem na ogólny wynik hiperparametrów) w zależności od wybranej instancji.
 	\item Wydawać by się mogło, że najmniejszy wpływ na wyniki ma wielkość populacji początkowej (na wszystkich wykresach wyniki są dosyć 'zbalansowane' niezależnie od tej wartości)
-	\item Dla instancji mniejszego rozmiaru widzimy ogólnie mniejszą zależność od hiperparametrów, chociaż dla obu wariantów możemy zauważyć, że optimum dla intensyfikacji jest w okolicach \textit{magicznej 7}, natomiast dla cross Size w okolicach 9.
-	\item Dla instanji większego rozmmiaru możemy zauważyć, że zwiększanie prawdopodobieństwa mutacji znacznie poprawia jakość rozwiązania, jednakże zwiększanie intensyfikacji ją pogarsza. Można zatem powiedzieć, że najlepiej jest 'często mutować, ale delikatnie'. Natomiast wielkość parametru crossSize wacha się w okolicy 12.
+	\item Dla instancji mniejszego rozmiaru widzimy ogólnie mniejszą zależność od hiperparametrów, chociaż dla obu wariantów możemy zauważyć, że optimum dla intensyfikacji jest w okolicach \textit{magicznej 7}, natomiast dla crossSize w okolicach 9.
+	\item Dla instanji większego rozmiaru możemy zauważyć, że zwiększanie prawdopodobieństwa mutacji znacznie poprawia jakość rozwiązania, jednakże zwiększanie intensyfikacji ją pogarsza. Można zatem powiedzieć, że najlepiej jest 'często mutować, ale delikatnie'. Natomiast wielkość parametru crossSize wacha się w okolicy 12.
 \end{itemize}
 
 \subsubsection{5 najlepszych}
@@ -445,7 +435,7 @@ Miejsce & popSize & mutThresh & mutInt & crosSize & popSize & mutThresh & mutInt
 I wyciągnijmy z nich parę wniosków:
 \begin{itemize}
 	\item Jak widzimy, dane otrzymane w tabeli nawet pokrywają się po części z tym, co zaobserwowaliśmy na wykresach, a konkretnie, a zwłasza to widać dla instancji 'dużych' i parametów związanych z mutacją (często, acz lekko).
-	\item Dla instancji 'mniejszych' (przypomnijmy że zauważyliśmy na wykresach, że wyniki wydają się bardziej zbalansowane) dane w tabeli bardziej się różnią od siebie (większy rozrzut pomimo wzięcia tylko pierwszej 5), i powiedzmy, że ranking wydaje się nieco bardziej 'losowy' - ale dalej nam determiniuje 'zwycięzce'
+	\item Dla instancji 'mniejszych' (przypomnijmy że zauważyliśmy na wykresach, że wyniki wydają się bardziej zbalansowane) dane w tabeli bardziej się różnią od siebie (większy rozrzut pomimo wzięcia tylko pierwszej 5), i powiedzmy, że ranking wydaje się nieco bardziej 'losowy' - ale dalej nam determiniuje 'zwycięzcę'
 \end{itemize}
 
 \subsubsection{Ostatecznie wybrane najlepsze}
@@ -480,33 +470,27 @@ Zamieśćmy jeszcze, jak wygląda wykres średniej liczby wykonanych iteracji wz
 
 \includegraphics[scale=0.72]{locEnhIter}
 
-A teraz przeanalizujmy otrzymane wyniki:
-\begin{itemize}
-	\item Wniosek 1
-	\item Wniosek 2
-	\item Wniosek 3
-	\item Wniosek 4
-\end{itemize}
+Analiza tutaj jest dosyć prosta i oczywista: Parametr ten nie wpływa zbyt korzystnie na rozwiązanie, a czasem nawet czas poświęcony na jego wykonywanie sprawia, że wykonujemy znacznie mniej iteracji, przez co nie nadążamy z dotarciem do rozwiązań 'względnie dobrych'
 
 \subsection{Badanie wpływu 'wieku' osobników}
 Eksperyment analogiczny do poprzedniego (w sensie metodologii, wyboru instancji i parametrów), jednak tym razem badaliśmy wpływ zastosowania wieku na rozwiązanie. Oznaczyliśmy go jako \textit{AgeMax}, przy czym oznacza on, że osobnik będący w populacji dłużej niż \textit{AgeMax} w procesie selekcji jest 'usuwany' z populacji. Zastosowaliśmy tutaj jednak pewną formę elitaryzmu, ponieważ podczas każdej selekcji 'zerujemy' wiek najlepszego osobnika (Najlepszy ma prawo \textit{Picia ze źródła wiecznej młodości}), dzięki czemu go nie tracimy.\\
 W testach wykonaliśmy 10 powtórzeń dla każdej wartości z zakresu $[1 ; 20]$, a wyniki przedstawiamy na wykresach:
 
-\includegraphics[scale=0.36]{ageSim70}
-\includegraphics[scale=0.36]{ageSim439}
-\includegraphics[scale=0.36]{ageAsim71}
-\includegraphics[scale=0.36]{ageAsim443}
+\includegraphics[scale=0.33]{ageSim70}
+\includegraphics[scale=0.33]{ageSim439}
+\includegraphics[scale=0.33]{ageAsim71}
+\includegraphics[scale=0.33]{ageAsim443}
 
 Zamieśćmy jeszcze, jak wygląda wykres średniej liczby wykonanych iteracji względem badanego parametru:
 
 \includegraphics[scale=0.72]{ageIter}
 
+\newpage
 A teraz przeanalizujmy otrzymane wyniki:
 \begin{itemize}
-	\item Wniosek 1
-	\item Wniosek 2
-	\item Wniosek 3
-	\item Wniosek 4
+	\item Z liczby iteracji widać, że nie wpływa tutaj to znacząco na poziom zaawansowania populacji, zatem można stosować ten parametr 'wstępnie bezstratnie'
+	\item Pomimo nieco losowego rozrzutu, to widzimy zadziwiającą zależność w obrębie jednego rodzaju (a/symetryczne), a konkretnie lokalne minima dla wartości odpowiednio 15 oraz 11
+	\item Stwierdzamy zatem, że mimo wszystko ten parametr warto używać, i będziemy z niego korzystali.
 \end{itemize}
 
 \subsection{Porównanie najlepszych wyników z algorytmem TabuSearch}
@@ -582,9 +566,11 @@ Asim, 443 & 5461 & 5730 & 1.04925837758652 \\
 	\end{tabular}
 \end{table}
 
-Oraz jeszcze zobaczmy, co Wilcoxon nam o tym mówi:
+\begin{itemize}
+	\item Jak widzimy, dla mniejszych instancji Tabu okazało się znacznie lepsze, co tłumaczymy tutaj po części ulosowieniem metody \textit{Genetic}
+	\item Jednakże mamy 'anomalię' dla większych instancji symetrycznych, w postaci znacznie gorzszego wyniku dla Tabu. Tłumaczymy tutaj to jednak tym, że startowało ono z rozwiązań praktycznie losowych, oraz korzystało z listy długoterminowej, zatem zwyczajnie nie zdążyło dotrzeć do rozwiązań porównywalnych do \textit{Genetica}.
+\end{itemize}
 
-\newpage
 \subsection{Badania nad Modelem Wyspowym}
 Model wyspowy zaimplementowano w następujący sposób:
 \begin{itemize}
@@ -598,18 +584,16 @@ Model wyspowy zaimplementowano w następujący sposób:
 		\item mutMode = 0
 		\item crossType = 1
 		\item selectionMode = 0
-    	\item double mutationThreshold = 0.6
+    	\item mutationThreshold = 0.6
     	\item time = 30.0
 	\end{itemize}
 	\item po ustalonej liczbie iteracji, z każdej z wysp zabierano $k$ osobników, po czym z powstałej puli w losowy sposób wysyłano ich z powrotem na wyspy
 \end{itemize}
 Badania przeprowadzono na instancji st70.tsp, każda kombinacja parametrów została uruchomiona trzykrotnie, a wynik został uśredniony.
 \subsubsection*{Wpływ długości interwału pomiędzy mieszaniem}
-\begin{figure}[H]
-\includegraphics[width=\textwidth]{Interval=10.png}
-\end{figure}
-\includegraphics[width=\textwidth]{Interval=100.png}
-\includegraphics[width=\textwidth]{Interval=1000.png}
+\includegraphics[scale=0.72]{Interval=10.png}
+\includegraphics[scale=0.72]{Interval=100.png}
+\includegraphics[scale=0.72]{Interval=1000.png}
 
 \subsubsection*{Wpływ liczby osobników podlegających mieszaniu}
 \includegraphics[width={\textwidth}/2]{swpSize=1.png}
@@ -621,14 +605,74 @@ Badania przeprowadzono na instancji st70.tsp, każda kombinacja parametrów zost
 
 Na każdym z wykresów mniej lub bardziej, ale zawsze widać tendencję spadkową, co pozwala zakładać, że model wyspowy został zaimplementowany prawidłowo. Ulepszenie nie jest liniowe, ale skuteczne. Najszybszy zysk widać przy długich interwałach pomiędzy mieszaniem, w przypadku \texttt{Interval=1000} wartość funkcji celu już przy dwóch wyspach była znacznie lepsza od pojedyńczej, potem jednak zyski kolejnych wysp były mniejsze. Dla parametru liczby osobników branych do mieszania nie widać szczególnie jakiś własności, poza nieprzewidywalnością wyniku, kiedy bierzemy tylko po jednym z osobników.
 
-
-\section{Drobne podsumowanie; Tabele dodatkowe}
-Zawrzemy tutaj niepokazane wcześniej tabele z wynikami, oraz pokusimy się o podsumowanie naszych eksperymentów.
+\newpage
+\section{Tabele Dodatkowe}
 
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{c||c|c|c|c|c||c|c}
-Tabela 2 Pisemnie\\
+Tabela D1.\\
+Wspólne\\
+Id & StartMode & SelectionMode & MutMode & CrossMode & CrossType & Sum & Avg \\
+\hline
+76 & 1 & 0 & 0 & 1 & 1 & 810.8125 & 50.67578125 \\
+75 & 1 & 0 & 0 & 1 & 0 & 791.4375 & 49.46484375 \\
+77 & 1 & 0 & 0 & 1 & 2 & 784.875 & 49.0546875 \\
+115 & 1 & 1 & 0 & 2 & 1 & 876.875 & 54.8046875 \\
+113 & 1 & 1 & 0 & 1 & 2 & 885.625 & 55.3515625 \\
+112 & 1 & 1 & 0 & 1 & 1 & 923.5 & 57.71875 \\
+114 & 1 & 1 & 0 & 2 & 0 & 931.125 & 58.1953125 \\
+103 & 1 & 0 & 3 & 1 & 1 & 1129.1875 & 70.57421875 \\
+116 & 1 & 1 & 0 & 2 & 2 & 1051.875 & 65.7421875 \\
+111 & 1 & 1 & 0 & 1 & 0 & 1049.25 & 65.578125 \\
+80 & 1 & 0 & 0 & 2 & 2 & 945.8125 & 59.11328125 \\
+139 & 1 & 1 & 3 & 1 & 1 & 1139.875 & 71.2421875 \\
+107 & 1 & 0 & 3 & 2 & 2 & 1210.125 & 75.6328125 \\
+106 & 1 & 0 & 3 & 2 & 1 & 1291.25 & 80.703125 \\
+142 & 1 & 1 & 3 & 2 & 1 & 1279.4375 & 79.96484375 \\
+79 & 1 & 0 & 0 & 2 & 1 & 1093.1875 & 68.32421875 \\
+143 & 1 & 1 & 3 & 2 & 2 & 1387.3125 & 86.70703125 \\
+138 & 1 & 1 & 3 & 1 & 0 & 1344.8125 & 84.05078125 \\
+141 & 1 & 1 & 3 & 2 & 0 & 1335.875 & 83.4921875 \\
+149 & 2 & 0 & 0 & 1 & 2 & 1129.125 & 70.5703125 \\
+104 & 1 & 0 & 3 & 1 & 2 & 1377.6875 & 86.10546875 \\
+78 & 1 & 0 & 0 & 2 & 0 & 1200.875 & 75.0546875 \\
+102 & 1 & 0 & 3 & 1 & 0 & 1441.9375 & 90.12109375 \\
+140 & 1 & 1 & 3 & 1 & 2 & 1511.75 & 94.484375 \\
+186 & 2 & 1 & 0 & 2 & 0 & 1361.6875 & 85.10546875 \\
+210 & 2 & 1 & 3 & 1 & 0 & 1498.25 & 93.640625 \\
+105 & 1 & 0 & 3 & 2 & 0 & 1359 & 84.9375 \\
+152 & 2 & 0 & 0 & 2 & 2 & 1386 & 86.625 \\
+148 & 2 & 0 & 0 & 1 & 1 & 1344 & 84 \\
+187 & 2 & 1 & 0 & 2 & 1 & 1421 & 88.8125 \\
+184 & 2 & 1 & 0 & 1 & 1 & 1365.125 & 85.3203125 \\
+185 & 2 & 1 & 0 & 1 & 2 & 1404.5625 & 87.78515625 \\
+178 & 2 & 0 & 3 & 2 & 1 & 1666.8125 & 104.17578125 \\
+151 & 2 & 0 & 0 & 2 & 1 & 1436.0625 & 89.75390625 \\
+150 & 2 & 0 & 0 & 2 & 0 & 1555.5625 & 97.22265625 \\
+89 & 1 & 0 & 1 & 2 & 2 & 1605.0625 & 100.31640625 \\
+213 & 2 & 1 & 3 & 2 & 0 & 1673.5 & 104.59375 \\
+179 & 2 & 0 & 3 & 2 & 2 & 1722.5625 & 107.66015625 \\
+183 & 2 & 1 & 0 & 1 & 0 & 1596.75 & 99.796875 \\
+188 & 2 & 1 & 0 & 2 & 2 & 1606.75 & 100.421875 \\
+88 & 1 & 0 & 1 & 2 & 1 & 1695.8125 & 105.98828125 \\
+211 & 2 & 1 & 3 & 1 & 1 & 1879.125 & 117.4453125 \\
+147 & 2 & 0 & 0 & 1 & 0 & 1718.4375 & 107.40234375 \\
+81 & 1 & 0 & 1 & 0 & 0 & 1623.125 & 101.4453125 \\
+175 & 2 & 0 & 3 & 1 & 1 & 1874.625 & 117.1640625 \\
+125 & 1 & 1 & 1 & 2 & 2 & 1875.3125 & 117.20703125 \\
+214 & 2 & 1 & 3 & 2 & 1 & 2064.4375 & 129.02734375 \\
+72 & 1 & 0 & 0 & 0 & 0 & 1665.1875 & 104.07421875 \\
+212 & 2 & 1 & 3 & 1 & 2 & 1916.25 & 119.765625 \\
+123 & 1 & 1 & 1 & 2 & 0 & 1920.1875 & 120.01171875 \\
+
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{c||c|c|c|c|c||c|c}
+Tabela D2 (2 Pisemnie)\\
 Id & StartMode & SelectionMode & MutMode & CrossMode & CrossType & Sum & Avg \\
 \hline
 107 & Hybryda & Turniej & Losowa & Part.Map. & Size/2 & 98 & 12.25 \\

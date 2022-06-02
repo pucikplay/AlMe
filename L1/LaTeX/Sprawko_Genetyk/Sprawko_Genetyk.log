@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.10.16)  2 JUN 2022 15:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.10.16)  2 JUN 2022 18:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -819,34 +819,49 @@ LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 4
 (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
 
  []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 157--160
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 10000) in paragraph at lines 94--95
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--168
+Underfull \hbox (badness 10000) in paragraph at lines 94--95
+
+ []
+
+[2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 162--165
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--173
 
  []
 
 <simDistI.png, id=27, 766.865pt x 431.6125pt>
 File: simDistI.png Graphic file (type png)
 <use simDistI.png>
-Package pdftex.def Info: simDistI.png  used on input line 169.
+Package pdftex.def Info: simDistI.png  used on input line 174.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <asimDistI.png, id=29, 766.865pt x 431.6125pt>
 File: asimDistI.png Graphic file (type png)
 <use asimDistI.png>
-Package pdftex.def Info: asimDistI.png  used on input line 170.
+Package pdftex.def Info: asimDistI.png  used on input line 175.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 
-Overfull \hbox (25.42732pt too wide) in paragraph at lines 169--171
+Overfull \hbox (25.42732pt too wide) in paragraph at lines 174--176
 [][] [] 
  []
 
@@ -854,120 +869,120 @@ Overfull \hbox (25.42732pt too wide) in paragraph at lines 169--171
 <simDist52.png, id=36, 766.865pt x 431.6125pt>
 File: simDist52.png Graphic file (type png)
 <use simDist52.png>
-Package pdftex.def Info: simDist52.png  used on input line 182.
+Package pdftex.def Info: simDist52.png  used on input line 186.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <simDist70.png, id=37, 766.865pt x 431.6125pt>
 File: simDist70.png Graphic file (type png)
 <use simDist70.png>
-Package pdftex.def Info: simDist70.png  used on input line 183.
+Package pdftex.def Info: simDist70.png  used on input line 187.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <simDist76.png, id=38, 766.865pt x 431.6125pt>
 File: simDist76.png Graphic file (type png)
 <use simDist76.png>
-Package pdftex.def Info: simDist76.png  used on input line 184.
+Package pdftex.def Info: simDist76.png  used on input line 188.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <simDist127.png, id=39, 766.865pt x 431.6125pt>
 File: simDist127.png Graphic file (type png)
 <use simDist127.png>
-Package pdftex.def Info: simDist127.png  used on input line 185.
+Package pdftex.def Info: simDist127.png  used on input line 189.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <simDist150.png, id=40, 768.8725pt x 432.61626pt>
 File: simDist150.png Graphic file (type png)
 <use simDist150.png>
-Package pdftex.def Info: simDist150.png  used on input line 186.
+Package pdftex.def Info: simDist150.png  used on input line 190.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <simDist318.png, id=41, 762.85pt x 429.605pt>
 File: simDist318.png Graphic file (type png)
 <use simDist318.png>
-Package pdftex.def Info: simDist318.png  used on input line 187.
+Package pdftex.def Info: simDist318.png  used on input line 191.
 (pdftex.def)             Requested size: 274.6258pt x 154.65767pt.
 <simDist319.png, id=42, 768.8725pt x 432.61626pt>
 File: simDist319.png Graphic file (type png)
 <use simDist319.png>
-Package pdftex.def Info: simDist319.png  used on input line 188.
+Package pdftex.def Info: simDist319.png  used on input line 192.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <simDist439.png, id=43, 768.8725pt x 432.61626pt>
 File: simDist439.png Graphic file (type png)
 <use simDist439.png>
-Package pdftex.def Info: simDist439.png  used on input line 189.
+Package pdftex.def Info: simDist439.png  used on input line 193.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 
-Overfull \hbox (25.42732pt too wide) in paragraph at lines 182--190
+Overfull \hbox (25.42732pt too wide) in paragraph at lines 186--194
 [][] []
  []
 
 
-Overfull \hbox (25.42732pt too wide) in paragraph at lines 182--190
+Overfull \hbox (25.42732pt too wide) in paragraph at lines 186--194
 [] []
  []
 
 
-Overfull \hbox (24.7046pt too wide) in paragraph at lines 182--190
+Overfull \hbox (24.7046pt too wide) in paragraph at lines 186--194
 [] []
  []
 
 
-Overfull \hbox (26.8727pt too wide) in paragraph at lines 182--190
+Overfull \hbox (26.8727pt too wide) in paragraph at lines 186--194
 [] [] 
  []
 
 <asimDist56.png, id=44, 766.865pt x 431.6125pt>
 File: asimDist56.png Graphic file (type png)
 <use asimDist56.png>
-Package pdftex.def Info: asimDist56.png  used on input line 191.
+Package pdftex.def Info: asimDist56.png  used on input line 195.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <asimDist65.png, id=45, 766.865pt x 431.6125pt>
 File: asimDist65.png Graphic file (type png)
 <use asimDist65.png>
-Package pdftex.def Info: asimDist65.png  used on input line 192.
+Package pdftex.def Info: asimDist65.png  used on input line 196.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <asimDist71.png, id=46, 766.865pt x 431.6125pt>
 File: asimDist71.png Graphic file (type png)
 <use asimDist71.png>
-Package pdftex.def Info: asimDist71.png  used on input line 193.
+Package pdftex.def Info: asimDist71.png  used on input line 197.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <asimDist100.png, id=47, 766.865pt x 431.6125pt>
 File: asimDist100.png Graphic file (type png)
 <use asimDist100.png>
-Package pdftex.def Info: asimDist100.png  used on input line 194.
+Package pdftex.def Info: asimDist100.png  used on input line 198.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <asimDist171.png, id=48, 768.8725pt x 432.61626pt>
 File: asimDist171.png Graphic file (type png)
 <use asimDist171.png>
-Package pdftex.def Info: asimDist171.png  used on input line 195.
+Package pdftex.def Info: asimDist171.png  used on input line 199.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <asimDist323.png, id=49, 762.85pt x 429.605pt>
 File: asimDist323.png Graphic file (type png)
 <use asimDist323.png>
-Package pdftex.def Info: asimDist323.png  used on input line 196.
+Package pdftex.def Info: asimDist323.png  used on input line 200.
 (pdftex.def)             Requested size: 274.6258pt x 154.65767pt.
 <asimDist358.png, id=50, 768.8725pt x 432.61626pt>
 File: asimDist358.png Graphic file (type png)
 <use asimDist358.png>
-Package pdftex.def Info: asimDist358.png  used on input line 197.
+Package pdftex.def Info: asimDist358.png  used on input line 201.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <asimDist443.png, id=51, 768.8725pt x 432.61626pt>
 File: asimDist443.png Graphic file (type png)
 <use asimDist443.png>
-Package pdftex.def Info: asimDist443.png  used on input line 198.
+Package pdftex.def Info: asimDist443.png  used on input line 202.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 
-Overfull \hbox (25.42732pt too wide) in paragraph at lines 191--199
+Overfull \hbox (25.42732pt too wide) in paragraph at lines 195--203
 [][] []
  []
 
 
-Overfull \hbox (25.42732pt too wide) in paragraph at lines 191--199
+Overfull \hbox (25.42732pt too wide) in paragraph at lines 195--203
 [] []
  []
 
 
-Overfull \hbox (24.7046pt too wide) in paragraph at lines 191--199
+Overfull \hbox (24.7046pt too wide) in paragraph at lines 195--203
 [] []
  []
 
 
-Overfull \hbox (26.8727pt too wide) in paragraph at lines 191--199
+Overfull \hbox (26.8727pt too wide) in paragraph at lines 195--203
 [] [] 
  []
 
@@ -975,44 +990,34 @@ Overfull \hbox (26.8727pt too wide) in paragraph at lines 191--199
 simDist150.png> <./simDist318.png> <./simDist319.png> <./simDist439.png>]
 [6 <./asimDist56.png> <./asimDist65.png> <./asimDist71.png> <./asimDist100.png>
  <./asimDist171.png> <./asimDist323.png> <./asimDist358.png> <./asimDist443.png
->]
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[7] [8]
+>] [7] [8]
 <parDistSim70.png, id=81, 765.86125pt x 430.60875pt>
 File: parDistSim70.png Graphic file (type png)
 <use parDistSim70.png>
-Package pdftex.def Info: parDistSim70.png  used on input line 366.
+Package pdftex.def Info: parDistSim70.png  used on input line 355.
 (pdftex.def)             Requested size: 275.70984pt x 155.01903pt.
 <parDistSim439.png, id=82, 765.86125pt x 430.60875pt>
 File: parDistSim439.png Graphic file (type png)
 <use parDistSim439.png>
-Package pdftex.def Info: parDistSim439.png  used on input line 367.
+Package pdftex.def Info: parDistSim439.png  used on input line 356.
 (pdftex.def)             Requested size: 275.70984pt x 155.01903pt.
 <parDistAsim71.png, id=83, 765.86125pt x 430.60875pt>
 File: parDistAsim71.png Graphic file (type png)
 <use parDistAsim71.png>
-Package pdftex.def Info: parDistAsim71.png  used on input line 368.
+Package pdftex.def Info: parDistAsim71.png  used on input line 357.
 (pdftex.def)             Requested size: 275.70984pt x 155.01903pt.
 <parDistAsim443.png, id=84, 765.86125pt x 430.60875pt>
 File: parDistAsim443.png Graphic file (type png)
 <use parDistAsim443.png>
-Package pdftex.def Info: parDistAsim443.png  used on input line 369.
+Package pdftex.def Info: parDistAsim443.png  used on input line 358.
 (pdftex.def)             Requested size: 275.70984pt x 155.01903pt.
 
-Overfull \hbox (24.7046pt too wide) in paragraph at lines 366--370
+Overfull \hbox (24.7046pt too wide) in paragraph at lines 355--359
 [][] []
  []
 
 
-Overfull \hbox (24.7046pt too wide) in paragraph at lines 366--370
+Overfull \hbox (24.7046pt too wide) in paragraph at lines 355--359
 [] [] 
  []
 
@@ -1021,42 +1026,103 @@ sim443.png>]
 <pSSim70.png, id=92, 767.86874pt x 431.6125pt>
 File: pSSim70.png Graphic file (type png)
 <use pSSim70.png>
-Package pdftex.def Info: pSSim70.png  used on input line 383.
+Package pdftex.def Info: pSSim70.png  used on input line 373.
 (pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
 <pSSim439.png, id=93, 767.86874pt x 431.6125pt>
 File: pSSim439.png Graphic file (type png)
 <use pSSim439.png>
-Package pdftex.def Info: pSSim439.png  used on input line 384.
+Package pdftex.def Info: pSSim439.png  used on input line 374.
 (pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
 <mTSim70.png, id=94, 768.8725pt x 432.61626pt>
 File: mTSim70.png Graphic file (type png)
 <use mTSim70.png>
-Package pdftex.def Info: mTSim70.png  used on input line 385.
+Package pdftex.def Info: mTSim70.png  used on input line 375.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <mTSim439.png, id=95, 768.8725pt x 432.61626pt>
 File: mTSim439.png Graphic file (type png)
 <use mTSim439.png>
-Package pdftex.def Info: mTSim439.png  used on input line 386.
+Package pdftex.def Info: mTSim439.png  used on input line 376.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <mISim70.png, id=96, 769.87625pt x 433.62pt>
 File: mISim70.png Graphic file (type png)
 <use mISim70.png>
-Package pdftex.def Info: mISim70.png  used on input line 387.
+Package pdftex.def Info: mISim70.png  used on input line 377.
 (pdftex.def)             Requested size: 277.15524pt x 156.10307pt.
 <mISim439.png, id=97, 768.8725pt x 432.61626pt>
 File: mISim439.png Graphic file (type png)
 <use mISim439.png>
-Package pdftex.def Info: mISim439.png  used on input line 388.
+Package pdftex.def Info: mISim439.png  used on input line 378.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 <cSSim70.png, id=98, 767.86874pt x 431.6125pt>
 File: cSSim70.png Graphic file (type png)
 <use cSSim70.png>
-Package pdftex.def Info: cSSim70.png  used on input line 389.
+Package pdftex.def Info: cSSim70.png  used on input line 379.
 (pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
 <cSSim439.png, id=99, 769.87625pt x 432.61626pt>
 File: cSSim439.png Graphic file (type png)
 <use cSSim439.png>
-Package pdftex.def Info: cSSim439.png  used on input line 390.
+Package pdftex.def Info: cSSim439.png  used on input line 380.
+(pdftex.def)             Requested size: 277.15524pt x 155.74173pt.
+
+Overfull \hbox (26.14998pt too wide) in paragraph at lines 373--381
+[] []
+ []
+
+
+Overfull \hbox (26.8727pt too wide) in paragraph at lines 373--381
+[] []
+ []
+
+
+Overfull \hbox (27.23405pt too wide) in paragraph at lines 373--381
+[] []
+ []
+
+
+Overfull \hbox (26.8727pt too wide) in paragraph at lines 373--381
+[] [] 
+ []
+
+[10 <./pSSim70.png> <./pSSim439.png> <./mTSim70.png> <./mTSim439.png>]
+<pSAsim71.png, id=107, 767.86874pt x 431.6125pt>
+File: pSAsim71.png Graphic file (type png)
+<use pSAsim71.png>
+Package pdftex.def Info: pSAsim71.png  used on input line 383.
+(pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
+<pSAsim443.png, id=108, 767.86874pt x 431.6125pt>
+File: pSAsim443.png Graphic file (type png)
+<use pSAsim443.png>
+Package pdftex.def Info: pSAsim443.png  used on input line 384.
+(pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
+<mTAsim71.png, id=109, 768.8725pt x 432.61626pt>
+File: mTAsim71.png Graphic file (type png)
+<use mTAsim71.png>
+Package pdftex.def Info: mTAsim71.png  used on input line 385.
+(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
+<mTAsim443.png, id=110, 768.8725pt x 432.61626pt>
+File: mTAsim443.png Graphic file (type png)
+<use mTAsim443.png>
+Package pdftex.def Info: mTAsim443.png  used on input line 386.
+(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
+<mIAsim71.png, id=111, 768.8725pt x 432.61626pt>
+File: mIAsim71.png Graphic file (type png)
+<use mIAsim71.png>
+Package pdftex.def Info: mIAsim71.png  used on input line 387.
+(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
+<mIAsim443.png, id=112, 770.88pt x 433.62pt>
+File: mIAsim443.png Graphic file (type png)
+<use mIAsim443.png>
+Package pdftex.def Info: mIAsim443.png  used on input line 388.
+(pdftex.def)             Requested size: 277.51659pt x 156.10307pt.
+<cSAsim71.png, id=113, 768.8725pt x 432.61626pt>
+File: cSAsim71.png Graphic file (type png)
+<use cSAsim71.png>
+Package pdftex.def Info: cSAsim71.png  used on input line 389.
+(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
+<cSAsim443.png, id=114, 769.87625pt x 432.61626pt>
+File: cSAsim443.png Graphic file (type png)
+<use cSAsim443.png>
+Package pdftex.def Info: cSAsim443.png  used on input line 390.
 (pdftex.def)             Requested size: 277.15524pt x 155.74173pt.
 
 Overfull \hbox (26.14998pt too wide) in paragraph at lines 383--391
@@ -1069,278 +1135,228 @@ Overfull \hbox (26.8727pt too wide) in paragraph at lines 383--391
  []
 
 
+Overfull \hbox (27.5954pt too wide) in paragraph at lines 383--391
+[] []
+ []
+
+
 Overfull \hbox (27.23405pt too wide) in paragraph at lines 383--391
-[] []
- []
-
-
-Overfull \hbox (26.8727pt too wide) in paragraph at lines 383--391
 [] [] 
  []
 
-[10 <./pSSim70.png> <./pSSim439.png> <./mTSim70.png> <./mTSim439.png> <./mISim7
-0.png> <./mISim439.png>]
-<pSAsim71.png, id=109, 767.86874pt x 431.6125pt>
-File: pSAsim71.png Graphic file (type png)
-<use pSAsim71.png>
-Package pdftex.def Info: pSAsim71.png  used on input line 393.
-(pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
-<pSAsim443.png, id=110, 767.86874pt x 431.6125pt>
-File: pSAsim443.png Graphic file (type png)
-<use pSAsim443.png>
-Package pdftex.def Info: pSAsim443.png  used on input line 394.
-(pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
-<mTAsim71.png, id=111, 768.8725pt x 432.61626pt>
-File: mTAsim71.png Graphic file (type png)
-<use mTAsim71.png>
-Package pdftex.def Info: mTAsim71.png  used on input line 395.
-(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
-<mTAsim443.png, id=112, 768.8725pt x 432.61626pt>
-File: mTAsim443.png Graphic file (type png)
-<use mTAsim443.png>
-Package pdftex.def Info: mTAsim443.png  used on input line 396.
-(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
-<mIAsim71.png, id=113, 768.8725pt x 432.61626pt>
-File: mIAsim71.png Graphic file (type png)
-<use mIAsim71.png>
-Package pdftex.def Info: mIAsim71.png  used on input line 397.
-(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
-<mIAsim443.png, id=114, 770.88pt x 433.62pt>
-File: mIAsim443.png Graphic file (type png)
-<use mIAsim443.png>
-Package pdftex.def Info: mIAsim443.png  used on input line 398.
-(pdftex.def)             Requested size: 277.51659pt x 156.10307pt.
-<cSAsim71.png, id=115, 768.8725pt x 432.61626pt>
-File: cSAsim71.png Graphic file (type png)
-<use cSAsim71.png>
-Package pdftex.def Info: cSAsim71.png  used on input line 399.
-(pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
-<cSAsim443.png, id=116, 769.87625pt x 432.61626pt>
-File: cSAsim443.png Graphic file (type png)
-<use cSAsim443.png>
-Package pdftex.def Info: cSAsim443.png  used on input line 400.
-(pdftex.def)             Requested size: 277.15524pt x 155.74173pt.
+[11 <./mISim70.png> <./mISim439.png> <./cSSim70.png> <./cSSim439.png> <./pSAsim
+71.png> <./pSAsim443.png> <./mTAsim71.png> <./mTAsim443.png>]
 
-Overfull \hbox (26.14998pt too wide) in paragraph at lines 393--401
-[] []
- []
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-Overfull \hbox (26.8727pt too wide) in paragraph at lines 393--401
-[] []
- []
-
-
-Overfull \hbox (27.5954pt too wide) in paragraph at lines 393--401
-[] []
- []
-
-
-Overfull \hbox (27.23405pt too wide) in paragraph at lines 393--401
-[] [] 
- []
-
-[11 <./cSSim70.png> <./cSSim439.png> <./pSAsim71.png> <./pSAsim443.png> <./mTAs
-im71.png> <./mTAsim443.png> <./mIAsim71.png> <./mIAsim443.png>] [12 <./cSAsim71
-.png> <./cSAsim443.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 469--473
+[12 <./mIAsim71.png> <./mIAsim443.png> <./cSAsim71.png> <./cSAsim443.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 459--463
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 469--473
+Underfull \hbox (badness 10000) in paragraph at lines 459--463
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 469--473
+Underfull \hbox (badness 10000) in paragraph at lines 459--463
 
  []
 
 <locEnhSim70.png, id=133, 769.87625pt x 433.62pt>
 File: locEnhSim70.png Graphic file (type png)
 <use locEnhSim70.png>
-Package pdftex.def Info: locEnhSim70.png  used on input line 474.
+Package pdftex.def Info: locEnhSim70.png  used on input line 464.
 (pdftex.def)             Requested size: 277.15524pt x 156.10307pt.
 <locEnhSim439.png, id=134, 770.88pt x 433.62pt>
 File: locEnhSim439.png Graphic file (type png)
 <use locEnhSim439.png>
-Package pdftex.def Info: locEnhSim439.png  used on input line 475.
+Package pdftex.def Info: locEnhSim439.png  used on input line 465.
 (pdftex.def)             Requested size: 277.51659pt x 156.10307pt.
 <locEnhAsim71.png, id=135, 766.865pt x 431.6125pt>
 File: locEnhAsim71.png Graphic file (type png)
 <use locEnhAsim71.png>
-Package pdftex.def Info: locEnhAsim71.png  used on input line 476.
+Package pdftex.def Info: locEnhAsim71.png  used on input line 466.
 (pdftex.def)             Requested size: 276.0712pt x 155.38037pt.
 <locEnhAsim443.png, id=136, 768.8725pt x 432.61626pt>
 File: locEnhAsim443.png Graphic file (type png)
 <use locEnhAsim443.png>
-Package pdftex.def Info: locEnhAsim443.png  used on input line 477.
+Package pdftex.def Info: locEnhAsim443.png  used on input line 467.
 (pdftex.def)             Requested size: 276.79388pt x 155.74173pt.
 
-Overfull \hbox (27.95676pt too wide) in paragraph at lines 474--478
+Overfull \hbox (27.95676pt too wide) in paragraph at lines 464--468
 [][] []
  []
 
 
-Overfull \hbox (26.15001pt too wide) in paragraph at lines 474--478
+Overfull \hbox (26.15001pt too wide) in paragraph at lines 464--468
 [] [] 
  []
 
-<locEnhIter.png, id=137, 768.8725pt x 432.61626pt>
+[13 <./locEnhSim70.png> <./locEnhSim439.png>]
+<locEnhIter.png, id=143, 768.8725pt x 432.61626pt>
 File: locEnhIter.png Graphic file (type png)
 <use locEnhIter.png>
-Package pdftex.def Info: locEnhIter.png  used on input line 481.
+Package pdftex.def Info: locEnhIter.png  used on input line 471.
 (pdftex.def)             Requested size: 553.58778pt x 311.48347pt.
 
-Overfull \hbox (24.65103pt too wide) in paragraph at lines 481--482
+Overfull \hbox (24.65103pt too wide) in paragraph at lines 471--472
 [][] 
  []
 
-[13 <./locEnhSim70.png> <./locEnhSim439.png> <./locEnhAsim71.png> <./locEnhAsim
-443.png>]
-<ageSim70.png, id=146, 767.86874pt x 431.6125pt>
+<ageSim70.png, id=144, 767.86874pt x 431.6125pt>
 File: ageSim70.png Graphic file (type png)
 <use ageSim70.png>
-Package pdftex.def Info: ageSim70.png  used on input line 495.
-(pdftex.def)             Requested size: 276.43253pt x 155.38037pt.
-<ageSim439.png, id=147, 854.19125pt x 479.7925pt>
+Package pdftex.def Info: ageSim70.png  used on input line 479.
+(pdftex.def)             Requested size: 253.39746pt x 142.43256pt.
+<ageSim439.png, id=145, 854.19125pt x 479.7925pt>
 File: ageSim439.png Graphic file (type png)
 <use ageSim439.png>
-Package pdftex.def Info: ageSim439.png  used on input line 496.
-(pdftex.def)             Requested size: 307.50862pt x 172.72516pt.
-<ageAsim71.png, id=148, 769.87625pt x 433.62pt>
+Package pdftex.def Info: ageSim439.png  used on input line 480.
+(pdftex.def)             Requested size: 281.88399pt x 158.332pt.
+<ageAsim71.png, id=146, 769.87625pt x 433.62pt>
 File: ageAsim71.png Graphic file (type png)
 <use ageAsim71.png>
-Package pdftex.def Info: ageAsim71.png  used on input line 497.
-(pdftex.def)             Requested size: 277.15524pt x 156.10307pt.
-<ageAsim443.png, id=149, 769.87625pt x 433.62pt>
+Package pdftex.def Info: ageAsim71.png  used on input line 481.
+(pdftex.def)             Requested size: 254.05995pt x 143.09503pt.
+<ageAsim443.png, id=147, 769.87625pt x 433.62pt>
 File: ageAsim443.png Graphic file (type png)
 <use ageAsim443.png>
-Package pdftex.def Info: ageAsim443.png  used on input line 498.
-(pdftex.def)             Requested size: 277.15524pt x 156.10307pt.
+Package pdftex.def Info: ageAsim443.png  used on input line 482.
+(pdftex.def)             Requested size: 254.05995pt x 143.09503pt.
 
-Overfull \hbox (57.22607pt too wide) in paragraph at lines 495--499
+Overfull \hbox (8.56638pt too wide) in paragraph at lines 479--483
 [][] []
  []
 
-
-Overfull \hbox (27.59541pt too wide) in paragraph at lines 495--499
-[] [] 
- []
-
-[14 <./locEnhIter.png> <./ageSim70.png> <./ageSim439.png>]
-<ageIter.png, id=156, 767.86874pt x 432.61626pt>
+[14 <./locEnhAsim71.png> <./locEnhAsim443.png> <./locEnhIter.png>]
+<ageIter.png, id=154, 767.86874pt x 432.61626pt>
 File: ageIter.png Graphic file (type png)
 <use ageIter.png>
-Package pdftex.def Info: ageIter.png  used on input line 502.
+Package pdftex.def Info: ageIter.png  used on input line 486.
 (pdftex.def)             Requested size: 552.86507pt x 311.48347pt.
 
-Overfull \hbox (23.92831pt too wide) in paragraph at lines 502--503
+Overfull \hbox (23.92831pt too wide) in paragraph at lines 486--487
 [][] 
  []
 
-[15 <./ageAsim71.png> <./ageAsim443.png> <./ageIter.png>]
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[16]
+[15 <./ageSim70.png> <./ageSim439.png> <./ageAsim71.png> <./ageAsim443.png> <./
+ageIter.png>] [16]
 <Interval=10.png, id=168, 735.402pt x 480.705pt>
 File: Interval=10.png Graphic file (type png)
 <use Interval=10.png>
-Package pdftex.def Info: Interval=10.png  used on input line 609.
-(pdftex.def)             Requested size: 528.93675pt x 345.75525pt.
- [17]
-<Interval=100.png, id=172, 735.402pt x 480.705pt>
+Package pdftex.def Info: Interval=10.png  used on input line 594.
+(pdftex.def)             Requested size: 529.48903pt x 346.10733pt.
+<Interval=100.png, id=169, 735.402pt x 480.705pt>
 File: Interval=100.png Graphic file (type png)
 <use Interval=100.png>
-Package pdftex.def Info: Interval=100.png  used on input line 611.
-(pdftex.def)             Requested size: 528.93675pt x 345.75525pt.
-<Interval=1000.png, id=173, 735.402pt x 480.705pt>
+Package pdftex.def Info: Interval=100.png  used on input line 595.
+(pdftex.def)             Requested size: 529.48903pt x 346.10733pt.
+<Interval=1000.png, id=170, 735.402pt x 480.705pt>
 File: Interval=1000.png Graphic file (type png)
 <use Interval=1000.png>
-Package pdftex.def Info: Interval=1000.png  used on input line 612.
-(pdftex.def)             Requested size: 528.93675pt x 345.75525pt.
- [18 <./Interval=10.png>]
-<swpSize=1.png, id=178, 735.402pt x 480.705pt>
+Package pdftex.def Info: Interval=1000.png  used on input line 596.
+(pdftex.def)             Requested size: 529.48903pt x 346.10733pt.
+
+Overfull \hbox (0.55228pt too wide) in paragraph at lines 594--597
+[]
+ []
+
+
+Overfull \hbox (0.55228pt too wide) in paragraph at lines 594--597
+[]
+ []
+
+
+Overfull \hbox (0.55228pt too wide) in paragraph at lines 594--597
+[] 
+ []
+
+[17]
+Overfull \vbox (3.00365pt too high) has occurred while \output is active []
+
+
+[18 <./Interval=10.png> <./Interval=100.png>]
+<swpSize=1.png, id=179, 735.402pt x 480.705pt>
 File: swpSize=1.png Graphic file (type png)
 <use swpSize=1.png>
-Package pdftex.def Info: swpSize=1.png  used on input line 615.
+Package pdftex.def Info: swpSize=1.png  used on input line 599.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
-<swpSize=2.png, id=179, 735.402pt x 480.705pt>
+<swpSize=2.png, id=180, 735.402pt x 480.705pt>
 File: swpSize=2.png Graphic file (type png)
 <use swpSize=2.png>
-Package pdftex.def Info: swpSize=2.png  used on input line 616.
+Package pdftex.def Info: swpSize=2.png  used on input line 600.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
-<swpSize=4.png, id=180, 735.402pt x 480.705pt>
+<swpSize=4.png, id=181, 735.402pt x 480.705pt>
 File: swpSize=4.png Graphic file (type png)
 <use swpSize=4.png>
-Package pdftex.def Info: swpSize=4.png  used on input line 617.
+Package pdftex.def Info: swpSize=4.png  used on input line 601.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
-<swpSize=8.png, id=181, 735.402pt x 480.705pt>
+<swpSize=8.png, id=182, 735.402pt x 480.705pt>
 File: swpSize=8.png Graphic file (type png)
 <use swpSize=8.png>
-Package pdftex.def Info: swpSize=8.png  used on input line 618.
+Package pdftex.def Info: swpSize=8.png  used on input line 602.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
-<swpSize=16.png, id=182, 735.402pt x 480.705pt>
+<swpSize=16.png, id=183, 735.402pt x 480.705pt>
 File: swpSize=16.png Graphic file (type png)
 <use swpSize=16.png>
-Package pdftex.def Info: swpSize=16.png  used on input line 619.
+Package pdftex.def Info: swpSize=16.png  used on input line 603.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
-<swpSize=32.png, id=183, 735.402pt x 480.705pt>
+<swpSize=32.png, id=184, 735.402pt x 480.705pt>
 File: swpSize=32.png Graphic file (type png)
 <use swpSize=32.png>
-Package pdftex.def Info: swpSize=32.png  used on input line 620.
+Package pdftex.def Info: swpSize=32.png  used on input line 604.
 (pdftex.def)             Requested size: 264.46837pt x 172.87762pt.
 
-Overfull \hbox (2.22166pt too wide) in paragraph at lines 615--621
+Overfull \hbox (2.22166pt too wide) in paragraph at lines 599--605
 [] []
  []
 
 
-Overfull \hbox (2.22166pt too wide) in paragraph at lines 615--621
+Overfull \hbox (2.22166pt too wide) in paragraph at lines 599--605
 [] []
  []
 
 
-Overfull \hbox (2.22166pt too wide) in paragraph at lines 615--621
+Overfull \hbox (2.22166pt too wide) in paragraph at lines 599--605
 [] [] 
  []
 
-[19 <./Interval=100.png> <./Interval=1000.png>]
+[19 <./Interval=1000.png>] [20 <./swpSize=1.png> <./swpSize=2.png> <./swpSize=4
+.png> <./swpSize=8.png> <./swpSize=16.png> <./swpSize=32.png>]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[20 <./swpSize=1.png> <./swpSize=2.png> <./swpSize=4.png> <./swpSize=8.png> <./
-swpSize=16.png> <./swpSize=32.png>] [21] (./Sprawko_Genetyk.aux) ) 
+[21] [22] (./Sprawko_Genetyk.aux) ) 
 Here is how much of TeX's memory you used:
- 27901 strings out of 483107
- 693592 string characters out of 5964400
- 1092714 words of memory out of 5000000
- 42462 multiletter control sequences out of 15000+600000
+ 27899 strings out of 483107
+ 693564 string characters out of 5964400
+ 1096714 words of memory out of 5000000
+ 42460 multiletter control sequences out of 15000+600000
  546183 words of font info for 61 fonts, out of 8000000 for 9000
  56 hyphenation exceptions out of 8191
  78i,9n,136p,741b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/frank
-/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1000.600pk> </home/fran
-k/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk> </home/fra
-nk/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1000.600pk> </home/fr
-ank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/f
-rank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/
-frank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home
-/frank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </hom
-e/frank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </ho
-me/frank/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Sprawko_Genetyk.pdf (21 pages, 3942979 bytes).
+ </home/frank/.texlive2019/texmf-var/fonts/p
+k/ljfour/jknappen/ec/ecbx1000.600pk> </home/frank/.texlive2019/texmf-var/fonts/
+pk/ljfour/jknappen/ec/tcrm1000.600pk> </home/frank/.texlive2019/texmf-var/fonts
+/pk/ljfour/jknappen/ec/ecti1000.600pk> </home/frank/.texlive2019/texmf-var/font
+s/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/frank/.texlive2019/texmf-var/fon
+ts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </home/frank/.texlive2019/texmf-var/fo
+nts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/frank/.texlive2019/texmf-var/f
+onts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/frank/.texlive2019/texmf-var/
+fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/frank/.texlive2019/texmf-var
+/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.p
+fb>
+Output written on Sprawko_Genetyk.pdf (22 pages, 3949730 bytes).
 PDF statistics:
- 575 PDF objects out of 1000 (max. 8388607)
- 106 compressed objects within 2 object streams
+ 576 PDF objects out of 1000 (max. 8388607)
+ 108 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  298 words of extra memory for PDF output out of 10000 (max. 10000000)
 
